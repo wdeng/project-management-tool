@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MdAddCircleOutline } from 'react-icons/md'; // Import icons from react-icons
+import { MdAdd } from 'react-icons/md'; // Import icons from react-icons
 import Modal from './Modal';
 
 interface ProjectCreationModalProps {
@@ -45,10 +45,10 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   return (
     <>
       <button
-        className="w-full flex items-center justify-center p-3 bg-gray-900 text-white shadow-md hover:bg-gray-800 transition-colors duration-300 ease-in-out cursor-pointer pb-5"
+        className="w-full flex items-center py-5 px-2 mb-2 bg-gray-900 text-white shadow-md hover:bg-gray-800 transition-colors duration-300 ease-in-out cursor-pointer"
         onClick={open}
       >
-        <MdAddCircleOutline className="mr-1" />
+        <MdAdd className="mr-2" />
         Create Project
       </button>
       <Modal

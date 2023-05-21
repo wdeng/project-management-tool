@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <div className="flex">
-      <div style={{ flex: '0 0 200px' }} className="bg-gray-800 h-screen overflow-auto">
+      <div style={{ flex: '0 0 200px' }} className="bg-gray-700 h-screen overflow-auto">
         <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
       </div>
       <div style={{ flex: '0 0 250px' }} className="bg-gray-600 h-screen overflow-auto">

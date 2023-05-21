@@ -12,9 +12,9 @@ interface EditorModalProps {
 const EditorModal: React.FC<EditorModalProps> = ({ isOpen, onClose, value, onChange }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Module">
-      <div className="mt-2 p-6">
+      <div>
         <Editor
-          height="60vh"
+          height="88vh"
           defaultLanguage="typescript"
           value={value}
           onChange={onChange}
