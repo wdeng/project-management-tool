@@ -53,7 +53,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
         {projects.map((project) => (
           <li
             key={project.id}
-            className={`px-2 py-4 flex items-center hover:bg-blue-400 text-white cursor-pointer transition-colors duration-250 ease-in-out ${selectedProjectId === project.id ? 'bg-blue-600' : ''}`}
+            className={`px-2 py-4 flex items-center rounded-l-md text-white cursor-pointer transition ease-in-out delay-100 hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === project.id ? 'bg-indigo-600' : ''}`}
             onClick={() => handleProjectClick(project)}
           >
             <div className="mr-2">

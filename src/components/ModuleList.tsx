@@ -31,7 +31,7 @@ export const ModuleList: React.FC<IModuleListProps> = ({ projectId, onModuleSele
         {modules.map((module) => (
           <li
             key={module.id}
-            className={`px-2 py-4 flex items-center a hover:bg-gray-200 hover:text-black text-white cursor-pointer ${selectedModule?.id === module.id ? 'bg-gray-200 text-black' : ''}`}
+            className={`px-2 py-4 flex items-center rounded-l-md mb-1 ${selectedModule?.id === module.id ? 'bg-gray-100 text-black' : 'text-white'} cursor-pointer transition ease-in-out delay-100 hover:translate-x-2 hover:scale-105 hover:bg-gray-100 hover:text-black duration-300`}
             onClick={() => handleModuleSelect(module)}
             style={{
               paddingLeft: `${(module.tabLevel || 0) * 16 + 12}px`,
@@ -45,7 +45,7 @@ export const ModuleList: React.FC<IModuleListProps> = ({ projectId, onModuleSele
         ))}
       </ul>
     </div>
-  );  
+  );
 };
 
 export default ModuleList;

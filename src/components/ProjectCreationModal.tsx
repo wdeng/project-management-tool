@@ -79,7 +79,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
             onChange={(e) => setSchema(e.target.value)}
             className="w-full p-2 mb-4 h-20 border rounded"
           />
-          <button type="submit" disabled={!validateForm()} className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 ease-in-out">
+          <button type="submit" disabled={!validateForm()} className="w-full p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
             Create
           </button>
         </form>

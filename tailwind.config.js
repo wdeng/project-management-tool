@@ -14,11 +14,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-  corePlugins: {
-    //...
-    transform: true,
-    transitionProperty: true,
-    transitionDuration: true,
-  }
+  plugins: [require('@tailwindcss/forms')],
 }

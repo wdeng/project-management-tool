@@ -21,6 +21,7 @@ export interface Module {
 }
 
 export interface FileDesign {
+  id?: number;
   filePath: string;
   goal: string;
   packages: string[];

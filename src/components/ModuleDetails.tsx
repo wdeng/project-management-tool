@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Module, updateModule } from '../utils/api';
 import EditorModal from './EditorModal';
+import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 
 interface IModuleDetailsProps {
   selectedModule: Module | null;
@@ -60,6 +61,28 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
     }
   };
 
+  const handleRemoveFile = async (fileId: number) => {
+    if (!selectedModule) {
+      return;
+    }
+    const shouldDelete = window.confirm("Are you sure you want to delete this file?");
+    if (shouldDelete) {
+      try {
+        // await deleteModuleFile(selectedModule.id, fileId);
+        const updatedModule = await updateModule(
+          selectedModule.projectId,
+          selectedModule.id,
+          name,
+          description,
+          selectedModule.files.filter(file => file.id !== fileId),
+        );
+        onModuleUpdate(updatedModule);
+      } catch (error) {
+        setError('Failed to delete the file');
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between h-full p-6">
       <EditorModal
@@ -71,15 +94,18 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
 
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={handleInputChange}
-          className="mt-1 block w-full text-3xl font-medium text-gray-700 border-none outline-none bg-transparent focus:ring-0 mb-4"
-          placeholder="Module Name"
-        />
+        <div className="flex justify-between items-center mb-3">
+          <input
+            type="text"
+            name="name"
+            id="name"
+            value={name}
+            onChange={handleInputChange}
+            className="-ml-2 block w-full text-3xl font-medium text-gray-700 border-none outline-none bg-transparent focus:ring-0"
+            placeholder="Module Name"
+          />
+          <button onClick={openEditor} className="hover:text-indigo-700 text-gray-700 text-xl"><MdOutlineSubject /></button>
+        </div>
         <textarea
           name="description"
           id="description"
@@ -92,7 +118,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         <div className="flex justify-end">
           <button
             type="submit"
-            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg"
           >
             Save
           </button>
@@ -103,7 +129,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           <button
             key={file.filePath}
             onClick={openEditor}
-            className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-2 text-left"
+            className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-400"
           >
             <h3 className="font-semibold text-l truncate">{file.filePath.split('/').pop()}</h3>
             <p className="text-gray-500 mt-4 text-sm">{file.goal}</p>
