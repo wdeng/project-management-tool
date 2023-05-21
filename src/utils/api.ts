@@ -64,8 +64,14 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
       description: 'Module 1 Description',      // Add module description
       files: [                      // Add functional designs
         {
-          filePath: '/path/to/file',
-          goal: 'Goal of the file',
+          filePath: '/path/to/ModuleDepndency1.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
           packages: ['Package 1', 'Package 2'],
           dependencies: ['/path/to/dependency'],
         },

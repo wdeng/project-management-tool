@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Module, updateModule } from '../utils/api';
+import EditorModal from './EditorModal';
 
 interface IModuleDetailsProps {
   selectedModule: Module | null;
@@ -11,6 +12,22 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [editorValue, setEditorValue] = useState("// some comment");
+
+  const openEditor = () => {
+    setIsEditorOpen(true);
+  };
+
+  const closeEditor = () => {
+    setIsEditorOpen(false);
+  };
+
+  const handleEditorChange = (val: string | undefined) => {
+    if (val != null)
+      setEditorValue(val);
+  }
+
   useEffect(() => {
     // Fetch module description from the selected module
     if (selectedModule) {
@@ -19,7 +36,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
     }
   }, [selectedModule]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     if (name === 'name') setName(value);
     if (name === 'description') setDescription(value);
@@ -45,8 +62,15 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
 
   return (
     <div className="w-full h-full p-4">
+      <EditorModal
+        isOpen={isEditorOpen}
+        onClose={closeEditor}
+        value={editorValue}
+        onChange={handleEditorChange}
+      />
+
       {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="mb-4">
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
           Name
         </label>
@@ -59,15 +83,15 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           className="mt-1 block w-full border border-gray-300 rounded-md"
         />
         <label htmlFor="description" className="block mt-4 text-sm font-medium text-gray-700">
-        Description
+          Description
         </label>
-        <input
-          type="text"
+        <textarea
           name="description"
           id="description"
           value={description}
           onChange={handleInputChange}
           className="mt-1 block w-full border border-gray-300 rounded-md"
+          rows={4}
         />
         <button
           type="submit"
@@ -76,6 +100,16 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           Save
         </button>
       </form>
+      {selectedModule?.files.map(file => (
+        <button
+          key={file.filePath}
+          onClick={openEditor}
+          className="bg-white shadow-md rounded-lg p-4 mb-4 cursor-pointer w-64 mr-2"
+        >
+          <h2 className="font-semibold text-xl truncate">{file.filePath.split('/').pop()}</h2>
+          <p className="text-gray-600 mt-2">{file.goal}</p>
+        </button>
+      ))}
     </div>
   );
 };
