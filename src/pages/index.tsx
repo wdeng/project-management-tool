@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectList from '../components/ProjectList';
-import { ModuleList } from '../components/ModuleList';
+import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails';
 import { Project, Module } from '../utils/api';
 
@@ -18,15 +18,16 @@ export default function Home() {
 
   return (
     <div className="flex">
-      <div style={{width: 150}} className="bg-gray-200 h-screen overflow-auto">
+      <div style={{ flex: '0 0 200px' }} className="bg-gray-800 h-screen overflow-auto">
         <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
       </div>
-      <div style={{width: 200}} className="bg-gray-300 h-screen overflow-auto">
+      <div style={{ flex: '0 0 250px' }} className="bg-gray-600 h-screen overflow-auto">
         {selectedProjectId && <ModuleList projectId={selectedProjectId} onModuleSelect={handleModuleSelect} />}
       </div>
-      <div className="flex-grow bg-gray-400 h-screen overflow-auto">
-      {selectedModule && <ModuleDetails selectedModule={selectedModule} onModuleUpdate={() => {}} />}
+      <div style={{ flex: '1' }} className="bg-gray-200 h-screen overflow-auto">
+        {selectedModule && <ModuleDetails selectedModule={selectedModule} onModuleUpdate={() => {}} />}
       </div>
     </div>
   );
+  
 }

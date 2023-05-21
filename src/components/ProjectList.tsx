@@ -47,11 +47,11 @@ export const ProjectList: React.FC<ProjectListProps> = ({
     <div className="overflow-y-auto h-full">
       <ProjectCreationModal onNewProject={handleNewProject} />
       {error && <p className="text-red-500">{error}</p>}
-      <ul className="divide-y divide-gray-200">
+      <ul>
         {projects.map((project) => (
           <li
             key={project.id}
-            className={`p-4 hover:bg-gray-100 cursor-pointer ${selectedProjectId === project.id ? 'bg-gray-100' : ''}`}
+            className={`p-4 hover:bg-blue-400 text-white cursor-pointer transition-colors duration-250 ease-in-out ${selectedProjectId === project.id ? 'bg-blue-600' : ''}`}
             onClick={() => handleProjectClick(project)}
           >
             {project.name}

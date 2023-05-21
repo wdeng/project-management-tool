@@ -30,10 +30,11 @@ export const ModuleList: React.FC<IModuleListProps> = ({ projectId, onModuleSele
         {modules.map((module) => (
           <li
             key={module.id}
-            className={`p-4 hover:bg-gray-100 cursor-pointer ${
-              selectedModule?.id === module.id ? 'bg-gray-200' : ''
+            className={`p-4 hover:bg-gray-200 hover:text-black text-white cursor-pointer ${
+              selectedModule?.id === module.id ? 'bg-gray-200 text-black' : ''
             }`}
             onClick={() => handleModuleSelect(module)}
+            style={{ paddingLeft: `${(module.tabLevel || 0) * 16 + 10}px` }}
           >
             {module.name}
           </li>
@@ -42,3 +43,5 @@ export const ModuleList: React.FC<IModuleListProps> = ({ projectId, onModuleSele
     </div>
   );
 };
+
+export default ModuleList;

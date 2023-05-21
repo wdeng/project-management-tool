@@ -61,7 +61,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
   };
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="flex flex-col justify-between h-full p-6">
       <EditorModal
         isOpen={isEditorOpen}
         onClose={closeEditor}
@@ -71,47 +71,48 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
 
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Name
-        </label>
         <input
           type="text"
           name="name"
           id="name"
           value={name}
           onChange={handleInputChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md"
+          className="mt-1 block w-full text-3xl font-medium text-gray-700 border-none outline-none bg-transparent focus:ring-0 mb-4"
+          placeholder="Module Name"
         />
-        <label htmlFor="description" className="block mt-4 text-sm font-medium text-gray-700">
-          Description
-        </label>
         <textarea
           name="description"
           id="description"
           value={description}
           onChange={handleInputChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md"
+          className="mt-1 block w-full border-none outline-none resize-none rounded-md p-2 focus:ring-0"
           rows={4}
+          placeholder='Describe the module...'
         />
-        <button
-          type="submit"
-          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Save
-        </button>
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Save
+          </button>
+        </div>
       </form>
-      {selectedModule?.files.map(file => (
-        <button
-          key={file.filePath}
-          onClick={openEditor}
-          className="bg-white shadow-md rounded-lg p-4 mb-4 cursor-pointer w-64 mr-2"
-        >
-          <h2 className="font-semibold text-xl truncate">{file.filePath.split('/').pop()}</h2>
-          <p className="text-gray-600 mt-2">{file.goal}</p>
-        </button>
-      ))}
+      <div>
+        {selectedModule?.files.map((file) => (
+          <button
+            key={file.filePath}
+            onClick={openEditor}
+            className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-2 text-left"
+          >
+            <h3 className="font-semibold text-l truncate">{file.filePath.split('/').pop()}</h3>
+            <p className="text-gray-500 mt-4 text-sm">{file.goal}</p>
+          </button>
+        ))}
+      </div>
     </div>
   );
+
 };
 
 export default ModuleDetails;

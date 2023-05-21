@@ -12,6 +12,7 @@ export interface Module {
   id: number;
   projectId: number;
   parentId: number | null;
+  tabLevel?: number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -72,6 +73,189 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
         {
           filePath: '/path/to/ModuleDepndency2.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+      ],
+    },
+    {
+      id: 2,
+      projectId: projectId,
+      parentId: null,
+      tabLevel: 1,
+      name: 'Test Module 2',
+      createdAt: '2023-01-01T00:00:00Z',
+      updatedAt: '2023-01-02T00:00:00Z',
+      description: 'Module 1 Description',      // Add module description
+      files: [                      // Add functional designs
+        {
+          filePath: '/path/to/ModuleDepndency1.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+      ],
+    },
+    {
+      id: 3,
+      projectId: projectId,
+      parentId: null,
+      tabLevel: 1,
+      name: 'Test Module 3',
+      createdAt: '2023-01-01T00:00:00Z',
+      updatedAt: '2023-01-02T00:00:00Z',
+      description: 'Module 1 Description',      // Add module description
+      files: [                      // Add functional designs
+        {
+          filePath: '/path/to/ModuleDepndency1.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+      ]
+    },
+    {
+      id: 4,
+      projectId: projectId,
+      parentId: null,
+      tabLevel: 2,
+      name: 'Test Module 4',
+      createdAt: '2023-01-01T00:00:00Z',
+      updatedAt: '2023-01-02T00:00:00Z',
+      description: 'Module 1 Description',      // Add module description
+      files: [                      // Add functional designs
+        {
+          filePath: '/path/to/ModuleDepndency1.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        },
+        {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
+          packages: ['Package 1', 'Package 2'],
+          dependencies: ['/path/to/dependency'],
+        }, {
+          filePath: '/path/to/ModuleDepndency2.tsx',
+          goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
           packages: ['Package 1', 'Package 2'],
           dependencies: ['/path/to/dependency'],
         },
