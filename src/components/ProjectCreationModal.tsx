@@ -57,27 +57,29 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         title="Create New Project"
       >
         <form onSubmit={handleSubmit} className="p-4">
-          <label htmlFor="projectName">Project Name</label>
           <input
             id="projectName"
             type="text"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-            className="w-full p-2 mb-4 border rounded"
+            className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2 text-lg"
+            placeholder='Project Name'
           />
-          <label htmlFor="requirements">Requirements</label>
           <textarea
             id="requirements"
             value={requirements}
             onChange={(e) => setRequirements(e.target.value)}
-            className="w-full p-2 mb-4 h-20 border rounded"
+            className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2"
+            placeholder='Requirements'
+            rows={5}
           />
-          <label htmlFor="schema">Project Schema</label>
           <textarea
             id="schema"
             value={schema}
             onChange={(e) => setSchema(e.target.value)}
-            className="w-full p-2 mb-4 h-20 border rounded"
+            className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2"
+            placeholder='API or database schema'
+            rows={5}
           />
           <button type="submit" disabled={!validateForm()} className="w-full p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
             Create

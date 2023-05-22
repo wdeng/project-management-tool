@@ -129,7 +129,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           <button
             key={file.filePath}
             onClick={openEditor}
-            className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-400"
+            className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-300"
           >
             <h3 className="font-semibold text-l truncate">{file.filePath.split('/').pop()}</h3>
             <p className="text-gray-500 mt-4 text-sm">{file.goal}</p>
