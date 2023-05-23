@@ -1,0 +1,9 @@
+directoryTree:
+- dirname: src
+  subdir:
+  - dirname: components
+    files: [ProjectList.tsx, ModuleList.tsx, ModuleDetails.tsx, ProjectCreationModal.tsx]
+  - dirname: pages
+    files: [index.tsx]
+  - dirname: utils
+    files: [api.ts]

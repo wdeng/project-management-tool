@@ -1,0 +1,48 @@
+projectName: Project Management Tool
+description: A responsive, single-page web application for managing software projects
+  and their configuration files using TypeScript, Next, Tailwind, and Headless UI.
+devLanguage: typescript
+testFramework: jest
+modules:
+- name: ProjectList
+  description: Displays a list of projects in the left column, along with a button to create new projects.
+  functionalBlocks:
+  - "Fetch projects from the backend API"
+  - "Display projects in a scrollable list"
+  - "Allow users to select a project"
+  - "Trigger the display of modules for the selected project"
+  - "Include the ProjectCreationModal component and handle successful project creation"
+  sourceFilePaths: [src/components/ProjectList.tsx]
+- name: ModuleList
+  description: Displays a list of modules for the selected project in the middle column.
+  functionalBlocks:
+  - "Fetch modules from the backend API based on the selected project"
+  - "Display modules in a scrollable list with a nested hierarchy"
+  - "Allow users to select a module"
+  - "Trigger the display of module details for the selected module"
+  sourceFilePaths: [src/components/ModuleList.tsx]
+- name: ModuleDetails
+  description: Displays and allows editing of the selected module's details in the
+    right column.
+  functionalBlocks:
+  - "Fetch module details from the backend API based on the selected module"
+  - "Display module details in a form"
+  - "Allow users to edit module details"
+  - "Save updated module details to the backend API"
+  sourceFilePaths: [src/components/ModuleDetails.tsx]
+- name: APIUtils
+  description: Utility functions for interacting with the backend API.
+  functionalBlocks:
+  - "Fetch projects and modules from the backend API"
+  - "Create, update, and delete projects and modules"
+  sourceFilePaths: [src/utils/api.ts]
+- name: ProjectCreationModal
+  description: Allows the creation of new projects through a modal.
+  functionalBlocks:
+  - "Display a button to open the modal"
+  - "Open a modal with a form for project details when the button is clicked"
+  - "Validate form input for new project details"
+  - "Create a new project through the backend API when form is submitted"
+  - "Close the modal and refresh the project list when a project is successfully created"
+  - "Display error messages for unsuccessful project creation"
+  sourceFilePaths: [src/components/ProjectCreationModal.tsx]

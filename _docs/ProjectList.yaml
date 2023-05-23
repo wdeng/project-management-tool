@@ -1,0 +1,39 @@
+moduleName: ProjectList
+functionalDesigns:
+- goal: Implement the ProjectList component to display a list of projects and handle
+    user interactions.
+  elements:
+  - name: "ProjectList()"
+    lines:
+    - 4
+    - 45
+    elementType: function
+    goal: Render a scrollable list of projects and handle user interactions for selecting
+      a project.
+    access: public
+    output: "A React functional component that displays a list of projects and handles
+      user interactions for selecting a project."
+    functionalBlocks:
+    - Fetch projects from the backend API
+    - Display projects in a scrollable list
+    - Allow users to select a project
+    - Trigger the display of modules for the selected project
+    subElements:
+    - name: "handleProjectSelect(project: Project)"
+      elementType: function
+      lines:
+      - 22
+      - 25
+      goal: Handle the selection of a project and trigger the display of modules for
+        the selected project.
+      access: private
+      output: "None, but updates the state of the selected project and triggers the
+        display of modules for the selected project."
+      functionalBlocks:
+      - Set the selected project in the component state
+      - Trigger the display of modules for the selected project
+  packages:
+  - "react"
+  dependencies:
+  - "src/utils/api.ts"
+  filePath: src/components/ProjectList.tsx
