@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Module, updateModule } from '../utils/api';
-import EditorModal from './EditorModal';
+import { Module, updateModule } from '../../utils/api';
+import EditorModal from '../EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
+import ChatButton from './ChatButton';
 
 interface IModuleDetailsProps {
   selectedModule: Module | null;
@@ -61,28 +62,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
     }
   };
 
-  const handleRemoveFile = async (fileId: number) => {
-    if (!selectedModule) {
-      return;
-    }
-    const shouldDelete = window.confirm("Are you sure you want to delete this file?");
-    if (shouldDelete) {
-      try {
-        // await deleteModuleFile(selectedModule.id, fileId);
-        const updatedModule = await updateModule(
-          selectedModule.projectId,
-          selectedModule.id,
-          name,
-          description,
-          selectedModule.files.filter(file => file.id !== fileId),
-        );
-        onModuleUpdate(updatedModule);
-      } catch (error) {
-        setError('Failed to delete the file');
-      }
-    }
-  };
-
   return (
     <div className="flex flex-col justify-between h-full p-6">
       <EditorModal
@@ -136,6 +115,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           </button>
         ))}
       </div>
+      <ChatButton />
     </div>
   );
 

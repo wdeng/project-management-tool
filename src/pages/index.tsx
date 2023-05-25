@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
-import ModuleDetails from '../components/ModuleDetails';
+import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
 import { Project, Module } from '../utils/api';
 
 export default function Home() {
