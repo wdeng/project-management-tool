@@ -28,7 +28,7 @@ const ChatButton = () => {
     );
   };
 
-  const textAreaRows = Math.min(20, Math.max(1, chatText.split('\n').length));
+  const textAreaRows = Math.min(12, Math.max(1, chatText.split('\n').length));
 
   return (
     <div className="z-10 absolute bottom-10 right-12">
@@ -41,7 +41,7 @@ const ChatButton = () => {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
-        <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[90vh] flex flex-col">
+        <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[92vh] flex flex-col">
           <button
             onClick={handleButtonClick}
             className="absolute top-3 right-3"
@@ -75,7 +75,7 @@ const ChatButton = () => {
                 <Disclosure key={option}>
                   {({ open }) => (
                     <>
-                      <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-indigo-900 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
+                      <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
                         <span>{option}</span>
                         <MdKeyboardArrowDown
                           className={`${open ? 'transform rotate-180' : ''
@@ -98,6 +98,30 @@ const ChatButton = () => {
                             </div>
                           ))}
                         </div>
+                        <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
+                          <span>{option}</span>
+                          <MdKeyboardArrowDown
+                            className={`${open ? 'transform rotate-180' : ''
+                              } w-5 h-5 text-indigo-500`}
+                          />
+                        </Disclosure.Button>
+                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                          Content for {option}
+                          <div className="flex flex-wrap items-center">
+                            {mockCheckboxOptions.map((option) => (
+                              <div className="flex items-center space-x-2 mr-10" key={option}>
+                                <input
+                                  type="checkbox"
+                                  id={option}
+                                  checked={selectedCheckboxOptions.includes(option)}
+                                  onChange={() => handleCheckboxChange(option)}
+                                  className="form-checkbox h-4 w-4 border border-gray-300 rounded-md checked:bg-indigo-500"
+                                />
+                                <label htmlFor={option}>{option}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </Disclosure.Panel>
                       </Disclosure.Panel>
                     </>
                   )}
@@ -115,13 +139,11 @@ const ChatButton = () => {
               onChange={handleTextChange}
               placeholder='Type your issue here...'
             />
-            {isChatOpen && (
-              <button
-                className="absolute right-6 bottom-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl transition-all duration-300"
-              >
-                <MdSend size={20} />
-              </button>
-            )}
+            <button
+              className="absolute right-6 bottom-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl transition-all duration-300 shadow-md"
+            >
+              <MdSend size={20} />
+            </button>
           </div>
         </div>
       </Transition>
@@ -137,7 +159,7 @@ const ChatButton = () => {
         leaveTo="opacity-0"
       >
         <button
-          className="absolute bottom-6 right-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl"
+          className="absolute bottom-6 right-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg"
           onClick={handleButtonClick}
         >
           <MdOutlineChat size={20} />
