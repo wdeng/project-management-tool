@@ -133,7 +133,7 @@ const ChatButton = () => {
 
           <div className="flex justify-between">
             <textarea
-              className="w-full rounded-lg p-3.5 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
+              className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
               rows={textAreaRows}
               value={chatText}
               onChange={handleTextChange}
@@ -142,7 +142,7 @@ const ChatButton = () => {
             <button
               className="absolute right-6 bottom-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl transition-all duration-300 shadow-md"
             >
-              <MdSend size={20} />
+              <MdSend size={16} />
             </button>
           </div>
         </div>
@@ -154,15 +154,15 @@ const ChatButton = () => {
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
         enterTo="opacity-100"
-        leave="transition-opacity duration-300 delay-300"
+        leave="transition-opacity duration-300 delay-100"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
         <button
-          className="absolute bottom-6 right-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg"
+          className="absolute bottom-4 right-5 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg"
           onClick={handleButtonClick}
         >
-          <MdOutlineChat size={20} />
+          <MdOutlineChat size={30} />
         </button>
       </Transition>
 

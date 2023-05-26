@@ -29,7 +29,7 @@ modules:
   - "Display module details in a form"
   - "Allow users to edit module details"
   - "Save updated module details to the backend API"
-  sourceFilePaths: [src/components/ModuleDetails.tsx]
+  sourceFilePaths: [src/components/ModuleDetails/ModuleDetails.tsx, components/ModuleDetails/ChatButton.tsx]
 - name: APIUtils
   description: Utility functions for interacting with the backend API.
   functionalBlocks:
