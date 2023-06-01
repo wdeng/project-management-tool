@@ -1,11 +1,12 @@
 // components/ChatButton.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat, MdSend } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './ModuleDetails/Disclosure';
 import { Module } from '../utils/api';
 import ToggleSwitch from './general/ToggleSwitch';
+import ChatInput from './general/ChatTextArea';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -14,7 +15,6 @@ interface ChatButtonProps {
 
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatText, setChatText] = useState('');
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
   const [enabled, setEnabled] = useState(false); // For the Switch
 
@@ -22,24 +22,18 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     setIsChatOpen(!isChatOpen);
   };
 
-  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setChatText(event.target.value);
-  };
-
   const handleCheckboxChange = (option: string) => {
     setSelectedCheckboxOptions((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
     );
   };
-  
-  const textAreaRows = Math.min(12, Math.max(1, chatText.split('\n').length));
 
   return (
     <div className="z-10 fixed bottom-10 right-12">
       <Transition
         show={isChatOpen}
         enter="transition-all transform duration-300"
-        enterFrom="opacity-0 scale-90 origin-bottom-right"
+        enterFrom="opacity-0 scale-75 origin-bottom-right"
         enterTo="opacity-100 scale-100"
         leave="transition-all transform duration-300"
         leaveFrom="opacity-100 scale-100"
@@ -72,21 +66,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               ))}
             </div>
           </div>
-          <div className="flex justify-between">
-            <textarea
-              className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
-              rows={textAreaRows}
-              value={chatText}
-              onChange={handleTextChange}
-              placeholder='Type your issue here...'
-            />
-            <button
-              disabled={!chatText}
-              className={`absolute right-6 bottom-6 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${!chatText ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
-            >
-              <MdSend size={16} />
-            </button>
-          </div>
+          <ChatInput onSend={() => {}} />
         </div>
       </Transition>
 
@@ -107,7 +87,6 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
           <MdOutlineChat size={20} />
         </button>
       </Transition>
-
     </div>
   );
 };
