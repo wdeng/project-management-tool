@@ -3,30 +3,15 @@
 import React, { useState } from 'react';
 import { Switch, Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat, MdSend } from 'react-icons/md'; // Import icons from react-icons
-import DisclosurePanel, {Option} from './Disclosure';
+import DisclosurePanel from './ModuleDetails/Disclosure';
+import { Module } from '../utils/api';
 
-const mockCheckboxOptions = ['data_utils/data_utils.py', 'data_utils/api_utils.py', 'data_utils/database_utils.py', 'data_utils/others.py'];
+interface ChatButtonProps {
+  moduleIdPath: number[];
+  modules: Module[];
+}
 
-const options = [
-  {
-    value: 'Option 1',
-    initialOpen: true,
-    children: [
-      {
-        value: 'Sub-Option 1.1',
-        initialOpen: false,
-        children: [
-          { value: 'Sub-Sub-Option 1.1.1', initialOpen: true },
-          { value: 'Sub-Sub-Option 1.1.2', initialOpen: false },
-        ]
-      },
-      { value: 'Sub-Option 1.2', initialOpen: true },
-    ],
-  },
-  { value: 'Option 2', initialOpen: false },
-];
-
-const ChatButton = () => {
+const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatText, setChatText] = useState('');
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
@@ -49,7 +34,7 @@ const ChatButton = () => {
   const textAreaRows = Math.min(12, Math.max(1, chatText.split('\n').length));
 
   return (
-    <div className="z-10 absolute bottom-10 right-12">
+    <div className="z-10 fixed bottom-10 right-12">
       <Transition
         show={isChatOpen}
         enter="transition-all transform duration-300"
@@ -77,25 +62,26 @@ const ChatButton = () => {
                 checked={enabled}
                 onChange={setEnabled}
                 className={`${enabled ? 'bg-indigo-600' : 'bg-gray-400'
-                  } relative inline-flex items-center h-6 rounded-full w-11`}
+                  } relative inline-flex items-center h-6 rounded-full w-11 transition delay-100 duration-200`}
               >
                 <span className="sr-only">Enable or disable</span>
                 <span
                   className={`${enabled ? 'translate-x-6' : 'translate-x-1'
-                    } inline-block w-4 h-4 transform bg-white rounded-full`}
+                    } inline-block w-4 h-4 transform bg-white rounded-full transition-transform ease-in-out delay-100 duration-200`}
                 />
               </Switch>
             </Switch.Group>
 
             <p>Project Modules:</p>
             <div className="mt-6">
-              {options.map((option) => (
+              {modules.map((mod) => (
                 <DisclosurePanel
-                  key={option.value}
-                  option={option}
+                  key={mod.id}
+                  isInitOpen={moduleIdPath[0] === mod.id}
+                  mod={mod}
                   handleCheckboxChange={handleCheckboxChange}
-                  mockCheckboxOptions={mockCheckboxOptions}
                   selectedCheckboxOptions={selectedCheckboxOptions}
+                  moduleIdPath={moduleIdPath.slice(1)}
                 />
               ))}
             </div>

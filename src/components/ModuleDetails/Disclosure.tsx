@@ -2,6 +2,7 @@ import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import EditorModal from '../EditorModal'; // Import your EditorModal
 import { useState, useCallback } from 'react';
+import { Module } from '@/utils/api';
 
 export interface Option {
   value: string,
@@ -10,17 +11,19 @@ export interface Option {
 }
 
 interface DisclosurePanelProps {
-  option: Option,
-  handleCheckboxChange: (option: string) => void,
-  mockCheckboxOptions: string[],
+  mod: Module,
+  handleCheckboxChange: (filePath: string) => void,
   selectedCheckboxOptions: string[],
+  isInitOpen: boolean,
+  moduleIdPath: number[],
 }
 
 const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
-  option,
+  mod,
   handleCheckboxChange,
-  mockCheckboxOptions,
   selectedCheckboxOptions,
+  isInitOpen,
+  moduleIdPath,
 }) => {
   // Create new state for the modal open state and the content to display
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,11 +44,11 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
 
   return (
     <>
-      <Disclosure defaultOpen={option.initialOpen}>
+      <Disclosure defaultOpen={isInitOpen}>
         {({ open }) => (
           <>
             <Disclosure.Button className="flex justify-between w-full px-4 py-2 mt-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200">
-              <span>{option.value}</span>
+              <span>{mod.name}</span>
               <MdKeyboardArrowDown
                 className={`${open ? 'transform rotate-180' : ''
                   } w-5 h-5 text-indigo-500`}
@@ -61,39 +64,40 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
               leaveTo="max-h-0 opacity-10"
             >
               <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-500">
-                Content for {option.value}
+                Content for {mod.name}
                 <div className="flex flex-wrap items-center">
-                  {mockCheckboxOptions.map((checkboxOption) => (
-                    <div className="flex items-center space-x-2 mr-8 p-1" key={checkboxOption}>
+                  {mod.files?.map((file) => (
+                    <div className="flex items-center space-x-2 mr-8 p-1" key={file.filePath}>
                       <div className="hover:scale-105">
-                      <input
-                        type="checkbox"
-                        id={checkboxOption}
-                        checked={selectedCheckboxOptions.includes(checkboxOption)}
-                        onChange={() => handleCheckboxChange(checkboxOption)}
-                        className="form-checkbox h-5 w-5 border-gray-300 rounded-sm checked:bg-indigo-500 checked:hover:bg-indigo-500 focus:ring-0 focus:ring-offset-0"
-                      />
+                        <input
+                          type="checkbox"
+                          id={file.filePath}
+                          checked={selectedCheckboxOptions.includes(file.filePath)}
+                          onChange={() => handleCheckboxChange(file.filePath)}
+                          className="form-checkbox h-5 w-5 border-gray-300 rounded-sm checked:bg-indigo-500 checked:hover:bg-indigo-500 focus:ring-0 focus:ring-offset-0"
+                        />
                       </div>
                       <label
-                        htmlFor={checkboxOption}
+                        htmlFor={file.filePath}
                         onClick={(event) => {
-                          event.preventDefault(); 
-                          openModal(checkboxOption);
-                        }} 
+                          event.preventDefault();
+                          openModal(file.filePath);
+                        }}
                         className="cursor-pointer hover:text-indigo-700 hover:underline"
                       >
-                        {checkboxOption}
+                        {file.filePath}
                       </label>
                     </div>
                   ))}
                 </div>
-                {option.children?.map((childOption) => (
+                {mod.modules?.map((subModule) => (
                   <DisclosurePanel
-                    key={childOption.value}
-                    option={childOption}
+                    key={subModule.id}
+                    mod={subModule}
                     handleCheckboxChange={handleCheckboxChange}
-                    mockCheckboxOptions={mockCheckboxOptions}
                     selectedCheckboxOptions={selectedCheckboxOptions}
+                    isInitOpen={moduleIdPath[0] === subModule.id}
+                    moduleIdPath={moduleIdPath.slice(1)}
                   />
                 ))}
               </Disclosure.Panel>

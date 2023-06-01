@@ -15,19 +15,19 @@ export interface Project {
 export interface Module {
   id: number;
   projectId: number;
-  parentId: number | null;
+  tabLevel?: number;
   name: string;
   createdAt: string;
   updatedAt: string;
   description: string;
   files: FileDesign[];
+  modules?: Module[];
 }
 
 export interface FileDesign {
+  id?: number;
   filePath: string;
   goal: string;
-  packages: string[];
-  dependencies: string[];
 }
 
 
@@ -38,11 +38,24 @@ export async function fetchProjects(): Promise<Project[]> {
 
 export async function fetchModules(projectId: number): Promise<Module[]> {
   const response = await axios.get<Module[]>(`${API_BASE_URL}/projects/${projectId}/modules`);
-  return response.data;
+  const modules = response.data;
+
+  // Create tabLevels for modules and include files
+  const assignTabLevels = (modules: Module[], tabLevel = 0) => {
+    for (const mod of modules) {
+      mod.tabLevel = tabLevel;
+      if (mod.modules) {
+        assignTabLevels(mod.modules, tabLevel + 1);
+      }
+    }
+  };
+
+  assignTabLevels(modules);
+  return modules;
 }
 
 export async function createProject(name: string, requirements: string, schema: string): Promise<Project> {
-  const response = await axios.post<Project>(`${API_BASE_URL}/projects`, { name , requirements, schema });
+  const response = await axios.post<Project>(`${API_BASE_URL}/projects`, { name, requirements, schema });
   return response.data;
 }
 

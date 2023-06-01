@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Module, updateModule } from '../../utils/api';
 import EditorModal from '../EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
-import ChatButton from './ChatButton';
 
 interface IModuleDetailsProps {
-  selectedModule: Module | null;
+  selectedModule: Module;
   onModuleUpdate: (module: Module) => void;
 }
 
@@ -115,7 +114,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           </button>
         ))}
       </div>
-      <ChatButton />
     </div>
   );
 
