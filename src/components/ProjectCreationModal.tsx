@@ -78,7 +78,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
             value={schema}
             onChange={(e) => setSchema(e.target.value)}
             className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2"
-            placeholder='API or database schema'
+            placeholder='Optional API or database schema'
             rows={5}
           />
           <button type="submit" disabled={!validateForm()} className="w-full p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors duration-200 ease-in-out">

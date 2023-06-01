@@ -1,12 +1,30 @@
 // components/ChatButton.tsx
 
 import React, { useState } from 'react';
-import { Switch, Transition, Disclosure } from '@headlessui/react';
-import { MdClose, MdOutlineChat, MdSend, MdKeyboardArrowDown } from 'react-icons/md'; // Import icons from react-icons
-
-const mockModuleOptions = ['DataUtils', 'ActorModel', 'CriticsModel', 'OverallFlow'];
+import { Switch, Transition } from '@headlessui/react';
+import { MdClose, MdOutlineChat, MdSend } from 'react-icons/md'; // Import icons from react-icons
+import DisclosurePanel, {Option} from './Disclosure';
 
 const mockCheckboxOptions = ['data_utils/data_utils.py', 'data_utils/api_utils.py', 'data_utils/database_utils.py', 'data_utils/others.py'];
+
+const options = [
+  {
+    value: 'Option 1',
+    initialOpen: true,
+    children: [
+      {
+        value: 'Sub-Option 1.1',
+        initialOpen: false,
+        children: [
+          { value: 'Sub-Sub-Option 1.1.1', initialOpen: true },
+          { value: 'Sub-Sub-Option 1.1.2', initialOpen: false },
+        ]
+      },
+      { value: 'Sub-Option 1.2', initialOpen: true },
+    ],
+  },
+  { value: 'Option 2', initialOpen: false },
+];
 
 const ChatButton = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -70,62 +88,15 @@ const ChatButton = () => {
             </Switch.Group>
 
             <p>Project Modules:</p>
-            <div className="mt-6 space-y-4">
-              {mockModuleOptions.map((option) => (
-                <Disclosure key={option}>
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
-                        <span>{option}</span>
-                        <MdKeyboardArrowDown
-                          className={`${open ? 'transform rotate-180' : ''
-                            } w-5 h-5 text-indigo-500`}
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                        Content for {option}
-                        <div className="flex flex-wrap items-center">
-                          {mockCheckboxOptions.map((option) => (
-                            <div className="flex items-center space-x-2 mr-10" key={option}>
-                              <input
-                                type="checkbox"
-                                id={option}
-                                checked={selectedCheckboxOptions.includes(option)}
-                                onChange={() => handleCheckboxChange(option)}
-                                className="form-checkbox h-4 w-4 border border-gray-300 rounded-md checked:bg-indigo-500"
-                              />
-                              <label htmlFor={option}>{option}</label>
-                            </div>
-                          ))}
-                        </div>
-                        <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
-                          <span>{option}</span>
-                          <MdKeyboardArrowDown
-                            className={`${open ? 'transform rotate-180' : ''
-                              } w-5 h-5 text-indigo-500`}
-                          />
-                        </Disclosure.Button>
-                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                          Content for {option}
-                          <div className="flex flex-wrap items-center">
-                            {mockCheckboxOptions.map((option) => (
-                              <div className="flex items-center space-x-2 mr-10" key={option}>
-                                <input
-                                  type="checkbox"
-                                  id={option}
-                                  checked={selectedCheckboxOptions.includes(option)}
-                                  onChange={() => handleCheckboxChange(option)}
-                                  className="form-checkbox h-4 w-4 border border-gray-300 rounded-md checked:bg-indigo-500"
-                                />
-                                <label htmlFor={option}>{option}</label>
-                              </div>
-                            ))}
-                          </div>
-                        </Disclosure.Panel>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
+            <div className="mt-6">
+              {options.map((option) => (
+                <DisclosurePanel
+                  key={option.value}
+                  option={option}
+                  handleCheckboxChange={handleCheckboxChange}
+                  mockCheckboxOptions={mockCheckboxOptions}
+                  selectedCheckboxOptions={selectedCheckboxOptions}
+                />
               ))}
             </div>
           </div>
@@ -159,10 +130,10 @@ const ChatButton = () => {
         leaveTo="opacity-0"
       >
         <button
-          className="absolute bottom-4 right-5 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg"
+          className="absolute bottom-4 right-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-3 rounded-3xl drop-shadow-lg"
           onClick={handleButtonClick}
         >
-          <MdOutlineChat size={30} />
+          <MdOutlineChat size={20} />
         </button>
       </Transition>
 
