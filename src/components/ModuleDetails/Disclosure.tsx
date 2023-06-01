@@ -59,7 +59,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
               enter="transition-all duration-500 ease-in overflow-y-hidden"
               enterFrom="max-h-0"
               enterTo="max-h-[2000px]"
-              leave="transition-all duration-500 ease-out overflow-y-hidden"
+              leave="transition-all duration-300 ease-out overflow-y-hidden"
               leaveFrom="max-h-[2000px] opacity-100"
               leaveTo="max-h-0 opacity-10"
             >
@@ -68,13 +68,13 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                 <div className="flex flex-wrap items-center">
                   {mod.files?.map((file) => (
                     <div className="flex items-center space-x-2 mr-8 p-1" key={file.filePath}>
-                      <div className="hover:scale-105">
+                      <div className="hover:scale-110">
                         <input
                           type="checkbox"
                           id={file.filePath}
                           checked={selectedCheckboxOptions.includes(file.filePath)}
                           onChange={() => handleCheckboxChange(file.filePath)}
-                          className="form-checkbox h-5 w-5 border-gray-300 rounded-sm checked:bg-indigo-500 checked:hover:bg-indigo-500 focus:ring-0 focus:ring-offset-0"
+                          className="form-checkbox h-5 w-5 border-gray-300 rounded-sm checked:bg-indigo-500 checked:hover:bg-indigo-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                         />
                       </div>
                       <label

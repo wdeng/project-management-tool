@@ -1,10 +1,11 @@
 // components/ChatButton.tsx
 
 import React, { useState } from 'react';
-import { Switch, Transition } from '@headlessui/react';
+import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat, MdSend } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './ModuleDetails/Disclosure';
 import { Module } from '../utils/api';
+import ToggleSwitch from './general/ToggleSwitch';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -30,7 +31,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
     );
   };
-
+  
   const textAreaRows = Math.min(12, Math.max(1, chatText.split('\n').length));
 
   return (
@@ -56,22 +57,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
 
-            <Switch.Group as="div" className="flex items-center space-x-3 pb-4">
-              <Switch.Label className='font-semibold'>Project Outline</Switch.Label>
-              <Switch
-                checked={enabled}
-                onChange={setEnabled}
-                className={`${enabled ? 'bg-indigo-600' : 'bg-gray-400'
-                  } relative inline-flex items-center h-6 rounded-full w-11 transition delay-100 duration-200`}
-              >
-                <span className="sr-only">Enable or disable</span>
-                <span
-                  className={`${enabled ? 'translate-x-6' : 'translate-x-1'
-                    } inline-block w-4 h-4 transform bg-white rounded-full transition-transform ease-in-out delay-100 duration-200`}
-                />
-              </Switch>
-            </Switch.Group>
-
+            <ToggleSwitch enabled={enabled} setEnabled={setEnabled} label='Project Outline' />
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((mod) => (
@@ -86,8 +72,6 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               ))}
             </div>
           </div>
-
-
           <div className="flex justify-between">
             <textarea
               className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
@@ -97,7 +81,8 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               placeholder='Type your issue here...'
             />
             <button
-              className="absolute right-6 bottom-6 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl transition-all duration-300 shadow-md"
+              disabled={!chatText}
+              className={`absolute right-6 bottom-6 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${!chatText ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
             >
               <MdSend size={16} />
             </button>
