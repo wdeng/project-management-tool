@@ -38,7 +38,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
     setIsModalOpen(false);
   }, []);
 
-  const handleModalChange = useCallback((value: string | undefined) => {
+  const handleModalChange = useCallback(() => {
     // Handle modal content change
   }, []);
 

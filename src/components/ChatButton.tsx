@@ -1,8 +1,8 @@
 // components/ChatButton.tsx
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
-import { MdClose, MdOutlineChat, MdSend } from 'react-icons/md'; // Import icons from react-icons
+import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './ModuleDetails/Disclosure';
 import { Module } from '../utils/api';
 import ToggleSwitch from './general/ToggleSwitch';
@@ -40,6 +40,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
         <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[92vh] flex flex-col">
+          {/* close button */}
           <button
             onClick={handleButtonClick}
             className="absolute top-3 right-3"
@@ -50,7 +51,6 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
-
             <ToggleSwitch enabled={enabled} setEnabled={setEnabled} label='Project Outline' />
             <p>Project Modules:</p>
             <div className="mt-6">
@@ -66,10 +66,11 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               ))}
             </div>
           </div>
-          <ChatInput onSend={() => {}} />
+          <ChatInput onSend={() => { }} />
         </div>
       </Transition>
 
+      {/* main button */}
       <Transition
         as={React.Fragment}
         show={!isChatOpen}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.example.com';
+const API_BASE_URL = 'http://localhost:8080';
 
 export interface Project {
   id: number;

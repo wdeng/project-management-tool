@@ -19,29 +19,6 @@ const ChatInput: React.FC<IChatInputProps> = ({ onSend }) => {
     setChatText('');
   };
 
-  // const [rows, setRows] = useState<number>(1);
-  // useEffect(() => {
-  //   if (textareaRef.current) {
-  //     const textareaElem = textareaRef.current;
-
-  //     const textAreaElement = textareaElem.cloneNode(false) as HTMLTextAreaElement;
-  //     textAreaElement.rows = 1;
-
-  //     const style = window.getComputedStyle(textAreaElement);
-  //     document.body.appendChild(textAreaElement);
-      
-  //     const lineHeight = parseFloat(style.getPropertyValue('line-height'));
-  //     const padding = parseFloat(style.getPropertyValue('padding-top')) + parseFloat(style.getPropertyValue('padding-bottom'));
-  //     const linesHeight = textAreaElement.scrollHeight - padding;
-
-  //     const currentLines = Math.round(linesHeight / lineHeight);
-  //     const calculatedRows = Math.min(currentLines, maxLines);
-  //     setRows(calculatedRows);
-
-  //     document.body.removeChild(textAreaElement);
-  //   }
-  // }, [chatText]);
-
   useEffect(() => {
     if (textareaRef.current) {
       const textareaElem = textareaRef.current;

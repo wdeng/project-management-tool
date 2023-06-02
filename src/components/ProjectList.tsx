@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Project, fetchProjects, createProject } from '../utils/api';
-import ProjectCreationModal from './ProjectCreationModal';
+import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard } from "react-icons/md";
 
 interface ProjectListProps {
