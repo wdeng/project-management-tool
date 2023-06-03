@@ -1,3 +1,4 @@
+import { checkboxStyles } from '@/styles/tailwindStyles';
 import React, { useState } from 'react';
 
 interface QuestionOption {
@@ -12,28 +13,37 @@ export interface Question {
 
 interface MultipleChoiceModalProps {
   questions: Question[];
-  onAnswersSubmit: (answers: { [key: string]: string }) => void; // key is question text, value is user's selected option
+  onAnswersSubmit: (answers: { [key: string]: { option: string; userInput: string }[] }) => void; 
 }
 
 export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
   questions,
   onAnswersSubmit,
 }) => {
-  const [answers, setAnswers] = useState<{ [key: string]: string }>({});
+  const [answers, setAnswers] = useState<{ [key: string]: { option: string; userInput: string }[] }>({});
 
-  const handleOptionChange = (questionText: string, optionText: string) => {
-    setAnswers({
-      ...answers,
-      [questionText]: optionText,
-    });
+  const handleOptionChange = (questionText: string, optionText: string, checked: boolean) => {
+    if (checked) {
+      setAnswers({
+        ...answers,
+        [questionText]: [...(answers[questionText] || []), { option: optionText, userInput: '' }],
+      });
+    } else {
+      setAnswers({
+        ...answers,
+        [questionText]: (answers[questionText] || []).filter((answer) => answer.option !== optionText),
+      });
+    }
   };
 
-  const handleUserTextInput = (questionText: string, userInput: string) => {
-    // Append user text input to the selected option
-    setAnswers({
-      ...answers,
-      [questionText]: `${answers[questionText]} - ${userInput}`,
-    });
+  const handleUserTextInput = (questionText: string, optionText: string, userInput: string) => {
+    const newAnswers = (answers[questionText] || []).map((answer) =>
+      answer.option === optionText ? { option: optionText, userInput } : answer
+    );
+    if (!newAnswers.some((answer) => answer.option === optionText) && userInput !== '') {
+      newAnswers.push({ option: optionText, userInput });
+    }
+    setAnswers({ ...answers, [questionText]: newAnswers });
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -46,26 +56,28 @@ export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
     <form onSubmit={handleSubmit} className="p-4">
       {questions.map((question) => (
         <div key={question.text}>
-          <h2>{question.text}</h2>
+          <h2 className='font-medium pt-3'>{question.text}</h2>
           {question.options.map((option) => (
-            <div key={option.text}>
-              <label>
+            <div key={option.text} className='flex items-center mx-3 my-2'>
+              <label className="flex items-center cursor-pointer">
                 <input
-                  type="radio"
+                  type="checkbox"
                   name={question.text}
                   value={option.text}
-                  checked={answers[question.text] === option.text}
-                  onChange={() => handleOptionChange(question.text, option.text)}
+                  checked={(answers[question.text] || []).some((answer) => answer.option === option.text)}
+                  onChange={(e) => handleOptionChange(question.text, option.text, e.target.checked)}
+                  className={`${checkboxStyles} mr-3`}
                 />
-                {option.text}
+                {!option.userTextField && option.text}
               </label>
               {option.userTextField && (
                 <input
                   type="text"
-                  placeholder="Enter your input"
-                  onBlur={(e) =>
-                    handleUserTextInput(question.text, e.target.value)
+                  placeholder={option.text}
+                  onChange={(e) =>
+                    handleUserTextInput(question.text, option.text, e.target.value)
                   }
+                  className='bg-transparent focus:ring-0 border-0 border-b-2 border-gray-400 p-0'
                 />
               )}
             </div>

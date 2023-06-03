@@ -3,6 +3,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import EditorModal from '../EditorModal'; // Import your EditorModal
 import { useState, useCallback } from 'react';
 import { Module } from '@/utils/api';
+import { checkboxStyles } from '@/styles/tailwindStyles';
 
 export interface Option {
   value: string,
@@ -74,7 +75,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                           id={file.filePath}
                           checked={selectedCheckboxOptions.includes(file.filePath)}
                           onChange={() => handleCheckboxChange(file.filePath)}
-                          className="form-checkbox h-5 w-5 border-gray-300 rounded-sm checked:bg-indigo-500 checked:hover:bg-indigo-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                          className={checkboxStyles}
                         />
                       </div>
                       <label

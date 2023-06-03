@@ -7,9 +7,14 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  height?: string;
+  svgButton1?: ReactNode;
+  onSvgButton1Click?: () => void;
+  svgButton2?: ReactNode;
+  onSvgButton2Click?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height, svgButton1, onSvgButton1Click, svgButton2, onSvgButton2Click }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}
       enter="ease-out duration-300"
@@ -34,14 +39,26 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-100 shadow-xl rounded-2xl text-gray-700">
+            <div className={`inline-block w-full max-w-4xl my-8 overflow-y-auto text-left align-middle transition-all transform bg-gray-100 shadow-xl rounded-2xl text-gray-700 ${height ? `h-[${height}]` : ''} max-h-[88vh]`}>
               <div className="flex justify-between items-center border-b p-4">
                 <Dialog.Title as="h3" className="text-xl leading-6 font-semibold">
                   {title}
                 </Dialog.Title>
-                <button onClick={onClose}>
-                  <MdClose className="text-gray-400 hover:text-gray-500" />
-                </button>
+                <div>
+                  {svgButton1 && (
+                    <button onClick={onSvgButton1Click} className="mr-2">
+                      {svgButton1}
+                    </button>
+                  )}
+                  {svgButton2 && (
+                    <button onClick={onSvgButton2Click} className="mr-2">
+                      {svgButton2}
+                    </button>
+                  )}
+                  <button onClick={onClose}>
+                    <MdClose className="text-gray-400 hover:text-gray-500" />
+                  </button>
+                </div>
               </div>
               {children}
             </div>

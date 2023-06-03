@@ -8,6 +8,51 @@ interface ProjectListProps {
   onProjectSelect: (project: Project) => void;
 }
 
+const questions = [
+  {
+    text: "Which programming language(s) would you like to use for your project?",
+    options: [
+      { text: "TypeScript", userTextField: false },
+      { text: "JavaScript", userTextField: false },
+      { text: "Python", userTextField: false },
+      { text: "Java", userTextField: false },
+      { text: "Other", userTextField: true },
+    ],
+  },
+  {
+    text: "What features would you like to include in your software project? (select all that apply)",
+    options: [
+      { text: "User authentication", userTextField: false },
+      { text: "Database integration", userTextField: false },
+      { text: "API integration", userTextField: false },
+      { text: "File uploading", userTextField: false },
+      { text: "Real-time updates", userTextField: false },
+      { text: "Other", userTextField: true },
+    ],
+  },
+  {
+    text: "What features would you like to include?",
+    options: [
+      {
+        text: "User authentication",
+        userTextField: false,
+      },
+      {
+        text: "Database integration",
+        userTextField: false,
+      },
+      {
+        text: "Third-party API integration",
+        userTextField: false,
+      },
+      {
+        text: "Custom feature",
+        userTextField: true,
+      },
+    ],
+  },
+];
+
 export const ProjectList: React.FC<ProjectListProps> = ({
   selectedProjectId,
   onProjectSelect,
@@ -47,7 +92,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
 
   return (
     <div className="overflow-y-auto h-full">
-      <ProjectCreationModal onNewProject={handleNewProject} />
+      <ProjectCreationModal onNewProject={handleNewProject} questions={questions} onQuestionSubmit={(v: any) => { }} />
       {error && <p className="text-red-500">{error}</p>}
       <ul>
         {projects.map((project) => (

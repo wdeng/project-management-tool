@@ -11,6 +11,8 @@ interface ProjectCreationModalProps {
   questions: Question[];
 }
 
+const tabStyle = 'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2';
+
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, questions }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,7 +24,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     setIsOpen(false);
   };
 
-  const handleAnswersSubmit = (answers: { [key: string]: string }) => {
+  const handleAnswersSubmit = (answers: { [key: string]: { option: string; userInput: string }[] }) => {
     // Handle submission of answers from MultipleChoiceModal
   };
 
@@ -35,31 +37,29 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         <MdAdd className="mr-2" />
         Create Project
       </button>
-      <Modal isOpen={isOpen} onClose={close} title="Create New Project">
+      <Modal height='50%' isOpen={isOpen} onClose={close} title="Create New Project">
         <Tab.Group>
-          <Tab.List className="flex p-1 space-x-1 bg-blue-900 rounded-xl">
+          <Tab.List className="flex space-x-1 rounded-xl bg-indigo-300 p-1 mx-4">
             <Tab className={({ selected }) => (
-              `w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg 
-              ${selected ? 'bg-white' : 'text-blue-100 bg-blue-700 hover:bg-blue-800'}
-              `)}>
-              GUI Form
-            </Tab>
-            <Tab className={({ selected }) => (
-              `w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg 
-              ${selected ? 'bg-white' : 'text-blue-100 bg-blue-700 hover:bg-blue-800'}
+              `${tabStyle} ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}
               `)}>
               Multiple Choice Questions
             </Tab>
+            <Tab className={({ selected }) => (
+              `${tabStyle} ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}
+              `)}>
+              GUI Form
+            </Tab>
           </Tab.List>
           <Tab.Panels className="mt-2">
-            <Tab.Panel>
-              <ProjectForm onNewProject={onNewProject} />
-            </Tab.Panel>
             <Tab.Panel>
               <MultipleChoiceQuestions
                 questions={questions}
                 onAnswersSubmit={handleAnswersSubmit}
               />
+            </Tab.Panel>
+            <Tab.Panel>
+              <ProjectForm onNewProject={onNewProject} />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
