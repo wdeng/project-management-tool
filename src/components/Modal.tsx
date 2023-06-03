@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height,
       leaveTo="opacity-0">
       <Dialog
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
+        className="fixed inset-0 z-10"
         onClose={onClose}
       >
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-60" />
@@ -39,8 +39,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height,
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className={`inline-block w-full max-w-4xl my-8 overflow-y-auto text-left align-middle transition-all transform bg-gray-100 shadow-xl rounded-2xl text-gray-700 ${height ? `h-[${height}]` : ''} max-h-[88vh]`}>
-              <div className="flex justify-between items-center border-b p-4">
+            <div className={`w-full max-w-4xl text-left align-middle bg-gray-100 shadow-xl rounded-2xl overflow-clip text-gray-700 `}>
+              <div className="sticky inset-x-0 top-0 flex justify-between items-center z-10 bg-gray-100 border-b p-4">
                 <Dialog.Title as="h3" className="text-xl leading-6 font-semibold">
                   {title}
                 </Dialog.Title>
@@ -60,7 +60,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height,
                   </button>
                 </div>
               </div>
-              {children}
+              <div className={`overflow-y-auto ${height ? `h-[${height}]` : ''} max-h-[80vh]`}>
+                {children}
+              </div>
             </div>
           </Transition.Child>
         </div>

@@ -37,7 +37,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         <MdAdd className="mr-2" />
         Create Project
       </button>
-      <Modal height='50%' isOpen={isOpen} onClose={close} title="Create New Project">
+      <Modal height='80vh' isOpen={isOpen} onClose={close} title="Create New Project">
         <Tab.Group>
           <Tab.List className="flex space-x-1 rounded-xl bg-indigo-300 p-1 mx-4">
             <Tab className={({ selected }) => (
@@ -48,7 +48,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
             <Tab className={({ selected }) => (
               `${tabStyle} ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}
               `)}>
-              GUI Form
+              Direct Setup
             </Tab>
           </Tab.List>
           <Tab.Panels className="mt-2">
