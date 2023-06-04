@@ -5,6 +5,7 @@ import Modal from '../Modal';
 import { MultipleChoiceQuestions, Question } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
+import Spinner from '../general/Spinner';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -12,13 +13,13 @@ interface ProjectCreationModalProps {
 }
 
 const tabStyle = ({ selected }: any) => (
-  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-200 hover:bg-white/[0.12] hover:text-white'}
-  `
+  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}`
 )
 
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, questions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSetProjectGoal, setShowSetProjectGoal] = useState(true); // added this line
+  const [isLoading, setIsLoading] = useState(false);
 
   const open = () => {
     setIsOpen(true);
@@ -29,15 +30,41 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     setIsOpen(false);
   };
 
-  const handleAnswersSubmit = (answers: { question: string; answers: string[] }[]) => {
+  const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
     // Handle submission of answers from MultipleChoiceModal
-    console.log(answers);
+    setIsLoading(true);
+
+    try {
+      // Simulate an async operation e.g. making API request.
+      await new Promise(res => setTimeout(res, 2000));
+
+      // After submitting the answers, we want to show the Multiple Choice Questions
+      console.log(answers);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // End the loading state
+      setIsLoading(false);
+    }
   };
 
-  const handleProjectGoalSubmit = (goal: string) => {
-    // After submitting the project goal, we want to show the Multiple Choice Questions
-    console.log(goal)
-    setShowSetProjectGoal(false);
+  const handleProjectGoalSubmit = async (goal: string) => {
+    // Start the loading state
+    setIsLoading(true);
+
+    try {
+      // Simulate an async operation e.g. making API request.
+      await new Promise(res => setTimeout(res, 2000));
+
+      // After submitting the project goal, we want to show the Multiple Choice Questions
+      console.log(goal)
+      setShowSetProjectGoal(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // End the loading state
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,11 +76,22 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         <MdAdd className="mr-2" />
         Create Project
       </button>
-      <Modal height='80vh' isOpen={isOpen} onClose={close} title="Create New Project">
+      <Modal
+        height='80vh'
+        isOpen={isOpen}
+        onClose={close}
+        title="Create New Project"
+        className={isLoading ? 'pointer-events-none' : ''}
+      >
+        {isLoading && (
+          <div className={`absolute inset-0 flex items-center justify-center bg-white bg-opacity-40 z-50 pointer-events-auto`}>
+            <Spinner />
+          </div>
+        )}
         <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-xl bg-indigo-300 p-1 mx-4">
+          <Tab.List className="flex space-x-1 rounded-xl bg-indigo-500 p-1 mx-4">
             <Tab className={tabStyle}>
-            Multiple Choice Questions
+              Multiple Choice Questions
             </Tab>
             <Tab className={tabStyle}>
               Direct Input

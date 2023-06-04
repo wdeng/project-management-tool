@@ -73,6 +73,7 @@ export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
               {option.userTextField && (
                 <input
                   type="text"
+                  name={question.text + ' userInput'}
                   placeholder={option.text}
                   value={
                     (answers[question.text] || []).find(answer => answer.option === option.text)?.userInput || ''
