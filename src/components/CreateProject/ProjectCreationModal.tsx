@@ -7,7 +7,6 @@ import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 
 interface ProjectCreationModalProps {
-  // onQuestionSubmit: (answers: { [key: string]: string }) => Promise<void>;
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
   questions: Question[];
 }
@@ -26,6 +25,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   };
 
   const close = () => {
+    setShowSetProjectGoal(true);
     setIsOpen(false);
   };
 
@@ -36,6 +36,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
   const handleProjectGoalSubmit = (goal: string) => {
     // After submitting the project goal, we want to show the Multiple Choice Questions
+    console.log(goal)
     setShowSetProjectGoal(false);
   };
 

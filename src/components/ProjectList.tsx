@@ -10,12 +10,6 @@ interface ProjectListProps {
 
 const questions = [
   {
-    text: "What this project is about? Please provide an overview or description.",
-    options: [
-      { text: "Overview of project", userTextField: true },
-    ],
-  },
-  {
     text: "Which programming language(s) would you like to use for your project?",
     options: [
       { text: "TypeScript", userTextField: false },

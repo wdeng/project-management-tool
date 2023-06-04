@@ -10,16 +10,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
   const [requirements, setRequirements] = useState('');
   const [schema, setSchema] = useState('');
 
-  const validateForm = () => {
-    return projectName.length > 0 && requirements.length > 0;
-  };
+  const validateForm = () => projectName.length > 0 && requirements.length > 0;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
 
     try {
       await onNewProject(projectName, requirements, schema);

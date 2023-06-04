@@ -13,8 +13,7 @@ export const SetProjectGoal: React.FC<Props> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!validateForm())
-      return;
+    console.log('hi')
     onProjectGoalSubmit(overview);
     setOverview(""); // reset form
   };
@@ -27,7 +26,7 @@ export const SetProjectGoal: React.FC<Props> = ({
         value={overview}
         placeholder='Overview of project'
         onChange={(e) => setOverview(e.target.value)}
-        className={textAreaStyles}
+        className={`mt-4 ${textAreaStyles}`}
         rows={5}
       />
       <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`}>
