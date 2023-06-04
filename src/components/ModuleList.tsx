@@ -13,7 +13,7 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
   const renderModule = (module: IModule) => (
     <li key={module.id}>
       <div
-        className={`px-2 py-4 flex items-center rounded-l-md mb-1 ${selectedModule?.id === module.id ? 'bg-gray-100 text-black' : 'text-white'} cursor-pointer transition ease-in-out delay-100 hover:translate-x-2 hover:scale-105 hover:bg-gray-100 hover:text-black duration-300`}
+        className={`px-2 py-4 flex items-center rounded-l-md mb-1 ${selectedModule?.id === module.id ? 'bg-gray-100 text-gray-800' : 'text-white'} cursor-pointer transition ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-gray-100 hover:text-gray-800 duration-300`}
         onClick={() => onModuleSelect(module)}
         style={{
           paddingLeft: `${(module.tabLevel || 0) * 16 + 14}px`,

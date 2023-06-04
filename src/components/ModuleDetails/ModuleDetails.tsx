@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Module, updateModule } from '../../utils/api';
 import EditorModal from '../EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
+import { buttonStyles } from '@/styles/tailwindStyles';
 
 interface IModuleDetailsProps {
   selectedModule: Module;
@@ -96,7 +97,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         <div className="flex justify-end">
           <button
             type="submit"
-            className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg"
+            className={`mt-4 ${buttonStyles} px-4`}
           >
             Save
           </button>

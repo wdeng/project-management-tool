@@ -4,17 +4,22 @@ import { MdAdd } from 'react-icons/md';
 import Modal from '../Modal';
 import { MultipleChoiceQuestions, Question } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
+import { SetProjectGoal } from './SetProjectGoal';
 
 interface ProjectCreationModalProps {
-  onQuestionSubmit: (answers: { [key: string]: string }) => Promise<void>;
+  // onQuestionSubmit: (answers: { [key: string]: string }) => Promise<void>;
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
   questions: Question[];
 }
 
-const tabStyle = 'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2';
+const tabStyle = ({ selected }: any) => (
+  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-200 hover:bg-white/[0.12] hover:text-white'}
+  `
+)
 
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, questions }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSetProjectGoal, setShowSetProjectGoal] = useState(true); // added this line
 
   const open = () => {
     setIsOpen(true);
@@ -24,8 +29,14 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     setIsOpen(false);
   };
 
-  const handleAnswersSubmit = (answers: { [key: string]: { option: string; userInput: string }[] }) => {
+  const handleAnswersSubmit = (answers: { question: string; answers: string[] }[]) => {
     // Handle submission of answers from MultipleChoiceModal
+    console.log(answers);
+  };
+
+  const handleProjectGoalSubmit = (goal: string) => {
+    // After submitting the project goal, we want to show the Multiple Choice Questions
+    setShowSetProjectGoal(false);
   };
 
   return (
@@ -40,23 +51,23 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
       <Modal height='80vh' isOpen={isOpen} onClose={close} title="Create New Project">
         <Tab.Group>
           <Tab.List className="flex space-x-1 rounded-xl bg-indigo-300 p-1 mx-4">
-            <Tab className={({ selected }) => (
-              `${tabStyle} ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}
-              `)}>
-              Multiple Choice Questions
+            <Tab className={tabStyle}>
+            Multiple Choice Questions
             </Tab>
-            <Tab className={({ selected }) => (
-              `${tabStyle} ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}
-              `)}>
-              Direct Setup
+            <Tab className={tabStyle}>
+              Direct Input
             </Tab>
           </Tab.List>
           <Tab.Panels className="mt-2">
             <Tab.Panel>
-              <MultipleChoiceQuestions
-                questions={questions}
-                onAnswersSubmit={handleAnswersSubmit}
-              />
+              {showSetProjectGoal ? (
+                <SetProjectGoal onProjectGoalSubmit={handleProjectGoalSubmit} />
+              ) : (
+                <MultipleChoiceQuestions
+                  questions={questions}
+                  onAnswersSubmit={handleAnswersSubmit}
+                />
+              )}
             </Tab.Panel>
             <Tab.Panel>
               <ProjectForm onNewProject={onNewProject} />
@@ -69,3 +80,4 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 };
 
 export default ProjectCreationModal;
+

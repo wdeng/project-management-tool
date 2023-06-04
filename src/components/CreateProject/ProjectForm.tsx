@@ -1,3 +1,4 @@
+import { buttonStyles, textAreaStyles } from '@/styles/tailwindStyles';
 import React, { useState } from 'react';
 
 interface ProjectFormProps {
@@ -10,7 +11,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
   const [schema, setSchema] = useState('');
 
   const validateForm = () => {
-    return projectName.length > 0 && requirements.length > 0 && schema.length > 0;
+    return projectName.length > 0 && requirements.length > 0;
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -37,14 +38,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
         type="text"
         value={projectName}
         onChange={(e) => setProjectName(e.target.value)}
-        className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2 text-lg"
+        className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-1 text-lg"
         placeholder='Project Name'
       />
       <textarea
         id="requirements"
         value={requirements}
         onChange={(e) => setRequirements(e.target.value)}
-        className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2"
+        className={textAreaStyles}
         placeholder='Requirements'
         rows={5}
       />
@@ -52,11 +53,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
         id="schema"
         value={schema}
         onChange={(e) => setSchema(e.target.value)}
-        className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-2"
+        className={textAreaStyles}
         placeholder='Optional API or database schema'
         rows={5}
       />
-      <button type="submit" disabled={!validateForm()} className="w-full p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
+      <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`}>
         Create
       </button>
     </form>

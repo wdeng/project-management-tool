@@ -1,4 +1,4 @@
-import { checkboxStyles } from '@/styles/tailwindStyles';
+import { buttonStyles, checkboxStyles } from '@/styles/tailwindStyles';
 import React, { useState } from 'react';
 
 interface QuestionOption {
@@ -13,7 +13,7 @@ export interface Question {
 
 interface MultipleChoiceModalProps {
   questions: Question[];
-  onAnswersSubmit: (answers: { [key: string]: { option: string; userInput: string }[] }) => void; 
+  onAnswersSubmit: (answers: { question: string; answers: string[] }[]) => void;
 }
 
 export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
@@ -48,7 +48,7 @@ export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onAnswersSubmit(answers);
+    onAnswersSubmit(convertAnswersFormat(answers));
     setAnswers({}); // reset form
   };
 
@@ -74,19 +74,33 @@ export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
                 <input
                   type="text"
                   placeholder={option.text}
+                  value={
+                    (answers[question.text] || []).find(answer => answer.option === option.text)?.userInput || ''
+                  }
                   onChange={(e) =>
                     handleUserTextInput(question.text, option.text, e.target.value)
                   }
-                  className='bg-transparent focus:ring-0 border-0 border-b-2 border-gray-400 p-0'
+                  className='bg-transparent focus:ring-0 border-0 border-b-2 border-gray-400 p-0 w-64'
                 />
               )}
             </div>
           ))}
         </div>
       ))}
-      <button type="submit" className="w-full p-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
+      <button type="submit" className={`w-full ${buttonStyles}`}>
         Submit
       </button>
     </form>
   );
+};
+
+const convertAnswersFormat = (answers: { [key: string]: { option: string; userInput: string }[] }) => {
+  let convertedAnswers = [];
+
+  for (let question in answers) {
+    let answerOptions = answers[question].map((answer) => answer.userInput || answer.option);
+    convertedAnswers.push({ question: question, answers: answerOptions });
+  }
+
+  return convertedAnswers;
 };
