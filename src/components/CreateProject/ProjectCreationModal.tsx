@@ -54,7 +54,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
     try {
       // Simulate an async operation e.g. making API request.
-      await new Promise(res => setTimeout(res, 2000));
+      await new Promise(res => setTimeout(res, 20000));
 
       // After submitting the project goal, we want to show the Multiple Choice Questions
       console.log(goal)

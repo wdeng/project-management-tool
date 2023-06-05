@@ -64,15 +64,15 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
       description: 'Module 1 Description',      // Add module description
       files: [                      // Add functional designs
         {
-          filePath: '/path/to1/ModuleDepndency1.tsx',
+          filePath: '/path/to1/ModuleFiles1.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to2/ModuleDepndency2.tsx',
+          filePath: '/path/to2/ModuleFiles2.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to3/ModuleDepndency21.tsx',
+          filePath: '/path/to3/ModuleFiles21.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
       ],
@@ -87,14 +87,14 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
           description: 'Module 1 Description',      // Add module description
           files: [
             {
-              filePath: '/path4/to/ModuleDepndency1.tsx',
+              filePath: '/path4/to/ModuleFiles1.tsx',
               goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
             },
             {
-              filePath: '/path5/to/ModuleDepndency2.tsx',
+              filePath: '/path5/to/ModuleFiles2.tsx',
               goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
             }, {
-              filePath: '/path6/to/ModuleDepndency21.tsx',
+              filePath: '/path6/to/ModuleFiles21.tsx',
               goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
             }
           ],
@@ -109,11 +109,11 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
               description: 'Module 1 Description',      // Add module description
               files: [
                 {
-                  filePath: '/path/to7/ModuleDepndency1.tsx',
+                  filePath: '/path/to7/ModuleFiles1.tsx',
                   goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
                 },
                 {
-                  filePath: '/path/to8/ModuleDepndency2.tsx',
+                  filePath: '/path/to8/ModuleFiles2.tsx',
                   goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
                 }
               ],
@@ -132,19 +132,19 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
       description: 'Module 1 Description',      // Add module description
       files: [                      // Add functional designs
         {
-          filePath: '/path/to/1ModuleDepndency1.tsx',
+          filePath: '/path/to/1ModuleFiles1.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/2ModuleDepndency2.tsx',
+          filePath: '/path/to/2ModuleFiles2.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/3ModuleDepndency3.tsx',
+          filePath: '/path/to/3ModuleFiles3.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/4ModuleDepndency4.tsx',
+          filePath: '/path/to/4ModuleFiles4.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         }
       ],
@@ -159,40 +159,40 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
       description: 'Module 1 Description',      // Add module description
       files: [                      // Add functional designs
         {
-          filePath: '/path/to/ModuleDepndency1.tsx',
+          filePath: '/path/to/ModuleFiles1.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency2.tsx',
+          filePath: '/path/to/ModuleFiles2.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency123.tsx',
+          filePath: '/path/to/ModuleFiles123.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency3.tsx',
+          filePath: '/path/to/ModuleFiles3.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency5.tsx',
+          filePath: '/path/to/ModuleFiles5.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency7.tsx',
+          filePath: '/path/to/ModuleFiles7.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
         {
-          filePath: '/path/to/ModuleDepndency11.tsx',
+          filePath: '/path/to/ModuleFiles11.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         }, {
-          filePath: '/path/to/ModuleDepndency12.tsx',
+          filePath: '/path/to/ModuleFiles12.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         }, {
-          filePath: '/path/to/ModuleDepndency23.tsx',
+          filePath: '/path/to/ModuleFiles23.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         }, {
-          filePath: '/path/to/ModuleDepndency45.tsx',
+          filePath: '/path/to/ModuleFiles45.tsx',
           goal: 'Provide utility functions for interacting with the backend API to fetch, create, update, and delete projects and modules.',
         },
       ]
