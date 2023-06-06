@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.wenxiangdeng.com';
 
 export interface Project {
   id: number;
@@ -30,6 +30,48 @@ export interface FileDesign {
   goal: string;
 }
 
+export interface QuestionOption {
+  text: string;
+  userTextField: boolean; // If true, this option will display an additional user text field.
+}
+
+export interface QuestionChoices {
+  text: string;
+  options: QuestionOption[];
+}
+
+export interface QAResponse {
+  projectId: number;
+  QAs: QuestionChoices[];
+}
+
+export interface QAAnswer {
+  question: string;
+  answers: string[];
+}
+
+export async function setProjectGoal(goal: string): Promise<QAResponse> {
+  const data = {
+    goal,
+  };
+  const response = await axios.post<QAResponse>(
+    `${API_BASE_URL}/project/qa`, data
+  );
+  return response.data;
+}
+
+export async function askProjectQAs(
+  questionAnswers: QAAnswer[], projectId: number
+): Promise<QAResponse> {
+  const data = {
+    questionAnswers,
+    projectId,
+  };
+  const response = await axios.post<QAResponse>(
+    `${API_BASE_URL}/project/qa`, data
+  );
+  return response.data;
+}
 
 export async function fetchProjects(): Promise<Project[]> {
   const response = await axios.get<Project[]>(`${API_BASE_URL}/projects`);

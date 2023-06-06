@@ -1,22 +1,13 @@
 import { buttonStyles, checkboxStyles } from '@/styles/tailwindStyles';
+import {  QuestionChoices } from '@/utils/apiREAL';
 import React, { useState } from 'react';
 
-interface QuestionOption {
-  text: string;
-  userTextField: boolean; // If true, this option will display an additional user text field.
-}
-
-export interface Question {
-  text: string;
-  options: QuestionOption[];
-}
-
 interface MultipleChoiceModalProps {
-  questions: Question[];
+  questions:  QuestionChoices[];
   onAnswersSubmit: (answers: { question: string; answers: string[] }[]) => void;
 }
 
-export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({
+export const MultipleChoiceQuestions: React.FC<MultipleChoiceModalProps> = ({ 
   questions,
   onAnswersSubmit,
 }) => {

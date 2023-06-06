@@ -13,7 +13,6 @@ export const SetProjectGoal: React.FC<Props> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('hi')
     onProjectGoalSubmit(overview);
     setOverview(""); // reset form
   };

@@ -2,24 +2,27 @@ import React, { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { MdAdd } from 'react-icons/md';
 import Modal from '../Modal';
-import { MultipleChoiceQuestions, Question } from './MultipleChoices';
+import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 import Spinner from '../general/Spinner';
+import {  QuestionChoices, setProjectGoal, askProjectQAs } from '@/utils/apiREAL';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
-  questions: Question[];
+  // questions:  QuestionChoices[];
 }
 
 const tabStyle = ({ selected }: any) => (
   `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}`
 )
 
-export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, questions }) => {
+export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSetProjectGoal, setShowSetProjectGoal] = useState(true); // added this line
   const [isLoading, setIsLoading] = useState(false);
+  const [questions, setQuestions] = useState<QuestionChoices[]>([]);
+  const [projectId, setProjectId] = useState<number>(-1);
 
   const open = () => {
     setIsOpen(true);
@@ -36,7 +39,9 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
     try {
       // Simulate an async operation e.g. making API request.
-      await new Promise(res => setTimeout(res, 2000));
+      // await new Promise(res => setTimeout(res, 2000));
+      const newQuestions = await askProjectQAs(answers, projectId)
+      setQuestions(newQuestions.QAs);
 
       // After submitting the answers, we want to show the Multiple Choice Questions
       console.log(answers);
@@ -54,7 +59,9 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
     try {
       // Simulate an async operation e.g. making API request.
-      await new Promise(res => setTimeout(res, 20000));
+      const res = await setProjectGoal(goal);
+      setProjectId(res.projectId);
+      setQuestions(res.QAs);
 
       // After submitting the project goal, we want to show the Multiple Choice Questions
       console.log(goal)
