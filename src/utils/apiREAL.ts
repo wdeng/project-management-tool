@@ -32,7 +32,7 @@ export interface FileDesign {
 
 export interface QuestionOption {
   text: string;
-  userTextField: boolean; // If true, this option will display an additional user text field.
+  userTextField: boolean;
 }
 
 export interface QuestionChoices {
@@ -60,7 +60,7 @@ export async function setProjectGoal(goal: string): Promise<QAResponse> {
   return response.data;
 }
 
-export async function askProjectQAs(
+export async function anwerProjectQAs(
   questionAnswers: QAAnswer[], projectId: number
 ): Promise<QAResponse> {
   const data = {
@@ -68,7 +68,7 @@ export async function askProjectQAs(
     projectId,
   };
   const response = await axios.post<QAResponse>(
-    `${API_BASE_URL}/project/qa`, data
+    `${API_BASE_URL}/project/collect_requirements`, data
   );
   return response.data;
 }

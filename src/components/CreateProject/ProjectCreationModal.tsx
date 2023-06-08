@@ -6,7 +6,7 @@ import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 import Spinner from '../general/Spinner';
-import {  QuestionChoices, setProjectGoal, askProjectQAs } from '@/utils/apiREAL';
+import {  QuestionChoices, setProjectGoal, anwerProjectQAs } from '@/utils/apiREAL';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -40,7 +40,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     try {
       // Simulate an async operation e.g. making API request.
       // await new Promise(res => setTimeout(res, 2000));
-      const newQuestions = await askProjectQAs(answers, projectId)
+      const newQuestions = await anwerProjectQAs(answers, projectId)
       setQuestions(newQuestions.QAs);
 
       // After submitting the answers, we want to show the Multiple Choice Questions
