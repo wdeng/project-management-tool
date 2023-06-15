@@ -50,12 +50,27 @@ export interface QAAnswer {
   answers: string[];
 }
 
+export interface ProjectDetailResponse {
+  outline: any;
+  module_sequence: any[];
+}
+
+export interface ProjectMeta {
+  folder: string;
+  // Add other properties as needed
+}
+
+export interface ModuleDetailResponse {
+  id: number;
+  // Add other properties as needed
+}
+
 export async function setProjectGoal(goal: string): Promise<QAResponse> {
   const data = {
     goal,
   };
   const response = await axios.post<QAResponse>(
-    `${API_BASE_URL}/project/qa`, data
+    `${API_BASE_URL}/project/collect_requirements`, data
   );
   return response.data;
 }
@@ -73,13 +88,45 @@ export async function anwerProjectQAs(
   return response.data;
 }
 
+export async function buildProject(projectId: number): Promise<ProjectDetailResponse> {
+  const response = await axios.post<ProjectDetailResponse>(`${API_BASE_URL}/project/build/${projectId}`);
+  return response.data;
+}
+
+export async function buildModule(projectId: number, moduleNamePath: string): Promise<any> {
+  const data = {
+    projectId,
+    moduleNamePath,
+  };
+  const response = await axios.post<any>(`${API_BASE_URL}/module/build/${projectId}`, data);
+  return response.data;
+}
+
+export async function fetchProjectDetails(projectId: number): Promise<ProjectDetailResponse> {
+  const response = await axios.get<ProjectDetailResponse>(`${API_BASE_URL}/project/${projectId}/details`);
+
+  const resp = response.data;
+  if (resp.outline && resp.outline.modules) {
+    const assignTabLevels = (modules: Module[], tabLevel = 0) => {
+      for (const mod of modules) {
+        mod.tabLevel = tabLevel;
+        if (mod.modules) {
+          assignTabLevels(mod.modules, tabLevel + 1);
+        }
+      }
+    };
+    assignTabLevels(resp.outline.modules);
+  }
+  return response.data;
+}
+
 export async function fetchProjects(): Promise<Project[]> {
-  const response = await axios.get<Project[]>(`${API_BASE_URL}/projects`);
+  const response = await axios.get<Project[]>(`${API_BASE_URL}/projects/list`);
   return response.data;
 }
 
 export async function fetchModules(projectId: number): Promise<Module[]> {
-  const response = await axios.get<Module[]>(`${API_BASE_URL}/projects/${projectId}/modules`);
+  const response = await axios.get<Module[]>(`${API_BASE_URL}/project/${projectId}/modules`);
   const modules = response.data;
 
   // Create tabLevels for modules and include files
@@ -96,39 +143,7 @@ export async function fetchModules(projectId: number): Promise<Module[]> {
   return modules;
 }
 
-export async function createProject(name: string, requirements: string, schema: string): Promise<Project> {
+export async function createProjectLegacy(name: string, requirements: string, schema: string): Promise<Project> {
   const response = await axios.post<Project>(`${API_BASE_URL}/projects`, { name, requirements, schema });
   return response.data;
-}
-
-export async function createModule(
-  projectId: number,
-  parentId: number | null,
-  name: string,
-  description: string,
-): Promise<Module> {
-  const response = await axios.post<Module>(`${API_BASE_URL}/projects/${projectId}/modules`, {
-    parentId,
-    name,
-    description,
-  });
-  return response.data;
-}
-
-export async function updateModule(
-  projectId: number,
-  moduleId: number,
-  name: string,
-  description: string,
-  files: FileDesign[],
-): Promise<Module> {
-  const response = await axios.put<Module>(
-    `${API_BASE_URL}/projects/${projectId}/modules/${moduleId}`,
-    { name, description, files },
-  );
-  return response.data;
-}
-
-export async function deleteModule(projectId: number, moduleId: number): Promise<void> {
-  await axios.delete(`${API_BASE_URL}/projects/${projectId}/modules/${moduleId}`);
 }
