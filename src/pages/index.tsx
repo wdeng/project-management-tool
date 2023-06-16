@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, Module, fetchModules } from '../utils/api';
+import { Project, Module, fetchModules } from '@/utils/api';
 import ChatButton from '@/components/ChatButton';
 
 

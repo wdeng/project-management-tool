@@ -43,6 +43,7 @@ export interface QuestionChoices {
 export interface QAResponse {
   projectId: number;
   QAs: QuestionChoices[];
+  finished?: boolean;
 }
 
 export interface QAAnswer {

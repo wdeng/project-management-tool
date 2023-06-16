@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './ModuleDetails/Disclosure';
-import { Module } from '../utils/api';
+import { Module } from '../utils/apiREAL';
 import ToggleSwitch from './general/ToggleSwitch';
 import ChatInput from './general/ChatTextArea';
 

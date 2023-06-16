@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Module as IModule } from '../utils/api';
+import { Module as IModule } from '../utils/apiREAL';
 import { MdViewStream, MdPlayArrow } from 'react-icons/md';
 import Spinner from './general/Spinner';
 

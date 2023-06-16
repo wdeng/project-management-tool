@@ -24,24 +24,22 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   const [questions, setQuestions] = useState<QuestionChoices[]>([]);
   const [projectId, setProjectId] = useState<number>(-1);
 
-  const open = () => {
-    setIsOpen(true);
-  };
-
-  const close = () => {
-    setShowSetProjectGoal(true);
-    setIsOpen(false);
-  };
+  const open = () => setIsOpen(true);
+  const close = () => setIsOpen(false);
 
   const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
-    // Handle submission of answers from MultipleChoiceModal
     setIsLoading(true);
 
     try {
-      // Simulate an async operation e.g. making API request.
       // await new Promise(res => setTimeout(res, 2000));
-      const newQuestions = await anwerProjectQAs(answers, projectId)
-      setQuestions(newQuestions.QAs);
+      const resps = await anwerProjectQAs(answers, projectId)
+      if (resps.finished) {
+        setIsLoading(false);
+        setShowSetProjectGoal(true);
+        close();
+        return;
+      }
+      setQuestions(resps.QAs);
 
       // After submitting the answers, we want to show the Multiple Choice Questions
       console.log(answers);
