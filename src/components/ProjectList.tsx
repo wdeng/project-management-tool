@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Project, fetchProjects, createProject } from '../utils/api';
+import { Project, fetchProjects, createProjectLegacy, buildProject, ProjectDetailResponse } from '../utils/apiREAL';
 import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard } from "react-icons/md";
+import Spinner from './general/Spinner';
 
 interface ProjectListProps {
   selectedProjectId: number | null;
@@ -13,6 +14,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
   onProjectSelect,
 }) => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [buildingProjects, setBuildingProjects] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   async function fetchData() {
@@ -31,7 +33,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
   async function handleNewProject(projectName: string, requirements: string, schema: string) {
     try {
       // you would call the API to create the project here
-      await createProject(projectName, requirements, schema);
+      await createProjectLegacy(projectName, requirements, schema);
 
       // and then re-fetch the projects
       fetchData();
@@ -40,14 +42,35 @@ export const ProjectList: React.FC<ProjectListProps> = ({
     }
   }
 
+  async function handleProjectBuild(projectId: number) {
+    try {
+      fetchData();
+      setBuildingProjects(prevState => [...prevState, projectId]);
+
+      const projectDetailResponse: ProjectDetailResponse = await buildProject(projectId);
+
+      // Handle the project build response here
+      console.log(projectDetailResponse);
+
+      // After project build is successful, remove the project from buildingProjects list
+      setBuildingProjects(prevState => prevState.filter(id => id !== projectId));
+    } catch (err) {
+      setError('Failed to build project');
+      setBuildingProjects(prevState => prevState.filter(id => id !== projectId));
+    }
+  }
+
   function handleProjectClick(project: Project) {
-    onProjectSelect(project);
+    // Avoid selection if the project is building
+    if (!buildingProjects.includes(project.id)) {
+      onProjectSelect(project);
+    }
   }
 
 
   return (
     <div className="overflow-y-auto h-full">
-      <ProjectCreationModal onNewProject={handleNewProject} />
+      <ProjectCreationModal onNewProject={handleNewProject} onProjectBuild={handleProjectBuild} />
       {error && <p className="text-red-500">{error}</p>}
       <ul>
         {projects.map((project) => (
@@ -57,7 +80,11 @@ export const ProjectList: React.FC<ProjectListProps> = ({
             onClick={() => handleProjectClick(project)}
           >
             <div className="mr-2">
-              <MdDashboard size={16} />
+              {buildingProjects.includes(project.id) ? (
+                <Spinner spinnerSize={16} />
+              ) : (
+                <MdDashboard size={16} />
+              )}
             </div>
             <span>{project.name}</span>
           </li>

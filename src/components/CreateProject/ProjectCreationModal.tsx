@@ -6,18 +6,18 @@ import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 import Spinner from '../general/Spinner';
-import {  QuestionChoices, setProjectGoal, anwerProjectQAs } from '@/utils/apiREAL';
+import { QuestionChoices, setProjectGoal, anwerProjectQAs } from '@/utils/apiREAL';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
-  // questions:  QuestionChoices[];
+  onProjectBuild: (projectId: number) => Promise<void>;
 }
 
 const tabStyle = ({ selected }: any) => (
   `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}`
 )
 
-export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject }) => {
+export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, onProjectBuild }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSetProjectGoal, setShowSetProjectGoal] = useState(true); // added this line
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +33,12 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     try {
       // await new Promise(res => setTimeout(res, 2000));
       const resps = await anwerProjectQAs(answers, projectId)
+
       if (resps.finished) {
         setIsLoading(false);
         setShowSetProjectGoal(true);
         close();
+        onProjectBuild(projectId); // remove the 'await' here
         return;
       }
       setQuestions(resps.QAs);

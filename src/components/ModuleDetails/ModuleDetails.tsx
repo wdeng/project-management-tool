@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Module, updateModule } from '../../utils/api';
+import { Module, buildModule } from '@/utils/apiREAL';
 import EditorModal from '../EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/styles/tailwindStyles';
@@ -15,14 +15,16 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
   const [error, setError] = useState<string | null>(null);
 
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editorValue, setEditorValue] = useState("// some comment");
+  const [editorValue, setEditorValue] = useState<string | null>(null);
 
   const openEditor = () => {
     setIsEditorOpen(true);
+
   };
 
   const closeEditor = () => {
     setIsEditorOpen(false);
+    setEditorValue(null);
   };
 
   const handleEditorChange = (val: string | undefined) => {
@@ -48,12 +50,9 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
     event.preventDefault();
     if (selectedModule) {
       try {
-        const updatedModule = await updateModule(
+        const updatedModule = await buildModule(
           selectedModule.projectId,
           selectedModule.id,
-          name,
-          description,
-          selectedModule.files,
         );
         onModuleUpdate(updatedModule);
       } catch (error) {
@@ -70,7 +69,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         value={editorValue}
         onChange={handleEditorChange}
       />
-
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex justify-between items-center mb-3">

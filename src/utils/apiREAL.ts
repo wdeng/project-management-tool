@@ -5,11 +5,17 @@ const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:
 export interface Project {
   id: number;
   name: string;
-  description: string;
-  requirements: string;
-  schema: string;
-  createdAt: string;
-  updatedAt: string;
+  folder: string;
+  url: string;
+  details?: ProjectDetailResponse;
+}
+
+export interface ProjectDetailResponse {
+  outline: {
+    modules: Module[];
+    [key: string]: any;
+  }
+  moduleSequence: Array<{ [key: string]: any }>;
 }
 
 export interface Module {
@@ -17,8 +23,6 @@ export interface Module {
   projectId: number;
   tabLevel?: number;
   name: string;
-  createdAt: string;
-  updatedAt: string;
   description: string;
   files: FileDesign[];
   modules?: Module[];
@@ -49,11 +53,6 @@ export interface QAResponse {
 export interface QAAnswer {
   question: string;
   answers: string[];
-}
-
-export interface ProjectDetailResponse {
-  outline: any;
-  module_sequence: any[];
 }
 
 export interface ProjectMeta {
@@ -94,10 +93,10 @@ export async function buildProject(projectId: number): Promise<ProjectDetailResp
   return response.data;
 }
 
-export async function buildModule(projectId: number, moduleNamePath: string): Promise<any> {
+export async function buildModule(projectId: number, moduleId: number): Promise<any> {
   const data = {
     projectId,
-    moduleNamePath,
+    moduleId,
   };
   const response = await axios.post<any>(`${API_BASE_URL}/module/build/${projectId}`, data);
   return response.data;
