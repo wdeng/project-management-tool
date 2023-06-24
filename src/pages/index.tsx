@@ -45,7 +45,7 @@ export default function Home() {
         style={{ flex: '0 0 250px' }}
         className={`bg-gray-600 h-screen overflow-auto transform transition-transform ease-in-out duration-300 ${selectedProjectId ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {selectedProjectId && <ModuleList onModuleSelect={handleModuleSelect} modules={modules} selectedModule={selectedModule} />}
+        {selectedProjectId && <ModuleList onModuleSelect={handleModuleSelect} modules={modules} selectedModule={selectedModule} nextModuleName='Crawler' />}
       </div>
       {selectedModule && <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
         <ModuleDetails selectedModule={selectedModule} onModuleUpdate={() => { }} />

@@ -19,7 +19,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
 
   const openEditor = () => {
     setIsEditorOpen(true);
-
   };
 
   const closeEditor = () => {
@@ -69,7 +68,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         value={editorValue}
         onChange={handleEditorChange}
       />
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="absolute text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex justify-between items-center mb-3">
           <input
@@ -94,15 +93,22 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         />
         <div className="flex justify-end">
           <button
+            className={`mt-4 ${buttonStyles} px-4 mr-4`}
+            type="button"
+            onClick={() => { console.log('Integrate'); }}
+          >
+            Integrate
+          </button>
+          <button
             type="submit"
             className={`mt-4 ${buttonStyles} px-4`}
           >
-            Save
+            Build
           </button>
         </div>
       </form>
       <div>
-        {selectedModule?.files.map((file) => (
+        {selectedModule?.files?.map((file) => (
           <button
             key={file.filePath}
             onClick={openEditor}

@@ -25,7 +25,7 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
     if (executingName) return;
     setExecuting(projModule.name);
     executeModule && executeModule(projModule);
-    await new Promise(res => setTimeout(res, 1000));
+    await new Promise(res => setTimeout(res, 5000));
     setExecuting("");
   };
 
@@ -38,11 +38,11 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
           paddingLeft: `${(projModule.tabLevel || 0) * 16 + 14}px`,
         }}
       >
-        <div className="mr-2">
+        <div className="flex items-center mr-2">
           {executingName === projModule.name ? (
             <Spinner spinnerSize={16} />
           ) : projModule.name === nextModuleName ? (
-            <button onClick={(e) => handlePlayClick(e, projModule)}>
+            <button className='hover:text-indigo-400' onClick={(e) => handlePlayClick(e, projModule)}>
               <MdPlayArrow size={16} />
             </button>
           ) : (
