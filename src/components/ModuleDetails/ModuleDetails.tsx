@@ -7,6 +7,7 @@ import { buttonStyles } from '@/styles/tailwindStyles';
 interface IModuleDetailsProps {
   selectedModule: Module;
   onModuleUpdate: (module: Module) => void;
+  canBuild?: "warn" | "yes" | "no";
 }
 
 export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, onModuleUpdate }) => {
@@ -93,15 +94,17 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         />
         <div className="flex justify-end">
           <button
-            className={`mt-4 ${buttonStyles} px-4 mr-4`}
+            disabled={true}
+            className={`${buttonStyles} mt-4 px-4 mr-4`}
             type="button"
             onClick={() => { console.log('Integrate'); }}
           >
             Integrate
           </button>
           <button
+            disabled={true}
             type="submit"
-            className={`mt-4 ${buttonStyles} px-4`}
+            className={`${buttonStyles} mt-4 px-4`}
           >
             Build
           </button>
