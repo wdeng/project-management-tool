@@ -110,6 +110,11 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
   return response.data;
 }
 
+export async function fetchSouceCode(projectId: number, moduleId: number, fileId: number): Promise<string> {
+  const response = await axios.get<string>(`${API_BASE_URL}/sourcecode/${projectId}/${moduleId}/${fileId}`);
+  return response.data;
+}
+
 export async function fetchProjectDetails(projectId: number): Promise<ProjectDetailResponse> {
   const response = await axios.get<ProjectDetailResponse>(`${API_BASE_URL}/project/${projectId}/details`);
 

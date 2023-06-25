@@ -2,13 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, ModuleImplement } from '@/utils/apiREAL';
+import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse } from '@/utils/apiREAL';
 import ChatButton from '@/components/ChatButton';
+import { SelectedContext } from '@/hooks/useSelectedContext';
+
 
 
 export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
-  const [selectedModule, setSelectedModule] = useState<ModuleImplement | null | undefined>(null);
+  const [selectedModule, setSelectedModule] = useState<ModuleHierarchy | null | undefined>(null);
   const [projectDetails, setProjectDetails] = useState<ProjectDetailResponse | null>(null);
 
   const moduleIdPath = useMemo(() => {
@@ -46,42 +48,46 @@ export default function Home() {
     setSelectedModule(moduleImp);
   };
 
-  const handleModuleBuild = async (e: React.MouseEvent, moduleName: string, moduleId: number) => {
-    e.stopPropagation();
+  const handleModuleBuild = async (moduleName: string, moduleId: number) => {
     if (executingName) return;
-    setExecuting(moduleName);
-    // executeModule && executeModule(projModule);
-    await new Promise(res => setTimeout(res, 5000));
-    setExecuting("");
+    try {
+      setExecuting(moduleName);
+      // executeModule && executeModule(projModule);
+      await new Promise(res => setTimeout(res, 5000));
+      setExecuting("");
+    } catch (error) {
+      console.log('Failed to update module description');
+    }
   };
 
   return (
-    <div className="flex">
-      <div style={{ flex: '0 0 200px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
-        <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
+    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId }}>
+      <div className="flex">
+        <div style={{ flex: '0 0 200px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
+          <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
+        </div>
+        <div
+          style={{ flex: '0 0 250px' }}
+          className={`bg-gray-600 h-screen overflow-auto transform transition-transform ease-in-out duration-300 ${selectedProjectId ? 'translate-x-0' : '-translate-x-full'}`}
+        >
+          {selectedProjectId && projectDetails && <ModuleList
+            onModuleSelect={handleModuleSelect}
+            executingName={executingName}
+            onPlayClick={handleModuleBuild}
+            modules={projectDetails.outline.modules}
+            nextModuleName={nextPendingModule}
+          />}
+        </div>
+        {selectedModule && <>
+          <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
+            <ModuleDetails
+              moduleBuild={handleModuleBuild}
+              canBuild={canBuild} />
+          </div>
+          <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.outline.modules} />
+        </>}
       </div>
-      <div
-        style={{ flex: '0 0 250px' }}
-        className={`bg-gray-600 h-screen overflow-auto transform transition-transform ease-in-out duration-300 ${selectedProjectId ? 'translate-x-0' : '-translate-x-full'}`}
-      >
-        {selectedProjectId && projectDetails && <ModuleList
-          onModuleSelect={handleModuleSelect}
-          executingName={executingName}
-          onPlayClick={handleModuleBuild}
-          modules={projectDetails.outline.modules}
-          selectedModule={selectedModule}
-          nextModuleName={nextPendingModule}
-        />}
-      </div>
-      {selectedModule && <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
-        <ModuleDetails
-          projectId={selectedProjectId!}
-          selectedModule={selectedModule}
-          onModuleUpdate={() => { }}
-          canBuild={canBuild} />
-      </div>}
-      {selectedModule && <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.outline.modules} />}
-    </div>
+    </SelectedContext.Provider>
   );
 }
 

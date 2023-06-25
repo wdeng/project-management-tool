@@ -1,6 +1,6 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import EditorModal from '../EditorModal'; // Import your EditorModal
+import EditorModal from './EditorModal'; // Import your EditorModal
 import { useState, useCallback } from 'react';
 import { ModuleHierarchy } from '@/utils/apiREAL';
 import { checkboxStyles } from '@/styles/tailwindStyles';

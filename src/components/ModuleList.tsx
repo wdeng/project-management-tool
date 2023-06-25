@@ -1,22 +1,21 @@
 import React from 'react';
-import { ModuleHierarchy, ModuleImplement } from '../utils/apiREAL';
+import { ModuleHierarchy } from '../utils/apiREAL';
 import { MdViewStream, MdPlayArrow } from 'react-icons/md';
 import Spinner from './general/Spinner';
+import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleListProps {
   onModuleSelect: (moduleName: string) => void;
   modules: ModuleHierarchy[];
-  selectedModule?: ModuleImplement | null;
   nextModuleName: string;
   executingName: string;
-  onPlayClick: (e: React.MouseEvent, moduleName: string, moduleId: number) => Promise<void>;
+  onPlayClick: (moduleName: string, moduleId: number) => Promise<void>;
 }
 
-export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules, selectedModule, nextModuleName, onPlayClick, executingName }) => {
+export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules, nextModuleName, onPlayClick, executingName }) => {
+  const { selectedModule } = useSelected();
   const handleModuleSelect = async (name: string) => {
-    if (name !== executingName) {
-      onModuleSelect(name);
-    }
+    onModuleSelect(name);
   };
 
   const renderModule = (projModule: ModuleHierarchy) => (
@@ -32,7 +31,7 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
           {executingName === projModule.name ? (
             <Spinner spinnerSize={16} />
           ) : projModule.name === nextModuleName ? (
-            <button className='hover:text-indigo-400' onClick={(e) => onPlayClick(e, projModule.name, projModule.id)}>
+            <button className='hover:text-indigo-400' onClick={() => onPlayClick(projModule.name, projModule.id)}>
               <MdPlayArrow size={16} />
             </button>
           ) : (

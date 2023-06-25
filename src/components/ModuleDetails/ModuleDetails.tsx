@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { ModuleImplement, buildModule } from '@/utils/apiREAL';
-import EditorModal from '../EditorModal';
+import { ModuleHierarchy, buildModule } from '@/utils/apiREAL';
+import EditorModal from './EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/styles/tailwindStyles';
+import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleDetailsProps {
-  projectId: number;
-  selectedModule: ModuleImplement;
-  onModuleUpdate: (module: ModuleImplement) => void;
+  // selectedModule: ModuleHierarchy;
+  moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;
   canBuild?: "warning" | true | false | null;
 }
 
-export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, onModuleUpdate, canBuild, projectId }) => {
+export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canBuild }) => {
+  const { selectedModule } = useSelected();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, _] = useState<string | null>(null);
 
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [editorValue, setEditorValue] = useState<string | null>(null);
@@ -51,15 +52,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
     event.preventDefault();
     if (selectedModule) {
       if (canBuild === "warning" ? window.confirm('This moudule is not next in the implementation sequence. Are you sure?') : true) {
-        try {
-          const updatedModule = await buildModule(
-            projectId,
-            selectedModule.id,
-          );
-          onModuleUpdate(updatedModule);
-        } catch (error) {
-          setError('Failed to update module description');
-        }
+        moduleBuild(selectedModule.name, selectedModule.id);
       }
     }
   };
@@ -106,7 +99,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
           </button>
           <button
             type="submit"
-            disabled={!!canBuild}
+            disabled={!canBuild}
             className={`${buttonStyles} mt-4 px-4`}
           >
             Build
