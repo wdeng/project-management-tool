@@ -2,7 +2,7 @@ import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import EditorModal from '../EditorModal'; // Import your EditorModal
 import { useState, useCallback } from 'react';
-import { Module } from '@/utils/apiREAL';
+import { ModuleHierarchy } from '@/utils/apiREAL';
 import { checkboxStyles } from '@/styles/tailwindStyles';
 
 export interface Option {
@@ -12,7 +12,7 @@ export interface Option {
 }
 
 interface DisclosurePanelProps {
-  mod: Module,
+  aModule: ModuleHierarchy,
   handleCheckboxChange: (filePath: string) => void,
   selectedCheckboxOptions: string[],
   isInitOpen: boolean,
@@ -20,7 +20,7 @@ interface DisclosurePanelProps {
 }
 
 const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
-  mod,
+  aModule,
   handleCheckboxChange,
   selectedCheckboxOptions,
   isInitOpen,
@@ -49,7 +49,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
         {({ open }) => (
           <>
             <Disclosure.Button className="flex justify-between w-full px-4 py-2 mt-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200">
-              <span>{mod.name}</span>
+              <span>{aModule.name}</span>
               <MdKeyboardArrowDown
                 className={`${open ? 'transform rotate-180' : ''
                   } w-5 h-5 text-indigo-500`}
@@ -65,36 +65,36 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
               leaveTo="max-h-0 opacity-10"
             >
               <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-500">
-                Content for {mod.name}
+                Content for {aModule.name}
                 <div className="flex flex-wrap items-center">
-                  {mod.files?.map((file) => (
-                    <div className="flex items-center space-x-2 mr-8 p-1" key={file.filePath}>
+                  {aModule.files?.map((file) => (
+                    <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
                       <div className="hover:scale-110">
                         <input
                           type="checkbox"
-                          id={file.filePath}
-                          checked={selectedCheckboxOptions.includes(file.filePath)}
-                          onChange={() => handleCheckboxChange(file.filePath)}
+                          id={file.path}
+                          checked={selectedCheckboxOptions.includes(file.path)}
+                          onChange={() => handleCheckboxChange(file.path)}
                           className={checkboxStyles}
                         />
                       </div>
                       <label
-                        htmlFor={file.filePath}
+                        htmlFor={file.path}
                         onClick={(event) => {
                           event.preventDefault();
-                          openModal(file.filePath);
+                          openModal(file.path);
                         }}
                         className="cursor-pointer hover:text-indigo-700 hover:underline"
                       >
-                        {file.filePath}
+                        {file.path}
                       </label>
                     </div>
                   ))}
                 </div>
-                {mod.modules?.map((subModule) => (
+                {aModule.modules?.map((subModule) => (
                   <DisclosurePanel
                     key={subModule.id}
-                    mod={subModule}
+                    aModule={subModule}
                     handleCheckboxChange={handleCheckboxChange}
                     selectedCheckboxOptions={selectedCheckboxOptions}
                     isInitOpen={moduleIdPath[0] === subModule.id}

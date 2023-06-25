@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Module, buildModule } from '@/utils/apiREAL';
+import { ModuleImplement, buildModule } from '@/utils/apiREAL';
 import EditorModal from '../EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/styles/tailwindStyles';
 
 interface IModuleDetailsProps {
-  selectedModule: Module;
-  onModuleUpdate: (module: Module) => void;
-  canBuild?: "warn" | "yes" | "no";
+  projectId: number;
+  selectedModule: ModuleImplement;
+  onModuleUpdate: (module: ModuleImplement) => void;
+  canBuild?: "warning" | true | false | null;
 }
 
-export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, onModuleUpdate }) => {
+export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, onModuleUpdate, canBuild, projectId }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -49,14 +50,16 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedModule) {
-      try {
-        const updatedModule = await buildModule(
-          selectedModule.projectId,
-          selectedModule.id,
-        );
-        onModuleUpdate(updatedModule);
-      } catch (error) {
-        setError('Failed to update module description');
+      if (canBuild === "warning" ? window.confirm('This moudule is not next in the implementation sequence. Are you sure?') : true) {
+        try {
+          const updatedModule = await buildModule(
+            projectId,
+            selectedModule.id,
+          );
+          onModuleUpdate(updatedModule);
+        } catch (error) {
+          setError('Failed to update module description');
+        }
       }
     }
   };
@@ -81,7 +84,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
             className="-ml-2 block w-full text-3xl font-medium text-gray-700 border-none outline-none bg-transparent focus:ring-0"
             placeholder="Module Name"
           />
-          <button onClick={openEditor} className="hover:text-indigo-700 text-gray-700 text-xl"><MdOutlineSubject /></button>
+          <button type="button" onClick={openEditor} className="hover:text-indigo-700 text-gray-700 text-xl"><MdOutlineSubject /></button>
         </div>
         <textarea
           name="description"
@@ -94,16 +97,16 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
         />
         <div className="flex justify-end">
           <button
-            disabled={true}
             className={`${buttonStyles} mt-4 px-4 mr-4`}
             type="button"
-            onClick={() => { console.log('Integrate'); }}
+            disabled={true}
+            onClick={() => { console.log('Will Integrate'); }}
           >
             Integrate
           </button>
           <button
-            disabled={true}
             type="submit"
+            disabled={!!canBuild}
             className={`${buttonStyles} mt-4 px-4`}
           >
             Build
@@ -113,11 +116,11 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ selectedModule, o
       <div>
         {selectedModule?.files?.map((file) => (
           <button
-            key={file.filePath}
+            key={file.path}
             onClick={openEditor}
             className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-300"
           >
-            <h3 className="font-semibold text-l truncate">{file.filePath.split('/').pop()}</h3>
+            <h3 className="font-semibold text-l truncate">{file.path.split('/').pop()}</h3>
             <p className="text-gray-500 mt-4 text-sm">{file.goal}</p>
           </button>
         ))}

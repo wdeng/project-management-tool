@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './ModuleDetails/Disclosure';
-import { Module } from '../utils/apiREAL';
+import { ModuleHierarchy } from '../utils/apiREAL';
 import ToggleSwitch from './general/ToggleSwitch';
 import ChatInput from './general/ChatTextArea';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
-  modules: Module[];
+  modules: ModuleHierarchy[];
 }
 
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
@@ -54,11 +54,11 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <ToggleSwitch enabled={enabled} setEnabled={setEnabled} label='Project Outline' />
             <p>Project Modules:</p>
             <div className="mt-6">
-              {modules.map((mod) => (
+              {modules.map((m) => (
                 <DisclosurePanel
-                  key={mod.id}
-                  isInitOpen={moduleIdPath[0] === mod.id}
-                  mod={mod}
+                  key={m.id}
+                  isInitOpen={moduleIdPath[0] === m.id}
+                  aModule={m}
                   handleCheckboxChange={handleCheckboxChange}
                   selectedCheckboxOptions={selectedCheckboxOptions}
                   moduleIdPath={moduleIdPath.slice(1)}

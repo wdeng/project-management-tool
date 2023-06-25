@@ -12,25 +12,33 @@ export interface Project {
 
 export interface ProjectDetailResponse {
   outline: {
-    modules: Module[];
+    modules: ModuleHierarchy[];
     [key: string]: any;
   }
-  moduleSequence: Array<{ [key: string]: any }>;
+  moduleSequence: ModuleImplement[];
 }
 
-export interface Module {
+export interface ModuleImplement {
   id: number;
-  projectId: number;
+  name: string;
+  description: string;
+  files: FileDesign[];
+  status: 'pending' | 'done' | 'failure';
+  [key: string]: any 
+}
+
+export interface ModuleHierarchy {
+  id: number;
   tabLevel?: number;
   name: string;
   description: string;
   files: FileDesign[];
-  modules?: Module[];
+  modules?: ModuleHierarchy[];
 }
 
 export interface FileDesign {
-  id?: number;
-  filePath: string;
+  id: number;
+  path: string;
   goal: string;
 }
 
@@ -107,7 +115,7 @@ export async function fetchProjectDetails(projectId: number): Promise<ProjectDet
 
   const resp = response.data;
   if (resp.outline && resp.outline.modules) {
-    const assignTabLevels = (modules: Module[], tabLevel = 0) => {
+    const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
       for (const mod of modules) {
         mod.tabLevel = tabLevel;
         if (mod.modules) {
@@ -125,12 +133,12 @@ export async function fetchProjects(): Promise<Project[]> {
   return response.data;
 }
 
-export async function fetchModules(projectId: number): Promise<Module[]> {
-  const response = await axios.get<Module[]>(`${API_BASE_URL}/project/${projectId}/modules`);
+export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]> {
+  const response = await axios.get<ModuleHierarchy[]>(`${API_BASE_URL}/project/${projectId}/modules`);
   const modules = response.data;
 
   // Create tabLevels for modules and include files
-  const assignTabLevels = (modules: Module[], tabLevel = 0) => {
+  const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
     for (const mod of modules) {
       mod.tabLevel = tabLevel;
       if (mod.modules) {

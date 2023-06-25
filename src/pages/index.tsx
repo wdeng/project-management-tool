@@ -2,27 +2,36 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, Module, fetchModules } from '@/utils/apiREAL';
+import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, ModuleImplement } from '@/utils/apiREAL';
 import ChatButton from '@/components/ChatButton';
 
 
 export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
-  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
-  const [modules, setModules] = useState<Module[]>([]);
+  const [selectedModule, setSelectedModule] = useState<ModuleImplement | null | undefined>(null);
+  const [projectDetails, setProjectDetails] = useState<ProjectDetailResponse | null>(null);
 
   const moduleIdPath = useMemo(() => {
-    if (selectedModule) {
-      return findModuleAncestors(selectedModule.id, modules);
+    if (selectedModule && projectDetails?.outline.modules) {
+      return findModuleAncestors(selectedModule.id, projectDetails.outline.modules);
     }
     return [];
-  }, [selectedModule, modules]);
+  }, [selectedModule, projectDetails]);
+
+  const [executingName, setExecuting] = useState("");
+  const nextPendingModule = useMemo(() => {
+    return projectDetails?.moduleSequence.find((module) => module.status === 'pending')?.name || '';
+  }, [projectDetails]);
+
+  const canBuild = useMemo(() => {
+    return executingName ? false : nextPendingModule === selectedModule?.name ? true : 'warning';
+  }, [nextPendingModule, selectedModule, executingName]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (selectedProjectId !== null) {
-        const modules = await fetchModules(selectedProjectId);
-        setModules(modules);
+        const details = await fetchProjectDetails(selectedProjectId);
+        setProjectDetails(details);
       }
     };
     fetchData();
@@ -32,8 +41,18 @@ export default function Home() {
     setSelectedProjectId(project.id);
   };
 
-  const handleModuleSelect = (mod: Module) => {
-    setSelectedModule(mod);
+  const handleModuleSelect = (moduleName: string) => {
+    const moduleImp = projectDetails?.moduleSequence.find((m) => m.name === moduleName);
+    setSelectedModule(moduleImp);
+  };
+
+  const handleModuleBuild = async (e: React.MouseEvent, moduleName: string, moduleId: number) => {
+    e.stopPropagation();
+    if (executingName) return;
+    setExecuting(moduleName);
+    // executeModule && executeModule(projModule);
+    await new Promise(res => setTimeout(res, 5000));
+    setExecuting("");
   };
 
   return (
@@ -45,17 +64,28 @@ export default function Home() {
         style={{ flex: '0 0 250px' }}
         className={`bg-gray-600 h-screen overflow-auto transform transition-transform ease-in-out duration-300 ${selectedProjectId ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {selectedProjectId && <ModuleList onModuleSelect={handleModuleSelect} modules={modules} selectedModule={selectedModule} nextModuleName='Crawler' />}
+        {selectedProjectId && projectDetails && <ModuleList
+          onModuleSelect={handleModuleSelect}
+          executingName={executingName}
+          onPlayClick={handleModuleBuild}
+          modules={projectDetails.outline.modules}
+          selectedModule={selectedModule}
+          nextModuleName={nextPendingModule}
+        />}
       </div>
       {selectedModule && <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
-        <ModuleDetails selectedModule={selectedModule} onModuleUpdate={() => { }} />
+        <ModuleDetails
+          projectId={selectedProjectId!}
+          selectedModule={selectedModule}
+          onModuleUpdate={() => { }}
+          canBuild={canBuild} />
       </div>}
-      {selectedModule && <ChatButton moduleIdPath={moduleIdPath} modules={modules} />}
+      {selectedModule && <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.outline.modules} />}
     </div>
   );
 }
 
-function findModuleAncestors(moduleId: number, modules: Module[]): number[] {
+function findModuleAncestors(moduleId: number, modules: ModuleHierarchy[]): number[] {
   for (let mod of modules) {
     if (mod.id === moduleId) {
       return [mod.id];
