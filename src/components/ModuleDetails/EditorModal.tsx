@@ -16,7 +16,7 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) 
   const [languageType, setLanguageType] = useState<string>("");
 
   useEffect(() => {
-    if(fileId != null && selectedProjectId && selectedModule?.id) {
+    if (fileId != null && selectedProjectId && selectedModule?.id) {
       fetchSouceCode(selectedProjectId, selectedModule.id, fileId)
         .then(data => {
           setContent(data.content);
@@ -28,12 +28,13 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) 
         });
     }
   }, [selectedProjectId, selectedModule?.id, fileId]);
-  
+
   const onCloseModal = () => {
-    setContent(undefined);
+    setTimeout(() => {
+      setContent(undefined);
+    }, 300);
     onClose();
   }
-
 
   const handleEditorChange = (value: string | undefined) => {
     setContent(value);

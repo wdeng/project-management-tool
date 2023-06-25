@@ -100,7 +100,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           </>
         )}
       </Disclosure>
-      {editingFileId && <EditorModal fileId={editingFileId} onClose={closeEditor} />}
+      <EditorModal fileId={editingFileId} onClose={closeEditor} />
     </>
   );
 };

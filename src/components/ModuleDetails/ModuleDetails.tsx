@@ -50,11 +50,10 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
 
   return (
     <div className="flex flex-col justify-between h-full p-6">
-      {editingFileId &&
-        <EditorModal
-          fileId={editingFileId}
-          onClose={closeEditor}
-        />}
+      <EditorModal
+        fileId={editingFileId}
+        onClose={closeEditor}
+      />
       {error && <p className="absolute text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex justify-between items-center mb-3">
@@ -97,7 +96,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
         </div>
       </form>
       <div>
-      {selectedModule?.files?.map((file) => (
+        {selectedModule?.files?.map((file) => (
           <button
             key={file.path}
             onClick={() => openEditor(file.id)} // pass file id to openEditor
