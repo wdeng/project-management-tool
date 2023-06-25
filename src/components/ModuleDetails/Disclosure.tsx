@@ -27,21 +27,15 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   moduleIdPath,
 }) => {
   // Create new state for the modal open state and the content to display
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [editingFileId, setEditingFileId] = useState<number | null>(null);
 
-  const openModal = useCallback((content: string) => {
-    setModalContent(content);
-    setIsModalOpen(true);
-  }, []);
+  const openEditor = (fileId: number) => {
+    setEditingFileId(fileId);
+  };
 
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
-
-  const handleModalChange = useCallback(() => {
-    // Handle modal content change
-  }, []);
+  const closeEditor = () => {
+    setEditingFileId(null);
+  };
 
   return (
     <>
@@ -82,7 +76,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                         htmlFor={file.path}
                         onClick={(event) => {
                           event.preventDefault();
-                          openModal(file.path);
+                          openEditor(file.id);
                         }}
                         className="cursor-pointer hover:text-indigo-700 hover:underline"
                       >
@@ -106,7 +100,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           </>
         )}
       </Disclosure>
-      <EditorModal isOpen={isModalOpen} onClose={closeModal} value={modalContent} onChange={handleModalChange} />
+      {editingFileId && <EditorModal fileId={editingFileId} onClose={closeEditor} />}
     </>
   );
 };

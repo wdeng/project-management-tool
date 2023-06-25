@@ -40,6 +40,7 @@ export interface FileDesign {
   id: number;
   path: string;
   goal: string;
+  content?: string;
 }
 
 export interface QuestionOption {
@@ -110,8 +111,8 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
   return response.data;
 }
 
-export async function fetchSouceCode(projectId: number, moduleId: number, fileId: number): Promise<string> {
-  const response = await axios.get<string>(`${API_BASE_URL}/sourcecode/${projectId}/${moduleId}/${fileId}`);
+export async function fetchSouceCode(projectId: number, moduleId: number, fileId: number): Promise<FileDesign> {
+  const response = await axios.get<FileDesign>(`${API_BASE_URL}/sourcecode/${projectId}/${moduleId}/${fileId}`);
   return response.data;
 }
 

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ModuleHierarchy, buildModule } from '@/utils/apiREAL';
 import EditorModal from './EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/styles/tailwindStyles';
 import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleDetailsProps {
-  // selectedModule: ModuleHierarchy;
   moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;
   canBuild?: "warning" | true | false | null;
 }
@@ -17,22 +15,15 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
   const [description, setDescription] = useState('');
   const [error, _] = useState<string | null>(null);
 
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editorValue, setEditorValue] = useState<string | null>(null);
+  const [editingFileId, setEditingFileId] = useState<number | null>(null);
 
-  const openEditor = () => {
-    setIsEditorOpen(true);
+  const openEditor = (fileId: number) => {
+    setEditingFileId(fileId);
   };
 
   const closeEditor = () => {
-    setIsEditorOpen(false);
-    setEditorValue(null);
+    setEditingFileId(null);
   };
-
-  const handleEditorChange = (val: string | undefined) => {
-    if (val != null)
-      setEditorValue(val);
-  }
 
   useEffect(() => {
     // Fetch module description from the selected module
@@ -59,12 +50,11 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
 
   return (
     <div className="flex flex-col justify-between h-full p-6">
-      <EditorModal
-        isOpen={isEditorOpen}
-        onClose={closeEditor}
-        value={editorValue}
-        onChange={handleEditorChange}
-      />
+      {editingFileId &&
+        <EditorModal
+          fileId={editingFileId}
+          onClose={closeEditor}
+        />}
       {error && <p className="absolute text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex justify-between items-center mb-3">
@@ -77,7 +67,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
             className="-ml-2 block w-full text-3xl font-medium text-gray-700 border-none outline-none bg-transparent focus:ring-0"
             placeholder="Module Name"
           />
-          <button type="button" onClick={openEditor} className="hover:text-indigo-700 text-gray-700 text-xl"><MdOutlineSubject /></button>
+          <button type="button" className="hover:text-indigo-700 text-gray-700 text-xl"><MdOutlineSubject /></button>
         </div>
         <textarea
           name="description"
@@ -107,10 +97,10 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
         </div>
       </form>
       <div>
-        {selectedModule?.files?.map((file) => (
+      {selectedModule?.files?.map((file) => (
           <button
             key={file.path}
-            onClick={openEditor}
+            onClick={() => openEditor(file.id)} // pass file id to openEditor
             className="bg-white shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-300"
           >
             <h3 className="font-semibold text-l truncate">{file.path.split('/').pop()}</h3>
