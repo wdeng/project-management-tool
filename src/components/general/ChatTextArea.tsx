@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, ChangeEvent } from 'react';
+import React, { useRef, useEffect, useState, ChangeEvent, useCallback } from 'react';
 import { MdSend } from 'react-icons/md';
 
 interface IChatInputProps {
@@ -14,10 +14,26 @@ const ChatInput: React.FC<IChatInputProps> = ({ onSend }) => {
     setChatText(e.target.value);
   };
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
+    console.log('Sending chat text:', chatText);
     onSend(chatText);
     setChatText('');
-  };
+  }, [chatText, onSend]);
+
+  // Add this useEffect
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        handleSend();
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [chatText, handleSend]); // Depend on chatText
 
   useEffect(() => {
     if (textareaRef.current) {

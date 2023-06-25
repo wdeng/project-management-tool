@@ -7,17 +7,19 @@ import { fetchSouceCode } from '@/utils/apiREAL';  // assuming apiREAL is the fi
 interface EditorModalProps {
   onClose: () => void;
   fileId?: number | null;
+  moduleId?: number | null;
   onChange?: (value: string | undefined) => void;
 }
 
-const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) => {
+const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, moduleId }) => {
   const { selectedModule, selectedProjectId } = useSelected();
   const [content, setContent] = useState<string | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
 
   useEffect(() => {
-    if (fileId != null && selectedProjectId && selectedModule?.id) {
-      fetchSouceCode(selectedProjectId, selectedModule.id, fileId)
+    const _moduleId = moduleId || selectedModule?.id;
+    if (fileId != null && selectedProjectId && _moduleId) {
+      fetchSouceCode(selectedProjectId, _moduleId, fileId)
         .then(data => {
           setContent(data.content);
           const extension = getFileExtension(data.path);
@@ -27,7 +29,7 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) 
           console.error(err);
         });
     }
-  }, [selectedProjectId, selectedModule?.id, fileId]);
+  }, [selectedProjectId, selectedModule?.id, fileId, moduleId]);
 
   const onCloseModal = () => {
     setTimeout(() => {

@@ -1,7 +1,7 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import EditorModal from './EditorModal'; // Import your EditorModal
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { ModuleHierarchy } from '@/utils/apiREAL';
 import { checkboxStyles } from '@/styles/tailwindStyles';
 
@@ -27,14 +27,14 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   moduleIdPath,
 }) => {
   // Create new state for the modal open state and the content to display
-  const [editingFileId, setEditingFileId] = useState<number | null>(null);
+  const [editingFileIds, setEditingFileIds] = useState<{ moduleId: number; fileId: number; } | null>(null);
 
-  const openEditor = (fileId: number) => {
-    setEditingFileId(fileId);
+  const openEditor = (moduleId: number, fileId: number) => {
+    setEditingFileIds({ moduleId, fileId });
   };
 
   const closeEditor = () => {
-    setEditingFileId(null);
+    setEditingFileIds(null);
   };
 
   return (
@@ -76,7 +76,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                         htmlFor={file.path}
                         onClick={(event) => {
                           event.preventDefault();
-                          openEditor(file.id);
+                          openEditor(aModule.id, file.id);
                         }}
                         className="cursor-pointer hover:text-indigo-700 hover:underline"
                       >
@@ -100,7 +100,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           </>
         )}
       </Disclosure>
-      <EditorModal fileId={editingFileId} onClose={closeEditor} />
+      <EditorModal moduleId={editingFileIds?.moduleId} fileId={editingFileIds?.fileId} onClose={closeEditor} />
     </>
   );
 };

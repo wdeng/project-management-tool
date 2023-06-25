@@ -16,9 +16,9 @@ interface ChatButtonProps {
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
-  const [enabled, setEnabled] = useState(false); // For the Switch
+  const [outlineUsed, setUseOutline] = useState(true); // For the Switch
 
-  const handleButtonClick = () => {
+  const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
 
@@ -42,7 +42,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[92vh] flex flex-col">
           {/* close button */}
           <button
-            onClick={handleButtonClick}
+            onClick={toggleChat}
             className="absolute top-3 right-3"
           >
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
@@ -51,7 +51,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
-            <ToggleSwitch enabled={enabled} setEnabled={setEnabled} label='Project Outline' />
+            <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((m) => (
@@ -83,7 +83,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
       >
         <button
           className="absolute bottom-4 right-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-3 rounded-3xl drop-shadow-lg"
-          onClick={handleButtonClick}
+          onClick={toggleChat}
         >
           <MdOutlineChat size={20} />
         </button>
