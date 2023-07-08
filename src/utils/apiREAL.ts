@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.wenxiangdeng.com';
+const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.wenxiangdeng.com';
 
 export interface Project {
   id: number;
@@ -120,6 +120,7 @@ export async function fetchProjectDetails(projectId: number): Promise<ProjectDet
   const response = await axios.get<ProjectDetailResponse>(`${API_BASE_URL}/project/${projectId}/details`);
 
   const resp = response.data;
+  console.log(resp);
   if (resp.outline && resp.outline.modules) {
     const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
       for (const mod of modules) {
@@ -155,6 +156,16 @@ export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]
 
   assignTabLevels(modules);
   return modules;
+}
+
+export async function resolveIssues(projectId: number, issues: string, files?: any): Promise<any> {
+  const data = {
+    projectId,
+    issues,
+    files,
+  };
+  const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues`, data);
+  return response.data;
 }
 
 export async function createProjectLegacy(name: string, requirements: string, schema: string): Promise<Project> {

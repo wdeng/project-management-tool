@@ -7,6 +7,9 @@ import DisclosurePanel from './ModuleDetails/Disclosure';
 import { ModuleHierarchy } from '../utils/apiREAL';
 import ToggleSwitch from './general/ToggleSwitch';
 import ChatInput from './general/ChatTextArea';
+import { outlineButtonStyles } from '@/utils/tailwindStyles';
+
+// export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -17,6 +20,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
   const [outlineUsed, setUseOutline] = useState(true); // For the Switch
+  const [readMore, allowReadMore] = useState(true); // For the Switch
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
@@ -47,11 +51,12 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
           >
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
-          <div className="overflow-y-auto flex-grow mt-4">
+          <div className="overflow-y-auto flex-grow my-4">
             <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
             <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
+            <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Allow Agent to Read More Files' />
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((m) => (
@@ -64,6 +69,22 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                   moduleIdPath={moduleIdPath.slice(1)}
                 />
               ))}
+            </div>
+            <div className="mt-6">
+              <span className="mr-6">placeholder for response</span>
+              <button
+                className={`${outlineButtonStyles} mr-2`}
+                disabled={false}
+                onClick={() => { console.log('Will Integrate'); }}
+              >
+                Accept
+              </button>
+              <button
+                disabled={true}
+                className={`${outlineButtonStyles}`}
+              >
+                Reject
+              </button>
             </div>
           </div>
           <ChatInput onSend={() => { }} />

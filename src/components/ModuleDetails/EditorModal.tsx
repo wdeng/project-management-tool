@@ -65,6 +65,7 @@ function getFileExtension(filename: string) {
 const languageMap: Record<string, string> = {
   "py": "python",
   "js": "javascript",
+  "jsx": "javascript",
   "ts": "typescript",
   "tsx": "typescript",
 }

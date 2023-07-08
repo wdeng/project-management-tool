@@ -3,7 +3,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import EditorModal from './EditorModal'; // Import your EditorModal
 import { useState } from 'react';
 import { ModuleHierarchy } from '@/utils/apiREAL';
-import { checkboxStyles } from '@/styles/tailwindStyles';
+import { checkboxStyles } from '@/utils/tailwindStyles';
 
 export interface Option {
   value: string,

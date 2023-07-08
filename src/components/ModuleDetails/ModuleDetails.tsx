@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EditorModal from './EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
-import { buttonStyles } from '@/styles/tailwindStyles';
+import { buttonStyles } from '@/utils/tailwindStyles';
 import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleDetailsProps {
