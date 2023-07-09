@@ -71,7 +71,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               ))}
             </div>
             <div className="mt-6">
-              <span className="mr-6">placeholder for response</span>
+              <span className="mr-6">Proposed modifications</span>
               <button
                 className={`${outlineButtonStyles} mr-2`}
                 disabled={false}

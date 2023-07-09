@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId }}>
       <div className="flex">
-        <div style={{ flex: '0 0 200px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
+        <div style={{ flex: '0 0 250px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
           <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
         </div>
         <div

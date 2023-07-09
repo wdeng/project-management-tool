@@ -6,5 +6,5 @@ export const textAreaStyles = "w-full mb-4 border-none outline-none resize-none 
 
 export const buttonStyles = "hover:bg-indigo-600 bg-indigo-500 p-2 font-semibold rounded-md transition-colors duration-200 text-white disableStyle";
 
-export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
+export const outlineButtonStyles = "bg-white text-md text-gray-700 px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
 

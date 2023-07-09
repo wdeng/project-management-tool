@@ -13,7 +13,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, setEnabled, label 
       <Switch
         checked={enabled}
         onChange={setEnabled}
-        className={`${enabled ? 'bg-indigo-600' : 'bg-gray-400'
+        className={`${enabled ? 'bg-indigo-500' : 'bg-gray-400'
           } relative inline-flex items-center h-6 rounded-full w-11 transition delay-100 duration-200`}
       >
         <span className="sr-only">Enable or disable</span>
