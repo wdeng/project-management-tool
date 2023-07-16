@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
-import DisclosurePanel from './ModuleDetails/Disclosure';
-import { ModuleHierarchy } from '../utils/apiREAL';
-import ToggleSwitch from './general/ToggleSwitch';
-import ChatInput from './general/ChatTextArea';
-import { outlineButtonStyles } from '@/utils/tailwindStyles';
+import DisclosurePanel from './Disclosure';
+import { ModuleHierarchy } from '../../utils/apiREAL';
+import ToggleSwitch from '../general/ToggleSwitch';
+import ChatInput from '../general/ChatTextArea';
+import ModificationButtons from './ModificationSection';
 
 // export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
 
@@ -56,7 +56,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
             <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
-            <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Allow Agent to Read More Files' />
+            <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((m) => (
@@ -70,22 +70,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            <div className="mt-6">
-              <span className="mr-6">Proposed modifications</span>
-              <button
-                className={`${outlineButtonStyles} mr-2`}
-                disabled={false}
-                onClick={() => { console.log('Will Integrate'); }}
-              >
-                Accept
-              </button>
-              <button
-                disabled={true}
-                className={`${outlineButtonStyles}`}
-              >
-                Reject
-              </button>
-            </div>
+            <ModificationButtons />
           </div>
           <ChatInput onSend={() => { }} />
         </div>

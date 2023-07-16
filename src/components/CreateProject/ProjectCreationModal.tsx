@@ -7,6 +7,7 @@ import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 import Spinner from '../general/Spinner';
 import { QuestionChoices, setProjectGoal, anwerProjectQAs } from '@/utils/apiREAL';
+import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -19,13 +20,35 @@ const tabStyle = ({ selected }: any) => (
 
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, onProjectBuild }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showSetProjectGoal, setShowSetProjectGoal] = useState(true); // added this line
+
+  const [currentStep, setCurrentStep] = useState('SetProjectGoal');
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionChoices[]>([]);
   const [projectId, setProjectId] = useState<number>(-1);
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
+
+  const handleProjectGoalSubmit = async (goal: string) => {
+    // Start the loading state
+    setIsLoading(true);
+
+    try {
+      // Simulate an async operation e.g. making API request.
+      const res = await setProjectGoal(goal);
+      setProjectId(res.projectId);
+      setQuestions(res.QAs);
+
+      // After submitting the project goal, we want to show the Multiple Choice Questions
+      console.log(goal)
+      setCurrentStep('MultipleChoiceQuestions');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // End the loading state
+      setIsLoading(false);
+    }
+  };
 
   const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
     setIsLoading(true);
@@ -36,9 +59,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
       if (resps.finished) {
         setIsLoading(false);
-        setShowSetProjectGoal(true);
-        close();
-        onProjectBuild(projectId); // remove the 'await' here
+        setCurrentStep('ReviewProjectSpecs');
         return;
       }
       setQuestions(resps.QAs);
@@ -53,26 +74,33 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     }
   };
 
-  const handleProjectGoalSubmit = async (goal: string) => {
-    // Start the loading state
-    setIsLoading(true);
-
-    try {
-      // Simulate an async operation e.g. making API request.
-      const res = await setProjectGoal(goal);
-      setProjectId(res.projectId);
-      setQuestions(res.QAs);
-
-      // After submitting the project goal, we want to show the Multiple Choice Questions
-      console.log(goal)
-      setShowSetProjectGoal(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // End the loading state
-      setIsLoading(false);
+  const handleIssueSubmit = async (issue: string) => {
+    // Handle the issue here
+    // Maybe sending it to your backend
+    if (issue) {
+      console.log(issue);
+    } else {
+      setCurrentStep('SetProjectGoal');
+      close();
+      onProjectBuild(projectId);
     }
   };
+
+  let currentComponent;
+  switch(currentStep) {
+    case 'SetProjectGoal':
+      currentComponent = <SetProjectGoal onProjectGoalSubmit={handleProjectGoalSubmit} />;
+      break;
+    case 'MultipleChoiceQuestions':
+      currentComponent = <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
+      break;
+    case 'ReviewProjectSpecs':
+      currentComponent = <ReviewProjectSpecs projectSpecs={/* get your project specs here */} onSubmitIssue={handleIssueSubmit}/>;
+      break;
+    default:
+      currentComponent = null;
+  }
+
 
   return (
     <>
@@ -106,14 +134,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
           </Tab.List>
           <Tab.Panels className="mt-2">
             <Tab.Panel>
-              {showSetProjectGoal ? (
-                <SetProjectGoal onProjectGoalSubmit={handleProjectGoalSubmit} />
-              ) : (
-                <MultipleChoiceQuestions
-                  questions={questions}
-                  onAnswersSubmit={handleAnswersSubmit}
-                />
-              )}
+              {currentComponent}
             </Tab.Panel>
             <Tab.Panel>
               <ProjectForm onNewProject={onNewProject} />
