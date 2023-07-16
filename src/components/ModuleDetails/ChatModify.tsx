@@ -32,6 +32,9 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
+  const handleChatSubmit = async () => {
+  }
+
   return (
     <div className="z-10 fixed bottom-10 right-12">
       <Transition
@@ -72,7 +75,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             </div>
             <ModificationButtons />
           </div>
-          <ChatInput onSend={() => { }} />
+          <ChatInput onSend={handleChatSubmit} />
         </div>
       </Transition>
 

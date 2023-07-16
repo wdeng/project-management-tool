@@ -2,6 +2,17 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.wenxiangdeng.com';
 
+export interface ComponentSpecs {
+  [key: string]: string | ComponentSpecs | ComponentSpecs[];
+}
+
+export interface ProjectSpecs {
+  name: string;
+  folder: string;
+  projectDescription: string;
+  components: ComponentSpecs[];
+}
+
 export interface Project {
   id: number;
   name: string;
@@ -57,6 +68,7 @@ export interface QAResponse {
   projectId: number;
   QAs: QuestionChoices[];
   finished?: boolean;
+  projectSpecs?: ProjectSpecs;
 }
 
 export interface QAAnswer {
@@ -93,6 +105,22 @@ export async function anwerProjectQAs(
   };
   const response = await axios.post<QAResponse>(
     `${API_BASE_URL}/project/collect_requirements`, data
+  );
+  return response.data;
+}
+
+export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> {
+  const response = await axios.get<ProjectSpecs>(`${API_BASE_URL}/project/requirement_specs/${projectId}`);
+  return response.data;
+}
+
+export async function fixProjectIssue(issues: string, projectId: number): Promise<QAResponse> {
+  const data = {
+    issues,
+    projectId,
+  };
+  const response = await axios.post<QAResponse>(
+    `${API_BASE_URL}/project/requirement_specs/fix_specs`, data
   );
   return response.data;
 }

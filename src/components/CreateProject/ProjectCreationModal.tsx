@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { MdAdd } from 'react-icons/md';
 import Modal from '../Modal';
@@ -6,7 +6,14 @@ import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
 import Spinner from '../general/Spinner';
-import { QuestionChoices, setProjectGoal, anwerProjectQAs } from '@/utils/apiREAL';
+import {
+  QuestionChoices,
+  setProjectGoal,
+  anwerProjectQAs,
+  ProjectSpecs,
+  fixProjectIssue,
+  getProjectSpecs,
+} from '@/utils/apiREAL';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 
 interface ProjectCreationModalProps {
@@ -22,12 +29,26 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState('SetProjectGoal');
+  const [projectSpecs, setProjectSpecs] = useState<ProjectSpecs | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionChoices[]>([]);
-  const [projectId, setProjectId] = useState<number>(-1);
+  const [projectId, setProjectId] = useState<number>(19);
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
+
+  useEffect(() => {
+
+    const fetchProjectSpecs = async () => {
+      const projectId = 19;
+      const res = await getProjectSpecs(projectId);
+      setProjectSpecs(res);
+      setProjectId(projectId);
+      setCurrentStep('ReviewProjectSpecs');
+    }
+  
+    fetchProjectSpecs();
+  }, []);
 
   const handleProjectGoalSubmit = async (goal: string) => {
     // Start the loading state
@@ -56,16 +77,14 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     try {
       // await new Promise(res => setTimeout(res, 2000));
       const resps = await anwerProjectQAs(answers, projectId)
-
       if (resps.finished) {
         setIsLoading(false);
+        setProjectSpecs(resps.projectSpecs);
         setCurrentStep('ReviewProjectSpecs');
         return;
       }
       setQuestions(resps.QAs);
-
-      // After submitting the answers, we want to show the Multiple Choice Questions
-      console.log(answers);
+      // console.log(answers);
     } catch (error) {
       console.error(error);
     } finally {
@@ -74,11 +93,13 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     }
   };
 
-  const handleIssueSubmit = async (issue: string) => {
+  const handleIssueSubmit = async (issues: string) => {
     // Handle the issue here
     // Maybe sending it to your backend
-    if (issue) {
-      console.log(issue);
+    console.log('issues:', issues);
+    if (issues) {
+      const resps = await fixProjectIssue(issues, projectId)
+      setProjectSpecs(resps.projectSpecs);
     } else {
       setCurrentStep('SetProjectGoal');
       close();
@@ -87,7 +108,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   };
 
   let currentComponent;
-  switch(currentStep) {
+  switch (currentStep) {
     case 'SetProjectGoal':
       currentComponent = <SetProjectGoal onProjectGoalSubmit={handleProjectGoalSubmit} />;
       break;
@@ -95,7 +116,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
       currentComponent = <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
       break;
     case 'ReviewProjectSpecs':
-      currentComponent = <ReviewProjectSpecs projectSpecs={/* get your project specs here */} onSubmitIssue={handleIssueSubmit}/>;
+      currentComponent = projectSpecs && <ReviewProjectSpecs setProjectSpecs={setProjectSpecs} projectSpecs={projectSpecs} onSubmitIssue={handleIssueSubmit} />;
       break;
     default:
       currentComponent = null;

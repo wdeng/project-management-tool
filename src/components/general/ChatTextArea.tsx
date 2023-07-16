@@ -2,23 +2,32 @@ import React, { useRef, useEffect, useState, ChangeEvent, useCallback } from 're
 import { MdSend } from 'react-icons/md';
 
 interface IChatInputProps {
-  onSend: (text: string) => void;
+  onSend: (text: string) => Promise<any>;
+  sendOnEmpty?: boolean;
+  placeholder?: string;
 }
 
-const ChatInput: React.FC<IChatInputProps> = ({ onSend }) => {
+const ChatInput: React.FC<IChatInputProps> = ({
+  onSend,
+  sendOnEmpty = false,
+  placeholder = "Write your issues here.."
+}) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>('');
   const maxLines = 12;
+  const disabledButton = !chatText && !sendOnEmpty;
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setChatText(e.target.value);
   };
 
-  const handleSend = useCallback(() => {
-    console.log('Sending chat text:', chatText);
-    onSend(chatText);
-    setChatText('');
-  }, [chatText, onSend]);
+  const handleSend = useCallback(async () => {
+    if (!disabledButton) {
+      console.log('Sending chat text:', chatText);
+      await onSend(chatText);
+      setChatText('');
+    }
+  }, [chatText, onSend, disabledButton]);
 
   // Add this useEffect
   useEffect(() => {
@@ -27,9 +36,9 @@ const ChatInput: React.FC<IChatInputProps> = ({ onSend }) => {
         handleSend();
       }
     };
-  
+
     window.addEventListener('keydown', handleKeyDown);
-  
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -52,18 +61,19 @@ const ChatInput: React.FC<IChatInputProps> = ({ onSend }) => {
   }, [chatText]);
 
   return (
-    <div className="flex justify-between">
+    <div className="relative flex justify-between items-end">
       <textarea
         ref={textareaRef}
         className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
         value={chatText}
         onChange={handleTextChange}
-        placeholder='Write your issue here...'
+        placeholder={placeholder}
       />
       <button
-        disabled={!chatText}
-        className={`absolute right-6 bottom-6 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${!chatText ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
+        disabled={disabledButton}
+        className={`absolute right-2 bottom-2 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${disabledButton ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
         onClick={handleSend}
+      // style={{ marginBottom: '1.5rem' }}
       >
         <MdSend size={16} />
       </button>
