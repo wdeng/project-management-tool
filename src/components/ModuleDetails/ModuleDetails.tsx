@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditorModal from './EditorModal';
+import EditorModal from '../general/EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/utils/tailwindStyles';
 import { useSelected } from '@/hooks/useSelectedContext';
@@ -29,7 +29,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
     // Fetch module description from the selected module
     if (selectedModule) {
       setName(selectedModule.name);
-      setDescription(selectedModule.description);
+      setDescription(selectedModule.description || '');
     }
   }, [selectedModule]);
 

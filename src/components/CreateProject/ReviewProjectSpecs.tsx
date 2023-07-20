@@ -45,7 +45,7 @@ export const ReviewProjectSpecs: React.FC<ProjectSpecsProps> = ({ projectSpecs, 
       <h4 className='font-bold text-lg pt-2'>Components</h4>
       <RecursiveComponent data={projectSpecs.components} />
       <div className='p-3' />
-      <ChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if you don't have any"/>
+      <ChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if none"/>
     </div>
   );
 };

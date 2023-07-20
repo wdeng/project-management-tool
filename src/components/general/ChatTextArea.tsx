@@ -23,7 +23,6 @@ const ChatInput: React.FC<IChatInputProps> = ({
 
   const handleSend = useCallback(async () => {
     if (!disabledButton) {
-      console.log('Sending chat text:', chatText);
       await onSend(chatText);
       setChatText('');
     }

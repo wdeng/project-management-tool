@@ -1,7 +1,7 @@
-// components/FileChangesPanel.tsx
+// NOT USED YET, will be used to show changes to files in a module
 
 import React, { useState } from 'react';
-import EditorModal from './EditorModal';
+import EditorModal from '../general/EditorModal';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
 
 interface FileChangesPanelProps {

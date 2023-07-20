@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './Disclosure';
-import { ModuleHierarchy } from '../../utils/apiREAL';
+import { useSelected } from '@/hooks/useSelectedContext';
+import { ModuleHierarchy, resolveIssues } from '../../utils/apiREAL';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
 import ModificationButtons from './ModificationSection';
@@ -21,6 +22,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
   const [outlineUsed, setUseOutline] = useState(true); // For the Switch
   const [readMore, allowReadMore] = useState(true); // For the Switch
+  const { selectedProjectId } = useSelected();
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
@@ -32,7 +34,10 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
-  const handleChatSubmit = async () => {
+  const handleChatSubmit = async (issues: string) => {
+    console.log('issues', issues);
+    if (selectedProjectId)
+      await resolveIssues(selectedProjectId, issues, readMore, selectedCheckboxOptions);
   }
 
   return (

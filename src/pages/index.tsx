@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse } from '@/utils/apiREAL';
+import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule } from '@/utils/apiREAL';
 import ChatButton from '@/components/ModuleDetails/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 
@@ -49,11 +49,17 @@ export default function Home() {
   };
 
   const handleModuleBuild = async (moduleName: string, moduleId: number) => {
-    if (executingName) return;
+    if (executingName || !selectedProjectId) return;
     try {
       setExecuting(moduleName);
-      // executeModule && executeModule(projModule);
-      await new Promise(res => setTimeout(res, 5000));
+      const moduleSequence = await buildModule(selectedProjectId, moduleId);
+      setProjectDetails((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          moduleSequence,
+        };
+      });
       setExecuting("");
     } catch (error) {
       console.log('Failed to update module description');
