@@ -13,12 +13,14 @@ export interface Option {
 
 interface DisclosurePanelProps {
   aModule: ModuleHierarchy,
-  handleCheckboxChange: (filePath: string) => void,
-  selectedCheckboxOptions: string[],
+  handleCheckboxChange: (fileRelPath: string) => void,
+  selectedCheckboxOptions: string[],  // relative paths
   isInitOpen: boolean,
   moduleIdPath: number[],
 }
 
+// TODO:
+// - [ ] if selectedCheckboxOptions changed should show the ones that are selected
 const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   aModule,
   handleCheckboxChange,

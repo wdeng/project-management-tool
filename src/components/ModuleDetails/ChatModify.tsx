@@ -63,6 +63,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
             <hr className='border-gray-300 my-8' />
+            {/* Chat History */}
             <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
             <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
             <p>Project Modules:</p>

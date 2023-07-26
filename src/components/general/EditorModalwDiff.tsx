@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Modal from '../Modal';
-import Editor, { DiffEditor} from "@monaco-editor/react";
+import Editor, { DiffEditor } from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { fetchSouceCode } from '@/utils/apiREAL'; 
+import { fetchSouceCode } from '@/utils/apiREAL';
 import { editor } from "monaco-editor";
 
 
@@ -25,7 +25,7 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, mo
   function handleEditorMount(currEditor: editor.IStandaloneDiffEditor) {
 
     const modifiedEditor = currEditor.getModifiedEditor();
-    
+
     // Add event listener to update state whenever the content in the editor changes
     modifiedEditor.onDidChangeModelContent((e: any) => {
       console.log(e)
