@@ -8,7 +8,8 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { ModuleHierarchy, resolveIssues } from '../../utils/apiREAL';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
-import ModificationButtons from './ModificationSection';
+// import ModificationButtons from './ModificationSection';
+import FileChangesPanel from './ModificationPanel';
 
 // export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
 
@@ -79,7 +80,8 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            <ModificationButtons />
+            {/* <ModificationButtons /> */}
+            <FileChangesPanel changedFiles={[{moduleId: 1, fileId: 2}]} />
           </div>
           <ChatInput onSend={handleChatSubmit} />
         </div>

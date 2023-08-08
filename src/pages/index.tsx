@@ -3,7 +3,7 @@ import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
 import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule } from '@/utils/apiREAL';
-import ChatButton from '@/components/ModuleDetails/ChatModify';
+import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 
 

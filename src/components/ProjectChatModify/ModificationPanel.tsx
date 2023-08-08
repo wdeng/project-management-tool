@@ -9,18 +9,19 @@ interface FileChangesPanelProps {
 }
 
 const FileChangesPanel: React.FC<FileChangesPanelProps> = ({ changedFiles }) => {
-  const [editingFileIds, setEditingFileIds] = useState<{ moduleId: number, fileId: number } | null>(null);
+  const [editingFile, setEditingFile] = useState<{ moduleId: number, fileId: number } | null>(null);
 
   const openEditor = (moduleId: number, fileId: number) => {
-    setEditingFileIds({ moduleId, fileId });
+    setEditingFile({ moduleId, fileId });
   };
 
   const closeEditor = () => {
-    setEditingFileIds(null);
+    setEditingFile(null);
   };
 
   return (
     <div className="mt-6">
+      <span className="mr-6">Proposed modifications: </span>
       <div className="mb-3">
         {changedFiles.map(({ moduleId, fileId }) => (
           <button onClick={() => openEditor(moduleId, fileId)} key={fileId} className="text-blue-500 underline mr-2">
@@ -29,10 +30,9 @@ const FileChangesPanel: React.FC<FileChangesPanelProps> = ({ changedFiles }) => 
         ))}
       </div>
       <div className="flex justify-end">
-        <span className="mr-6">Proposed modifications</span>
         <button
           className={`${outlineButtonStyles} mr-2`}
-          onClick={() => { console.log('Will Integrate'); }}
+          onClick={() => { console.log('Integrate'); }}
         >
           Accept
         </button>
@@ -42,7 +42,7 @@ const FileChangesPanel: React.FC<FileChangesPanelProps> = ({ changedFiles }) => 
           Reject
         </button>
       </div>
-      {editingFileIds && <EditorModal moduleId={editingFileIds.moduleId} fileId={editingFileIds.fileId} onClose={closeEditor} />}
+      {editingFile && <EditorModal moduleId={editingFile.moduleId} fileId={editingFile.fileId} onClose={closeEditor} />}
     </div>
   );
 };
