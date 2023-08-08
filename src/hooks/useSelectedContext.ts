@@ -1,4 +1,4 @@
-import { ModuleHierarchy } from '@/utils/apiREAL';
+import { ModuleHierarchy } from '@/utils/apis';
 import React, { createContext, useContext } from 'react';
 
 interface SelectedContextType {

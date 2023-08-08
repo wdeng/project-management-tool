@@ -1,5 +1,5 @@
 import { buttonStyles, checkboxStyles } from '../../utils/tailwindStyles';
-import { QuestionChoices } from '@/utils/apiREAL';
+import { QuestionChoices } from '@/utils/apis';
 import React, { useState } from 'react';
 
 interface MultipleChoiceModalProps {

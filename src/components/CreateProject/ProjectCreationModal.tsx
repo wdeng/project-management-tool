@@ -13,7 +13,7 @@ import {
   ProjectSpecs,
   fixProjectIssue,
   getProjectSpecs,
-} from '@/utils/apiREAL';
+} from '@/utils/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 
 interface ProjectCreationModalProps {

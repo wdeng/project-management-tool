@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { fetchSouceCode } from '@/utils/apiREAL';  // assuming apiREAL is the file where fetchSouceCode is exported from
+import { fetchSouceCode } from '@/utils/apis';  // assuming apiREAL is the file where fetchSouceCode is exported from
 
 interface EditorModalProps {
   onClose: () => void;

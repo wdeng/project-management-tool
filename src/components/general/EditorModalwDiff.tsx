@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Modal from '../Modal';
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { fetchSouceCode } from '@/utils/apiREAL';
+import { fetchSouceCode } from '@/utils/apis';
 import { editor } from "monaco-editor";
 
 

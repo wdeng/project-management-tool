@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule } from '@/utils/apiREAL';
+import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule } from '@/utils/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 

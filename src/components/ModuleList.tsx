@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModuleHierarchy } from '../utils/apiREAL';
+import { ModuleHierarchy } from '../utils/apis';
 import { MdViewStream, MdPlayArrow } from 'react-icons/md';
 import Spinner from './general/Spinner';
 import { useSelected } from '@/hooks/useSelectedContext';

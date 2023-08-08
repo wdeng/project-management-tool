@@ -1,4 +1,4 @@
-import { ComponentSpecs, ProjectSpecs } from '@/utils/apiREAL';
+import { ComponentSpecs, ProjectSpecs } from '@/utils/apis';
 import React from 'react';
 import ChatInput from '../general/ChatTextArea';
 
