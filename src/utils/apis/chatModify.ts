@@ -14,4 +14,3 @@ export async function resolveIssues(
   const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues`, data);
   return response.data;
 }
-
