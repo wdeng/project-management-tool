@@ -6,6 +6,7 @@ interface SelectedContextType {
   setSelectedModule: React.Dispatch<React.SetStateAction<ModuleHierarchy | null | undefined>>;
   selectedProjectId: number | null;
   setSelectedProjectId: React.Dispatch<React.SetStateAction<number | null>>;
+  refreshCurrentProject: () => void;
 }
 
 export const SelectedContext = createContext<SelectedContextType | undefined>(undefined);

@@ -5,11 +5,13 @@ import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ModuleHierarchy, resolveIssues } from '../../utils/apis/chatModify';
+import { ProposedFile, resolveIssues } from '@/utils/apis/chatRefine';
+import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
 // import ModificationButtons from './ModificationSection';
 import FileChangesPanel from './ModificationPanel';
+import ChatHistory from './ChatHistory';
 
 // export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
 
@@ -25,6 +27,9 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [readMore, allowReadMore] = useState(true); // For the Switch
   const { selectedProjectId } = useSelected();
 
+  const [proposedChanges, setProposedChanges] = useState<ProposedFile[]>([]);
+
+
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
@@ -37,8 +42,17 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
 
   const handleChatSubmit = async (issues: string) => {
     console.log('issues', issues);
-    if (selectedProjectId)
-      await resolveIssues(selectedProjectId, issues, readMore, selectedCheckboxOptions);
+    if (selectedProjectId) {
+      const data = await resolveIssues(
+        selectedProjectId, issues, readMore, selectedCheckboxOptions
+      );
+
+      if (data.type === 'readMoreFiles') {
+        setSelectedCheckboxOptions(v => [...v, ...data.files])
+      } else {
+        Array.isArray(data) ? setProposedChanges(data) : setProposedChanges([data]);
+      }
+    }
   }
 
   return (
@@ -53,7 +67,6 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
         <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[92vh] flex flex-col">
-          {/* close button */}
           <button
             onClick={toggleChat}
             className="absolute top-3 right-3"
@@ -63,8 +76,8 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
           <div className="overflow-y-auto flex-grow my-4">
             <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
-            <hr className='border-gray-300 my-8' />
-            {/* Chat History */}
+            <hr className='border-gray-300 my-6' />
+            <ChatHistory steps={[]} />
             <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
             <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
             <p>Project Modules:</p>
@@ -80,8 +93,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            {/* <ModificationButtons /> */}
-            <FileChangesPanel changedFiles={[{moduleId: 1, fileId: 2}]} />
+            {proposedChanges && <FileChangesPanel changedFiles={proposedChanges} />}
           </div>
           <ChatInput onSend={handleChatSubmit} />
         </div>

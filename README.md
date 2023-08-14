@@ -1,6 +1,7 @@
 
 ## TODOs:
-- APIs for modify
+- APIs for modifyChat
+- where do we save file diffs
 
 ## Getting Started
 

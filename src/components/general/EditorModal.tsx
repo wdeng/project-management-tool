@@ -45,13 +45,13 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, mo
 
   return (
     <Modal isOpen={fileId != null} onClose={onCloseModal} title="Edit Module">
-      {content != null && <Editor
+      <Editor
         height="78vh"
         defaultLanguage={languageType}
         value={content}
         onChange={handleEditorChange}
         theme="vs-dark"
-      />}
+      />
     </Modal>
   );
 };

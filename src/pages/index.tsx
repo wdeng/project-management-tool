@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
@@ -13,6 +13,15 @@ export default function Home() {
   const [selectedModule, setSelectedModule] = useState<ModuleHierarchy | null | undefined>(null);
   const [projectDetails, setProjectDetails] = useState<ProjectDetailResponse | null>(null);
 
+  const refreshCurrentProject = useCallback(async () => {
+    if (selectedProjectId == null) return;
+
+    const details = await fetchProjectDetails(selectedProjectId);
+    if (!details.moduleSequence.find((m) => m.name === selectedModule?.name))
+      setSelectedModule(null);
+    setProjectDetails(details);
+  }, [selectedProjectId, selectedModule])
+
   const moduleIdPath = useMemo(() => {
     if (selectedModule && projectDetails?.outline.modules) {
       return findModuleAncestors(selectedModule.id, projectDetails.outline.modules);
@@ -22,7 +31,7 @@ export default function Home() {
 
   const [executingName, setExecuting] = useState("");
   const nextPendingModule = useMemo(() => {
-    return projectDetails?.moduleSequence.find((module) => module.status === 'pending')?.name || '';
+    return projectDetails?.moduleSequence.find((m) => m.status === 'pending')?.name || '';
   }, [projectDetails]);
 
   const canBuild = useMemo(() => {
@@ -67,7 +76,7 @@ export default function Home() {
   };
 
   return (
-    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId }}>
+    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId, refreshCurrentProject }}>
       <div className="flex">
         <div style={{ flex: '0 0 250px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
           <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />

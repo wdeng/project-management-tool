@@ -12,8 +12,8 @@ interface ChatHistoryProps {
 }
 
 const ChatHistory = ({ steps }: ChatHistoryProps) => {
-  return (
-    <div className="overflow-y-auto h-full px-2 py-4">
+  return steps.length > 0 ? (
+    <div className="overflow-y-auto h-full py-2">
       <h3 className="text-lg font-semibold mb-4">Chat History</h3>
       <ul>
         {steps.map((step, index) => (
@@ -24,7 +24,7 @@ const ChatHistory = ({ steps }: ChatHistoryProps) => {
         ))}
       </ul>
     </div>
-  );
+  ) : null;
 };
 
 export default ChatHistory;

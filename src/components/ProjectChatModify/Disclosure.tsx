@@ -61,7 +61,6 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
               leaveTo="max-h-0 opacity-10"
             >
               <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-500">
-                Content for {aModule.name}
                 <div className="flex flex-wrap items-center">
                   {aModule.files?.map((file) => (
                     <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
