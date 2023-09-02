@@ -2,24 +2,22 @@ import React, { useEffect, useState } from 'react';
 import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { fetchSouceCode } from '@/utils/apis';  // assuming apiREAL is the file where fetchSouceCode is exported from
+import { fetchSouceCode } from '@/utils/apis';
 
 interface EditorModalProps {
   onClose: () => void;
   fileId?: number | null;
-  moduleId?: number | null;
   onChange?: (value: string | undefined) => void;
 }
 
-const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, moduleId }) => {
-  const { selectedModule, selectedProjectId } = useSelected();
+const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) => {
+  const { selectedProjectId } = useSelected();
   const [content, setContent] = useState<string | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
 
   useEffect(() => {
-    const _moduleId = moduleId || selectedModule?.id;
-    if (fileId != null && selectedProjectId && _moduleId) {
-      fetchSouceCode(selectedProjectId, _moduleId, fileId)
+    if (fileId != null && selectedProjectId) {
+      fetchSouceCode(selectedProjectId, fileId)
         .then(data => {
           setContent(data.content);
           const extension = getFileExtension(data.path);
@@ -29,7 +27,7 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, mo
           console.error(err);
         });
     }
-  }, [selectedProjectId, selectedModule?.id, fileId, moduleId]);
+  }, [selectedProjectId, fileId]);
 
   const onCloseModal = () => {
     setTimeout(() => {
@@ -47,7 +45,8 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, mo
     <Modal isOpen={fileId != null} onClose={onCloseModal} title="Edit Module">
       <Editor
         height="78vh"
-        defaultLanguage={languageType}
+        // defaultLanguage={languageType}
+        language={languageType}
         value={content}
         onChange={handleEditorChange}
         theme="vs-dark"

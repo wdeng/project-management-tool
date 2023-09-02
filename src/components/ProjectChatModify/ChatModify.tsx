@@ -22,7 +22,7 @@ interface ChatButtonProps {
 
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<string[]>([]);
+  const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
   const [outlineUsed, setUseOutline] = useState(true); // For the Switch
   const [readMore, allowReadMore] = useState(true); // For the Switch
   const { selectedProjectId } = useSelected();
@@ -34,7 +34,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     setIsChatOpen(!isChatOpen);
   };
 
-  const handleCheckboxChange = (option: string) => {
+  const handleCheckboxChange = (option: number) => {
     setSelectedCheckboxOptions((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
     );
@@ -48,7 +48,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
       );
 
       if (data.type === 'readMoreFiles') {
-        setSelectedCheckboxOptions(v => [...v, ...data.files])
+        setSelectedCheckboxOptions(v => [...v, ...data.fileIds])
       } else {
         Array.isArray(data) ? setProposedChanges(data) : setProposedChanges([data]);
       }

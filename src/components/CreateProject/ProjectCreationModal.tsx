@@ -37,18 +37,17 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  useEffect(() => {
-
-    const fetchProjectSpecs = async () => {
-      const projectId = 19;
-      const res = await getProjectSpecs(projectId);
-      setProjectSpecs(res);
-      setProjectId(projectId);
-      setCurrentStep('ReviewProjectSpecs');
-    }
+  // useEffect(() => {
+  //   const fetchProjectSpecs = async () => {
+  //     const projectId = 19;
+  //     const res = await getProjectSpecs(projectId);
+  //     setProjectSpecs(res);
+  //     setProjectId(projectId);
+  //     setCurrentStep('ReviewProjectSpecs');
+  //   }
   
-    fetchProjectSpecs();
-  }, []);
+  //   fetchProjectSpecs();
+  // }, []);
 
   const handleProjectGoalSubmit = async (goal: string) => {
     // Start the loading state

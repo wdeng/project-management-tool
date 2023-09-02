@@ -16,17 +16,14 @@ export interface ProjectSpecs {
 export interface Project {
   id: number;
   name: string;
-  folder: string;
-  url: string;
-  details?: ProjectDetailResponse;
+  // folder: string;
+  // url: string;
 }
 
 export interface ProjectDetailResponse {
-  outline: {
-    modules: ModuleHierarchy[];
-    [key: string]: any;
-  }
-  moduleSequence: ModuleImplement[];
+  modules: ModuleHierarchy[];
+  moduleIds: number[];
+  next: number;
 }
 
 export interface ModuleImplement {
@@ -35,7 +32,7 @@ export interface ModuleImplement {
   description: string;
   files: FileDesign[];
   status: 'pending' | 'done' | 'failure';
-  [key: string]: any 
+  [key: string]: any
 }
 
 export interface ModuleHierarchy {
@@ -50,7 +47,7 @@ export interface ModuleHierarchy {
 export interface FileDesign {
   id: number;
   path: string;
-  goal: string;
+  goal?: string;
   content?: string;
 }
 
@@ -139,27 +136,41 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
   return response.data;
 }
 
-export async function fetchSouceCode(projectId: number, moduleId: number, fileId: number): Promise<FileDesign> {
-  const response = await axios.get<FileDesign>(`${API_BASE_URL}/sourcecode/${projectId}/${moduleId}/${fileId}`);
+export async function fetchSouceCode(projectId: number, fileId: number): Promise<FileDesign> {
+  const response = await axios.get<FileDesign>(`${API_BASE_URL}/sourcecode/${projectId}/${fileId}`);
   return response.data;
 }
 
-export async function fetchProjectDetails(projectId: number): Promise<ProjectDetailResponse> {
-  const response = await axios.get<ProjectDetailResponse>(`${API_BASE_URL}/project/${projectId}/details`);
+export async function fetchProjectModules(projectId: number, projectDetails=false): Promise<ProjectDetailResponse> {
+  let url = `${API_BASE_URL}/project/${projectId}/modules`;
+  if (projectDetails)
+    url = `${API_BASE_URL}/project/${projectId}/details`;
+  const response = await axios.get<ProjectDetailResponse>(url);
 
   const resp = response.data;
   console.log(resp);
-  if (resp.outline && resp.outline.modules) {
-    const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
-      for (const mod of modules) {
-        mod.tabLevel = tabLevel;
-        if (mod.modules) {
-          assignTabLevels(mod.modules, tabLevel + 1);
-        }
+  const [modules, moduleIds] = parseProjectModules(resp.modules);
+  return {...resp, modules, moduleIds};
+}
+
+function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], number[]] {
+  const moduleIds = new Set<number>();
+  const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
+    for (const mod of modules) {
+      mod.tabLevel = tabLevel;
+      if (mod.modules) {
+        assignTabLevels(mod.modules, tabLevel + 1);
       }
-    };
-    assignTabLevels(resp.outline.modules);
-  }
+      moduleIds.add(mod.id);
+    }
+  };
+
+  assignTabLevels(modules);
+  return [modules, Array.from(moduleIds)];
+}
+
+export async function fetchModuleDetails(projectId: number, moduleId: number): Promise<ModuleHierarchy> {
+  const response = await axios.get<ModuleHierarchy>(`${API_BASE_URL}/module/${projectId}/${moduleId}/details`);
   return response.data;
 }
 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/ProjectList';
 import ModuleList from '../components/ModuleList';
 import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule } from '@/utils/apis';
+import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, fetchModuleDetails } from '@/utils/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 
@@ -16,32 +16,30 @@ export default function Home() {
   const refreshCurrentProject = useCallback(async () => {
     if (selectedProjectId == null) return;
 
-    const details = await fetchProjectDetails(selectedProjectId);
-    if (!details.moduleSequence.find((m) => m.name === selectedModule?.name))
+    const details = await fetchProjectModules(selectedProjectId);
+    if (!selectedModule?.id || !details.moduleIds.includes(selectedModule?.id))
       setSelectedModule(null);
     setProjectDetails(details);
   }, [selectedProjectId, selectedModule])
 
   const moduleIdPath = useMemo(() => {
-    if (selectedModule && projectDetails?.outline.modules) {
-      return findModuleAncestors(selectedModule.id, projectDetails.outline.modules);
+    if (selectedModule && projectDetails?.modules) {
+      return findModuleAncestors(selectedModule.id, projectDetails.modules);
     }
     return [];
   }, [selectedModule, projectDetails]);
 
   const [executingName, setExecuting] = useState("");
-  const nextPendingModule = useMemo(() => {
-    return projectDetails?.moduleSequence.find((m) => m.status === 'pending')?.name || '';
-  }, [projectDetails]);
 
   const canBuild = useMemo(() => {
-    return executingName ? false : nextPendingModule === selectedModule?.name ? true : 'warning';
-  }, [nextPendingModule, selectedModule, executingName]);
+    if (!selectedModule || executingName) return false;
+    return projectDetails?.next === selectedModule.id ? true : 'warning';
+  }, [projectDetails?.next, selectedModule, executingName]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (selectedProjectId !== null) {
-        const details = await fetchProjectDetails(selectedProjectId);
+        const details = await fetchProjectModules(selectedProjectId);
         setProjectDetails(details);
       }
     };
@@ -52,21 +50,23 @@ export default function Home() {
     setSelectedProjectId(project.id);
   };
 
-  const handleModuleSelect = (moduleName: string) => {
-    const moduleImp = projectDetails?.moduleSequence.find((m) => m.name === moduleName);
-    setSelectedModule(moduleImp);
+  const handleModuleSelect = async (moduleId: number) => {
+    if (!selectedProjectId) return;
+    const selectedModule = await fetchModuleDetails(selectedProjectId, moduleId);
+    selectedModule.id = moduleId;
+    setSelectedModule(selectedModule);
   };
 
   const handleModuleBuild = async (moduleName: string, moduleId: number) => {
     if (executingName || !selectedProjectId) return;
     try {
       setExecuting(moduleName);
-      const moduleSequence = await buildModule(selectedProjectId, moduleId);
+      const next = await buildModule(selectedProjectId, moduleId);
       setProjectDetails((prev) => {
         if (!prev) return null;
         return {
           ...prev,
-          moduleSequence,
+          next,
         };
       });
       setExecuting("");
@@ -89,8 +89,8 @@ export default function Home() {
             onModuleSelect={handleModuleSelect}
             executingName={executingName}
             onPlayClick={handleModuleBuild}
-            modules={projectDetails.outline.modules}
-            nextModuleName={nextPendingModule}
+            modules={projectDetails.modules}
+            nextModuleId={projectDetails.next}
           />}
         </div>
         {selectedModule && <>
@@ -99,7 +99,7 @@ export default function Home() {
               moduleBuild={handleModuleBuild}
               canBuild={canBuild} />
           </div>
-          <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.outline.modules} />
+          <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
         </>}
       </div>
     </SelectedContext.Provider>

@@ -11,12 +11,12 @@ export interface ProposedFile {
 }
 
 export async function resolveIssues(
-  projectId: number, issues: string, allowAdditionalFiles: boolean, files?: any
+  projectId: number, issues: string, allowAdditionalFiles: boolean, fileIds?: number[]
 ): Promise<any> {
   const data = {
     projectId,
     issues,
-    files,
+    fileIds,
     noAdditionalFiles: !allowAdditionalFiles,
   };
   console.log(data);

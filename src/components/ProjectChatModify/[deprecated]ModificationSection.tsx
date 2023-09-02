@@ -9,7 +9,7 @@ const ModificationButtons = () => {
       <span className="mr-6">Proposed modifications</span>
       <button
         className={`${outlineButtonStyles} mr-2`}
-        onClick={() => { console.log('Will Integrate'); }}
+        onClick={() => { console.log('Future Integration'); }}
       >
         Accept
       </button>

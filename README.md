@@ -1,5 +1,6 @@
 
 ## TODOs:
+- remove sourceFilePaths from all follow up and use files and moduleSequence
 - APIs for modifyChat
 - where do we save file diffs
 

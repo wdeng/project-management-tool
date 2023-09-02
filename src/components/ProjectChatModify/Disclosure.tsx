@@ -13,8 +13,8 @@ export interface Option {
 
 interface DisclosurePanelProps {
   aModule: ModuleHierarchy,
-  handleCheckboxChange: (fileRelPath: string) => void,
-  selectedCheckboxOptions: string[],  // relative paths
+  handleCheckboxChange: (fileRelPath: number) => void,
+  selectedCheckboxOptions: number[],  // relative paths
   isInitOpen: boolean,
   moduleIdPath: number[],
 }
@@ -29,14 +29,14 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   moduleIdPath,
 }) => {
   // Create new state for the modal open state and the content to display
-  const [editingFileIds, setEditingFileIds] = useState<{ moduleId: number; fileId: number; } | null>(null);
+  const [editingFileId, setEditingFileId] = useState<number | null>(null);
 
-  const openEditor = (moduleId: number, fileId: number) => {
-    setEditingFileIds({ moduleId, fileId });
+  const openEditor = (fileId: number) => {
+    setEditingFileId(fileId);
   };
 
   const closeEditor = () => {
-    setEditingFileIds(null);
+    setEditingFileId(null);
   };
 
   return (
@@ -68,8 +68,8 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                         <input
                           type="checkbox"
                           id={file.path}
-                          checked={selectedCheckboxOptions.includes(file.path)}
-                          onChange={() => handleCheckboxChange(file.path)}
+                          checked={selectedCheckboxOptions.includes(file.id)}
+                          onChange={() => handleCheckboxChange(file.id)}
                           className={checkboxStyles}
                         />
                       </div>
@@ -77,7 +77,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                         htmlFor={file.path}
                         onClick={(event) => {
                           event.preventDefault();
-                          openEditor(aModule.id, file.id);
+                          openEditor(file.id);
                         }}
                         className="cursor-pointer hover:text-indigo-700 hover:underline"
                       >
@@ -101,7 +101,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           </>
         )}
       </Disclosure>
-      <EditorModal moduleId={editingFileIds?.moduleId} fileId={editingFileIds?.fileId} onClose={closeEditor} />
+      <EditorModal fileId={editingFileId} onClose={closeEditor} />
     </>
   );
 };
