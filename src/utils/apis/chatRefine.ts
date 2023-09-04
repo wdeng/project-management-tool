@@ -1,14 +1,25 @@
 import axios from 'axios';
 import { API_BASE_URL } from '.'
 
-export interface ProposedFile {
-  type: 'file' | 'outline';
-  path: string;
+interface BaseProposed {
+  type: string;
+  name: string;
+  revisionType: 'add' | 'delete' | 'modify';
   content: string;
-  goal?: string;
-  original?: string;
-  module?: string;
+  original: string;
 }
+
+export interface ProposedFile extends BaseProposed {
+  type: 'file';
+  goal: string;
+  module: string;
+}
+
+export interface ProposedModule extends BaseProposed {
+  type: 'module';
+}
+
+export type ProposedItem = ProposedFile | ProposedModule;
 
 export async function resolveIssues(
   projectId: number, issues: string, allowAdditionalFiles: boolean, fileIds?: number[]
@@ -24,7 +35,7 @@ export async function resolveIssues(
   return response.data;
 }
 
-export async function confirmProjectChanges(projectId: number, changedFiles: ProposedFile[]): Promise<any> {
+export async function confirmProjectChanges(projectId: number, changedFiles: ProposedItem[]): Promise<any> {
   const data = {
     projectId,
     changedFiles,

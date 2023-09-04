@@ -2,18 +2,21 @@ import React, { useMemo, useEffect, useState } from 'react';
 import Modal from '../Modal';
 import { DiffEditor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import { ProposedFile } from '@/utils/apis/chatRefine';
 
 
 interface EditorModalProps {
   onClose: () => void;
-  file?: ProposedFile | null;
-  setContent?: (value: string | undefined) => void;
+  file?: {
+    name: string;
+    original: string;
+    content: string;
+  } | null;
+  contentUpdated?: (value: string | undefined) => void;  // addtional callback to the parent component
 }
 
-const EditorModal: React.FC<EditorModalProps> = ({ onClose, setContent, file }) => {
+const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file }) => {
   const languageType = useMemo(() => {
-    const extension = getFileExtension(file?.path || "");
+    const extension = getFileExtension(file?.name || "yaml");
     return languageMap[extension] || extension;
   }, [file]);
 
@@ -25,8 +28,8 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, setContent, file }) 
     modifiedEditor.onDidChangeModelContent((e: any) => {
       console.log(e)
       const v = modifiedEditor.getValue();
-      if (file) file.content = v;
-      setContent && setContent(v);
+      if (file) file.content = v;  // inline update the content in the file object
+      contentUpdated && contentUpdated(v);
     });
   }
 
@@ -39,6 +42,7 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, setContent, file }) 
     // setTimeout(() => {
     //   setModalOpen(false);
     // }, 300);
+    console.log('closing')
     onClose();
   }
 

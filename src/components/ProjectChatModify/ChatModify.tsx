@@ -5,12 +5,12 @@ import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
 import DisclosurePanel from './Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ProposedFile, resolveIssues } from '@/utils/apis/chatRefine';
+import { ProposedItem, resolveIssues } from '@/utils/apis/chatRefine';
 import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
 // import ModificationButtons from './ModificationSection';
-import FileChangesPanel from './ModificationPanel';
+import ChangesReviewPanel from './ModificationPanel';
 import ChatHistory from './ChatHistory';
 
 // export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
@@ -27,7 +27,42 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [readMore, allowReadMore] = useState(true); // For the Switch
   const { selectedProjectId } = useSelected();
 
-  const [proposedChanges, setProposedChanges] = useState<ProposedFile[]>([]);
+  const [proposedChanges, setProposedChanges] = useState<ProposedItem[]>([
+    {
+      type: 'module',
+      name: 'UserAuth',
+      revisionType: "modify",
+      original: 'Old module content here\nhello\nworld',
+      content: 'New module content here\nhello\nworld',
+    },
+    {
+      type: 'file',
+      content: 'New file content here',
+      original: 'Old file content here',
+      goal: 'Improve readability. Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes',
+      module: 'UserAuth',
+      name: '/src/UserAuth.js',
+      revisionType: 'delete',
+    },
+    {
+      type: 'file',
+      content: 'Another new file content',
+      original: 'Another old file content',
+      goal: 'Refactor code',
+      module: 'UserProfile',
+      name: '/src/UserProfile.js',
+      revisionType: 'modify',
+    },
+    {
+      type: 'file',
+      content: 'Yet another new content',
+      original: 'Yet another old content',
+      goal: 'Add feature',
+      module: 'Dashboard',
+      name: '/src/Dashboard.js',
+      revisionType: 'add',
+    },
+  ]);
 
 
   const toggleChat = () => {
@@ -47,7 +82,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         selectedProjectId, issues, readMore, selectedCheckboxOptions
       );
 
-      if (data.type === 'readMoreFiles') {
+      if (data.type === 'readFiles') {
         setSelectedCheckboxOptions(v => [...v, ...data.fileIds])
       } else {
         Array.isArray(data) ? setProposedChanges(data) : setProposedChanges([data]);
@@ -66,7 +101,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
-        <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[52rem] max-h-[92vh] flex flex-col">
+        <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[48rem] max-h-[92vh] flex flex-col">
           <button
             onClick={toggleChat}
             className="absolute top-3 right-3"
@@ -74,12 +109,14 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
           <div className="overflow-y-auto flex-grow my-4">
-            <h3 className="font-semibold text-lg">Select the resources to expose to Debugger</h3>
+            <h2 className="font-semibold text-2xl">Select the resources to expose to Debugger</h2>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
-            <hr className='border-gray-300 my-6' />
             <ChatHistory steps={[]} />
-            <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
-            <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
+            <div className="mb-4 bg-white px-6 py-3 rounded-lg drop-shadow-sm">
+              <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
+              <hr className='border-gray-300 my-3 mr-[-1.5rem]' />
+              <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
+            </div>
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((m) => (
@@ -93,7 +130,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            {proposedChanges && <FileChangesPanel changedFiles={proposedChanges} />}
+            {proposedChanges && <ChangesReviewPanel changes={proposedChanges} />}
           </div>
           <ChatInput onSend={handleChatSubmit} />
         </div>

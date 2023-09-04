@@ -1,8 +1,7 @@
 
 ## TODOs:
-- remove sourceFilePaths from all follow up and use files and moduleSequence
-- APIs for modifyChat
-- where do we save file diffs
+- GUI for project level info (currently only modules): outline and schema (future editable)
+- change switches in refiner to something more obvious
 
 ## Getting Started
 
