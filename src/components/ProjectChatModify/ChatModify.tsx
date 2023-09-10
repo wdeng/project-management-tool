@@ -1,19 +1,16 @@
-// components/ChatButton.tsx
-
 import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
-import { MdClose, MdOutlineChat } from 'react-icons/md'; // Import icons from react-icons
+import { MdClose, MdOutlineChat } from 'react-icons/md';
 import DisclosurePanel from './Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ProposedItem, resolveIssues } from '@/utils/apis/chatRefine';
+import { ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, resolveIssues } from '@/utils/apis/chatRefine';
 import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
-// import ModificationButtons from './ModificationSection';
 import ChangesReviewPanel from './ModificationPanel';
 import ChatHistory from './ChatHistory';
-
-// export const outlineButtonStyles = "bg-white border-2 border-indigo-500 text-black px-2 rounded-full hover:bg-indigo-500 hover:text-white transition-colors duration-300 disableStyle";
+import Spinner from '../general/Spinner';
+import NextSteps from './NextStepsPanel';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -21,53 +18,28 @@ interface ChatButtonProps {
 }
 
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
-  const [outlineUsed, setUseOutline] = useState(true); // For the Switch
-  const [readMore, allowReadMore] = useState(true); // For the Switch
   const { selectedProjectId } = useSelected();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  // resources for GPT
+  const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
+  const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
 
-  const [proposedChanges, setProposedChanges] = useState<ProposedItem[]>([
-    {
-      type: 'module',
-      name: 'UserAuth',
-      revisionType: "modify",
-      original: 'Old module content here\nhello\nworld',
-      content: 'New module content here\nhello\nworld',
-    },
-    {
-      type: 'file',
-      content: 'New file content here',
-      original: 'Old file content here',
-      goal: 'Improve readability. Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes',
-      module: 'UserAuth',
-      name: '/src/UserAuth.js',
-      revisionType: 'delete',
-    },
-    {
-      type: 'file',
-      content: 'Another new file content',
-      original: 'Another old file content',
-      goal: 'Refactor code',
-      module: 'UserProfile',
-      name: '/src/UserProfile.js',
-      revisionType: 'modify',
-    },
-    {
-      type: 'file',
-      content: 'Yet another new content',
-      original: 'Yet another old content',
-      goal: 'Add feature',
-      module: 'Dashboard',
-      name: '/src/Dashboard.js',
-      revisionType: 'add',
-    },
-  ]);
+  const [currentIssueId, setIssueId] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
+  const [proposedChanges, setProposedChanges] = useState<ProposedItem[] | ProposedDirectAnswer>([]);
+  const [nextSteps, setNextSteps] = useState<string[]>([]);
+  const [resolving, setResolving] = useState(false);
 
-
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
+  const clearHistory = () => {
+    setHistory([]);
+    setIssueId(null);
+  }
+  const resetHistory = (h?: string[] | null) => {
+    setHistory(h ?? []);
+    setProposedChanges([]);
+    setResolving(false);
+  }
+  const toggleChat = () => setIsChatOpen(!isChatOpen);
 
   const handleCheckboxChange = (option: number) => {
     setSelectedCheckboxOptions((prev) =>
@@ -75,19 +47,27 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
-  const handleChatSubmit = async (issues: string) => {
-    console.log('issues', issues);
-    if (selectedProjectId) {
-      const data = await resolveIssues(
-        selectedProjectId, issues, readMore, selectedCheckboxOptions
-      );
+  const handleChatSubmit = async (issues: string | null = null) => {
+    if (!selectedProjectId || !issues && !currentIssueId) return;
+    if (issues != null)
+      setHistory(prev => [...prev, `User issue: ${issues}`]);
+    setResolving(true);
+    const { toolType, changes, issueId, steps } = await resolveIssues(
+      selectedProjectId, issues, currentIssueId, selectedCheckboxOptions, resourcesEnabled
+    );
+    if (issueId !== currentIssueId)
+      setIssueId(issueId);
 
-      if (data.type === 'readFiles') {
-        setSelectedCheckboxOptions(v => [...v, ...data.fileIds])
-      } else {
-        Array.isArray(data) ? setProposedChanges(data) : setProposedChanges([data]);
-      }
-    }
+    if (toolType === 'ReadMoreFiles') {
+      setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
+      setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
+    } else if (toolType === 'TaskComplete') {
+      setHistory(prev => [...prev, `Task completed: ${changes}`]);
+    } else
+      setProposedChanges(changes);
+    const _steps = steps || [];
+    _steps.shift();
+    setNextSteps(_steps);
   }
 
   return (
@@ -101,22 +81,33 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
-        <div className="absolute bottom-0 text-gray-700 right-0 p-4 rounded-lg shadow-2xl bg-gray-200 w-[48rem] max-h-[92vh] flex flex-col">
+        <div className="absolute bottom-0 text-gray-700 right-0 rounded-lg shadow-2xl bg-gray-200 w-[48rem] max-h-[92vh] flex flex-col">
           <button
             onClick={toggleChat}
-            className="absolute top-3 right-3"
+            className="absolute top-3 right-3 z-10"
           >
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
-          <div className="overflow-y-auto flex-grow my-4">
+          <div className="overflow-y-auto flex-grow p-4">
             <h2 className="font-semibold text-2xl">Select the resources to expose to Debugger</h2>
             <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
-            <ChatHistory steps={[]} />
             <div className="mb-4 bg-white px-6 py-3 rounded-lg drop-shadow-sm">
-              <ToggleSwitch enabled={outlineUsed} setEnabled={setUseOutline} label='Project Outline' />
-              <hr className='border-gray-300 my-3 mr-[-1.5rem]' />
-              <ToggleSwitch enabled={readMore} setEnabled={allowReadMore} label='Agent Read More Files' />
+              {Object.entries(REFINE_RESOURCES).map(([resource, label], index) => (
+                <div key={resource}>
+                  {index ? <hr className='border-gray-300 my-3 mr-[-1.5rem]' /> : null}
+                  <ToggleSwitch
+                    enabled={resourcesEnabled.includes(resource as RefineResource)}
+                    setEnabled={(newState) => {
+                      setResourcesEnabled(prevState =>
+                        newState ? [...prevState, resource as RefineResource] : prevState.filter(res => res !== resource)
+                      );
+                    }}
+                    label={label}
+                  />
+                </div>
+              ))}
             </div>
+
             <p>Project Modules:</p>
             <div className="mt-6">
               {modules.map((m) => (
@@ -130,9 +121,21 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            {proposedChanges && <ChangesReviewPanel changes={proposedChanges} />}
+            <ChatHistory steps={history} clearHistory={clearHistory} />
+            {!!Object.keys(proposedChanges).length ? <ChangesReviewPanel
+              changes={proposedChanges}
+              issueId={currentIssueId}
+              reset={resetHistory}
+            /> : <NextSteps
+              steps={nextSteps}
+              proceed={handleChatSubmit}
+              deny={() => setNextSteps([])}
+            />}
           </div>
-          <ChatInput onSend={handleChatSubmit} />
+          <div className='p-4 pt-0'>
+            {resolving ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}
+          </div>
+
         </div>
       </Transition>
 
@@ -159,3 +162,42 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
 };
 
 export default ChatButton;
+
+
+
+// const demoChanges = [
+//   {
+//     type: 'module',
+//     name: 'UserAuth',
+//     revisionType: "modify",
+//     original: 'Old module content here\nhello\nworld',
+//     content: 'New module content here\nhello\nworld',
+//   },
+//   {
+//     type: 'file',
+//     content: 'New file content here',
+//     original: 'Old file content here',
+//     goal: 'Improve readability. Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes',
+//     module: 'UserAuth',
+//     name: '/src/UserAuth.js',
+//     revisionType: 'delete',
+//   },
+//   {
+//     type: 'file',
+//     content: 'Another new file content',
+//     original: 'Another old file content',
+//     goal: 'Refactor code',
+//     module: 'UserProfile',
+//     name: '/src/UserProfile.js',
+//     revisionType: 'modify',
+//   },
+//   {
+//     type: 'file',
+//     content: 'Yet another new content',
+//     original: 'Yet another old content',
+//     goal: 'Add feature',
+//     module: 'Dashboard',
+//     name: '/src/Dashboard.js',
+//     revisionType: 'add',
+//   },
+// ]

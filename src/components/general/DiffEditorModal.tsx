@@ -26,7 +26,6 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file
 
     // Add event listener to update state whenever the content in the editor changes
     modifiedEditor.onDidChangeModelContent((e: any) => {
-      console.log(e)
       const v = modifiedEditor.getValue();
       if (file) file.content = v;  // inline update the content in the file object
       contentUpdated && contentUpdated(v);
@@ -42,7 +41,6 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file
     // setTimeout(() => {
     //   setModalOpen(false);
     // }, 300);
-    console.log('closing')
     onClose();
   }
 

@@ -7,8 +7,8 @@ interface ProjectFormProps {
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
   const [projectName, setProjectName] = useState('');
+  const [projectFolder, setProjectFolder] = useState('');
   const [requirements, setRequirements] = useState('');
-  const [schema, setSchema] = useState('');
 
   const validateForm = () => projectName.length > 0 && requirements.length > 0;
 
@@ -16,10 +16,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
     event.preventDefault();
 
     try {
-      await onNewProject(projectName, requirements, schema);
+      await onNewProject(projectName, projectFolder, requirements);
       setProjectName(''); // reset form
+      setProjectFolder(''); // reset form
       setRequirements(''); // reset form
-      setSchema(''); // reset form
     } catch (error) {
       // Display error messages
     }
@@ -35,21 +35,21 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onNewProject }) => {
         className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-1 text-lg"
         placeholder='Project Name'
       />
+      <input
+        id="projectFolder"
+        type="text"
+        value={projectFolder}
+        onChange={(e) => setProjectFolder(e.target.value)}
+        className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-1"
+        placeholder='Project Folder'
+      />
       <textarea
         id="requirements"
         value={requirements}
         onChange={(e) => setRequirements(e.target.value)}
         className={textAreaStyles}
         placeholder='Requirements'
-        rows={5}
-      />
-      <textarea
-        id="schema"
-        value={schema}
-        onChange={(e) => setSchema(e.target.value)}
-        className={textAreaStyles}
-        placeholder='Optional API or database schema'
-        rows={5}
+        rows={10}
       />
       <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`}>
         Create

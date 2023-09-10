@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Project, fetchProjects, createProjectLegacy, buildProject, ProjectDetailResponse } from '../utils/apis';
+import { Project, fetchProjects, initProject, buildProject, ProjectDetailResponse } from '../utils/apis';
 import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard } from "react-icons/md";
 import Spinner from './general/Spinner';
@@ -30,10 +30,11 @@ export const ProjectList: React.FC<ProjectListProps> = ({
     fetchData();
   }, []);
 
-  async function handleNewProject(projectName: string, requirements: string, schema: string) {
+  async function handleNewProject(projectName: string, folderName: string, requirements: string) {
     try {
       // you would call the API to create the project here
-      await createProjectLegacy(projectName, requirements, schema);
+      const { projectId } = await initProject(projectName, folderName, requirements);
+      await handleProjectBuild(projectId)
 
       // and then re-fetch the projects
       fetchData();

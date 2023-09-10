@@ -2,13 +2,13 @@ import React from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
 interface SpinnerProps {
-  additionalStyles?: string;
+  className?: string;
   spinnerSize?: number;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ additionalStyles = '', spinnerSize=36 }) => {
+const Spinner: React.FC<SpinnerProps> = ({ className = '', spinnerSize=36 }) => {
   return (
-    <div className={`flex justify-center items-center ${additionalStyles}`}>
+    <div className={`flex justify-center items-center ${className}`}>
       <ImSpinner2 className="animate-spin text-gray-400" size={spinnerSize} />
     </div>
   );

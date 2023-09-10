@@ -12,7 +12,6 @@ import {
   anwerProjectQAs,
   ProjectSpecs,
   fixProjectIssue,
-  getProjectSpecs,
 } from '@/utils/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 
@@ -45,7 +44,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   //     setProjectId(projectId);
   //     setCurrentStep('ReviewProjectSpecs');
   //   }
-  
+
   //   fetchProjectSpecs();
   // }, []);
 
@@ -83,7 +82,6 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         return;
       }
       setQuestions(resps.QAs);
-      // console.log(answers);
     } catch (error) {
       console.error(error);
     } finally {
@@ -115,10 +113,19 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
       currentComponent = <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
       break;
     case 'ReviewProjectSpecs':
-      currentComponent = projectSpecs && <ReviewProjectSpecs setProjectSpecs={setProjectSpecs} projectSpecs={projectSpecs} onSubmitIssue={handleIssueSubmit} />;
+      currentComponent = projectSpecs && <ReviewProjectSpecs
+        setProjectSpecs={setProjectSpecs}
+        projectSpecs={projectSpecs}
+        onSubmitIssue={handleIssueSubmit}
+      />;
       break;
     default:
       currentComponent = null;
+  }
+
+  const directNewProject = async (projectName: string, requirements: string, schema: string) => {
+    close();
+    await onNewProject(projectName, requirements, schema);
   }
 
 
@@ -157,7 +164,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
               {currentComponent}
             </Tab.Panel>
             <Tab.Panel>
-              <ProjectForm onNewProject={onNewProject} />
+              <ProjectForm onNewProject={directNewProject} />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

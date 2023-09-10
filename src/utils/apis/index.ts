@@ -127,6 +127,12 @@ export async function buildProject(projectId: number): Promise<ProjectDetailResp
   return response.data;
 }
 
+export async function initProject(name: string, folder: string, requirements: string): Promise<any> {
+  console.log(name, folder, requirements);
+  const response = await axios.post<any>(`${API_BASE_URL}/project/init`, { name, folder, requirements });
+  return response.data;
+}
+
 export async function buildModule(projectId: number, moduleId: number): Promise<any> {
   const data = {
     projectId,
@@ -195,9 +201,4 @@ export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]
 
   assignTabLevels(modules);
   return modules;
-}
-
-export async function createProjectLegacy(name: string, requirements: string, schema: string): Promise<Project> {
-  const response = await axios.post<Project>(`${API_BASE_URL}/projects`, { name, requirements, schema });
-  return response.data;
 }

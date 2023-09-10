@@ -79,14 +79,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
         />
         <div className="flex justify-end">
           <button
-            className={`${buttonStyles} mt-4 px-4 mr-4`}
-            type="button"
-            disabled={true}
-            onClick={() => { console.log('Will Integrate'); }}
-          >
-            Integrate
-          </button>
-          <button
             type="submit"
             disabled={!canBuild}
             className={`${buttonStyles} mt-4 px-4`}

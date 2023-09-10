@@ -17,7 +17,7 @@ export default function Home() {
     if (selectedProjectId == null) return;
 
     const details = await fetchProjectModules(selectedProjectId);
-    if (!selectedModule?.id || !details.moduleIds.includes(selectedModule?.id))
+    if (!(selectedModule?.id && details.moduleIds.includes(selectedModule.id)))
       setSelectedModule(null);
     setProjectDetails(details);
   }, [selectedProjectId, selectedModule])

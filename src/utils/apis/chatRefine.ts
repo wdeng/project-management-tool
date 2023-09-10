@@ -19,27 +19,51 @@ export interface ProposedModule extends BaseProposed {
   type: 'module';
 }
 
+export interface ProposedDirectAnswer {
+  type: 'answer';
+  content: string;
+}
+
 export type ProposedItem = ProposedFile | ProposedModule;
 
+export type RefineResource = 'outline' | 'schema' | 'read_more_files' | 'direct_answer';
+
+export const REFINE_RESOURCES: Record<RefineResource, string> = {
+  outline: "Project Outline",
+  schema: "Data and API Schema",
+  read_more_files: "Read More Files",
+  direct_answer: "Directly Answer Question",
+};
+
 export async function resolveIssues(
-  projectId: number, issues: string, allowAdditionalFiles: boolean, fileIds?: number[]
+  projectId: number, issues: string | null, issueId: string | null, fileIds?: number[], resourcesAllowed: RefineResource[] = []
 ): Promise<any> {
   const data = {
     projectId,
+    issueId,
     issues,
     fileIds,
-    noAdditionalFiles: !allowAdditionalFiles,
+    resourcesAllowed,
   };
   console.log(data);
   const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues`, data);
+  console.log(response.data);
   return response.data;
 }
 
-export async function confirmProjectChanges(projectId: number, changedFiles: ProposedItem[]): Promise<any> {
+export async function confirmProjectChanges(projectId: number, issueId: string, changedFiles: ProposedItem[]): Promise<any> {
   const data = {
     projectId,
-    changedFiles,
+    issueId,
+    changes: changedFiles,
   };
-  const response = await axios.post<any>(`${API_BASE_URL}/project/confirm_project`, data);
+  console.log(data);
+  const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues/confirm`, data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getIssueHistory(projectId: number, issueId: string): Promise<any> {
+  const response = await axios.get<any>(`${API_BASE_URL}/project=${projectId}/issue=${issueId}/history`);
   return response.data;
 }

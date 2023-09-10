@@ -1,5 +1,6 @@
 
 ## TODOs:
+- organize project building part: two pipelines should unify into one
 - GUI for project level info (currently only modules): outline and schema (future editable)
 - change switches in refiner to something more obvious
 
