@@ -50,7 +50,8 @@ function renderElement(
   }
 };
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
+export const InfoEdit: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
+  // TODO: check if the data should set 
   // const [data, setData] = useState<{ [key: string]: any }>(data);
   // const handleFieldChange = (key: string, newValue: any) => {
   //   // Update the local state

@@ -3,7 +3,7 @@ import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSouceCode, updateFile } from '@/utils/apis';
-import { DynamicForm } from './DescView';
+import { InfoEdit } from './DescView';
 import { getFileExtension, languageMap } from '@/utils';
 
 interface EditorModalProps {
@@ -77,7 +77,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
         value={file?.content}
         onChange={handleEditorChange}
         theme="vs-dark"
-      /> : <DynamicForm values={file} valueTypes={dispayTypes} onUpdateField={(k: string, v: any) => setFile(
+      /> : <InfoEdit values={file} valueTypes={dispayTypes} onUpdateField={(k: string, v: any) => setFile(
         f => f && ({...f, k: v}))} /> }
     </Modal>
   );
