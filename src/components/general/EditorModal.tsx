@@ -1,25 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { fetchSouceCode } from '@/utils/apis';
+import { FileDesign, fetchSouceCode, updateFile } from '@/utils/apis';
 
 interface EditorModalProps {
   onClose: () => void;
   fileId?: number | null;
   onChange?: (value: string | undefined) => void;
+  kind?: "editor" | "info";
 }
 
-const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) => {
+const different = (file1: FileDesign, file2?: FileDesign | null): boolean => {
+  if (!file2)
+    return true
+  const allKeys: (keyof FileDesign)[] = ["id", "path", "goal", "content"];
+  
+  for (const key of allKeys) {
+    if (file1[key] !== file2[key as keyof FileDesign]) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
+const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, kind="editor" }) => {
   const { selectedProjectId } = useSelected();
-  const [content, setContent] = useState<string | undefined>(undefined);
+  const [file, setFile] = useState<FileDesign | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
+  const orgFile = useRef<FileDesign | null>(null)
+
 
   useEffect(() => {
     if (fileId != null && selectedProjectId) {
       fetchSouceCode(selectedProjectId, fileId)
         .then(data => {
-          setContent(data.content);
+          setFile(data);
+          orgFile.current = data
           const extension = getFileExtension(data.path);
           setLanguageType(languageMap[extension] || extension);
         })
@@ -30,14 +48,17 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) 
   }, [selectedProjectId, fileId]);
 
   const onCloseModal = () => {
+    const curr = orgFile.current
+    if (selectedProjectId && file?.id && different(file, curr))
+      updateFile(selectedProjectId, file)
     setTimeout(() => {
-      setContent(undefined);
+      setFile(undefined);
     }, 300);
     onClose();
   }
 
   const handleEditorChange = (value: string | undefined) => {
-    setContent(value);
+    setFile(v => v ? {...v, content: value} : undefined);
     onChange && onChange(value);
   };
 
@@ -45,9 +66,8 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) 
     <Modal isOpen={fileId != null} onClose={onCloseModal} title="Edit Module">
       <Editor
         height="78vh"
-        // defaultLanguage={languageType}
         language={languageType}
-        value={content}
+        value={file?.content}
         onChange={handleEditorChange}
         theme="vs-dark"
       />

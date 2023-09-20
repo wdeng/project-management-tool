@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import EditorModal from '../general/EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/utils/tailwindStyles';
 import { useSelected } from '@/hooks/useSelectedContext';
-import FileCard from './FileCard';
+import FilesCard from './FilesCard';
 
 interface IModuleDetailsProps {
   moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;
@@ -15,16 +14,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, _] = useState<string | null>(null);
-
-  const [editingFileId, setEditingFileId] = useState<number | null>(null);
-
-  const openEditor = (fileId: number) => {
-    setEditingFileId(fileId);
-  };
-
-  const closeEditor = () => {
-    setEditingFileId(null);
-  };
 
   useEffect(() => {
     // Fetch module description from the selected module
@@ -51,10 +40,6 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
 
   return (
     <div className="flex flex-col justify-between h-full p-6">
-      <EditorModal
-        fileId={editingFileId}
-        onClose={closeEditor}
-      />
       {error && <p className="absolute text-red-500">{error}</p>}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex justify-between items-center mb-3">
@@ -88,14 +73,9 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
           </button>
         </div>
       </form>
-      <div>
-        {selectedModule?.files?.map((file) => (
-          <FileCard key={file.path} file={file} openEditor={openEditor}/>
-        ))}
-      </div>
+      {!!selectedModule?.files && <FilesCard files={selectedModule?.files} />}
     </div>
   );
-
 };
 
 export default ModuleDetails;
