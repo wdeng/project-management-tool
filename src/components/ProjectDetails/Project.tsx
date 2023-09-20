@@ -1,5 +1,6 @@
 // ProjectDetails.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import ChangesReviewPanel from '../ProjectChatModify/ModificationPanel';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -34,31 +35,34 @@ const ApiSchema: React.FC<IApiSchemaProps> = ({ schemaData }) => {
 
 interface IProjectDetailsProps {
   projectData: any; // Replace 'any' with your project data type
+  projectSchema: any;
 }
 
-export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectData }) => {
+export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectData, projectSchema }) => {
+
+  const [changes, setChanges] = useState(null)
+
   return (
     <div className="flex flex-col">
       <h1>{projectData.projectName}</h1>
       <p>{projectData.description}</p>
-      <h2>Languages:</h2>
-      <ul>
-        {projectData.languages.map((lang: string) => (
-          <li key={lang}>{lang}</li>
-        ))}
-      </ul>
+      {/* refresh button */}
       <h2>Requirements:</h2>
       <ul>
         {projectData.requirements.map((req: string) => (
           <li key={req}>{req}</li>
         ))}
       </ul>
+
+      {
+        changes && <ChangesReviewPanel />
+      }
       <h2>Modules:</h2>
       {projectData.modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
         <Module key={index} moduleData={mod} />
       ))}
       <h2>Project Schema:</h2>
-      {projectData.projectSchema.map((schema: any, index: number) => ( // Replace 'any' with your schema data type
+      {projectSchema.map((schema: any, index: number) => ( // Replace 'any' with your schema data type
         <ApiSchema key={index} schemaData={schema} />
       ))}
     </div>

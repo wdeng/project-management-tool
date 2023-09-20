@@ -16,11 +16,13 @@ const getTagStyle = (type: 'add' | 'delete' | 'modify') => {
 
 interface ChangesReviewPanelProps {
   changes: ProposedItem[] | ProposedDirectAnswer;
-  issueId: string | null;
+  issueId?: string | null;
   reset: (history?: string[] | null) => void;
 }
 
-const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({ changes, issueId, reset }) => {
+const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
+  changes, issueId = null, reset
+}) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
 
