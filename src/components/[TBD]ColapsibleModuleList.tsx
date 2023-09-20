@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Module as IModule, fetchModules } from '../utils/api';
+import { Module as IModule, fetchModules } from '../utils/api_mocks';
 
 interface IModuleListProps {
   projectId: number;

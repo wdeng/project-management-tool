@@ -33,8 +33,15 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const clearHistory = () => {
     setHistory([]);
     setIssueId(null);
+    setNextSteps([]);
+    setResolving(false);
   }
   const resetHistory = (h?: string[] | null) => {
+    if (h != null)
+      setHistory(h);
+    else {
+      clearHistory();
+    }
     setHistory(h ?? []);
     setProposedChanges([]);
     setResolving(false);
@@ -61,8 +68,10 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     if (toolType === 'ReadMoreFiles') {
       setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
       setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
+      setResolving(false);
     } else if (toolType === 'TaskComplete') {
       setHistory(prev => [...prev, `Task completed: ${changes}`]);
+      setResolving(false);
     } else
       setProposedChanges(changes);
     const _steps = steps || [];
@@ -121,16 +130,16 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            <ChatHistory steps={history} clearHistory={clearHistory} />
             {!!Object.keys(proposedChanges).length ? <ChangesReviewPanel
               changes={proposedChanges}
               issueId={currentIssueId}
               reset={resetHistory}
             /> : <NextSteps
               steps={nextSteps}
-              proceed={handleChatSubmit}
+              proceed={()=>handleChatSubmit(null)}
               deny={() => setNextSteps([])}
             />}
+            <ChatHistory steps={history} clearHistory={clearHistory} />
           </div>
           <div className='p-4 pt-0'>
             {resolving ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}
@@ -162,42 +171,3 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
 };
 
 export default ChatButton;
-
-
-
-// const demoChanges = [
-//   {
-//     type: 'module',
-//     name: 'UserAuth',
-//     revisionType: "modify",
-//     original: 'Old module content here\nhello\nworld',
-//     content: 'New module content here\nhello\nworld',
-//   },
-//   {
-//     type: 'file',
-//     content: 'New file content here',
-//     original: 'Old file content here',
-//     goal: 'Improve readability. Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes Add event listener to update state whenever the content in the editor changes',
-//     module: 'UserAuth',
-//     name: '/src/UserAuth.js',
-//     revisionType: 'delete',
-//   },
-//   {
-//     type: 'file',
-//     content: 'Another new file content',
-//     original: 'Another old file content',
-//     goal: 'Refactor code',
-//     module: 'UserProfile',
-//     name: '/src/UserProfile.js',
-//     revisionType: 'modify',
-//   },
-//   {
-//     type: 'file',
-//     content: 'Yet another new content',
-//     original: 'Yet another old content',
-//     goal: 'Add feature',
-//     module: 'Dashboard',
-//     name: '/src/Dashboard.js',
-//     revisionType: 'add',
-//   },
-// ]

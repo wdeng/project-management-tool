@@ -3,6 +3,7 @@ import EditorModal from '../general/EditorModal';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/utils/tailwindStyles';
 import { useSelected } from '@/hooks/useSelectedContext';
+import FileCard from './FileCard';
 
 interface IModuleDetailsProps {
   moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;
@@ -89,14 +90,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
       </form>
       <div>
         {selectedModule?.files?.map((file) => (
-          <button
-            key={file.path}
-            onClick={() => openEditor(file.id)} // pass file id to openEditor
-            className="bg-white drop-shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 mr-4 text-left cursor-pointer transition ease-in-out delay-100 hover:scale-110 duration-300"
-          >
-            <h3 className="font-semibold text-l truncate text-gray-700">{file.path.split('/').pop()}</h3>
-            <p className="text-gray-400 mt-4 text-sm">{file.goal}</p>
-          </button>
+          <FileCard key={file.path} file={file} openEditor={openEditor}/>
         ))}
       </div>
     </div>

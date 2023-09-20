@@ -48,13 +48,13 @@ export default function Home() {
 
   const handleProjectSelect = (project: Project) => {
     setSelectedProjectId(project.id);
+    selectedModule && setSelectedModule(null);
   };
 
   const handleModuleSelect = async (moduleId: number) => {
     if (!selectedProjectId) return;
-    const selectedModule = await fetchModuleDetails(selectedProjectId, moduleId);
-    selectedModule.id = moduleId;
-    setSelectedModule(selectedModule);
+    const m = await fetchModuleDetails(selectedProjectId, moduleId);
+    setSelectedModule(m);
   };
 
   const handleModuleBuild = async (moduleName: string, moduleId: number) => {
@@ -70,6 +70,8 @@ export default function Home() {
         };
       });
       setExecuting("");
+      const m = await fetchModuleDetails(selectedProjectId, moduleId);
+      setSelectedModule(m);
     } catch (error) {
       console.log('Failed to update module description');
     }
