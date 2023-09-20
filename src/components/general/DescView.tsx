@@ -50,7 +50,7 @@ function renderElement(
   }
 };
 
-export const InfoEdit: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
+export const InfoEditor: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
   // TODO: check if the data should set 
   // const [data, setData] = useState<{ [key: string]: any }>(data);
   // const handleFieldChange = (key: string, newValue: any) => {
