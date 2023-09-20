@@ -174,4 +174,3 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 };
 
 export default ProjectCreationModal;
-
