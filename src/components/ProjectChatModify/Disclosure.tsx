@@ -1,6 +1,6 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import EditorModal from '../general/EditorModal'; // Import your EditorModal
+import FileEditorModal from '../general/FileEditorModal'; // Import your EditorModal
 import { useState } from 'react';
 import { ModuleHierarchy } from '@/utils/apis';
 import { checkboxStyles } from '@/utils/tailwindStyles';
@@ -101,7 +101,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           </>
         )}
       </Disclosure>
-      <EditorModal fileId={editingFileId} onClose={closeEditor} />
+      <FileEditorModal fileId={editingFileId} onClose={closeEditor} />
     </>
   );
 };

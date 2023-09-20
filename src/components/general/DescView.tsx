@@ -3,17 +3,17 @@ import { textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useState } from 'react';
 
 interface DynamicFormProps {
-  initialData: { [key: string]: any };
-  dataTypes: { [key: string]: 'textarea' | 'textfield' | 'label' };
+  values: { [key: string]: any } | undefined;
+  valueTypes: { [key: string]: string };
   onUpdateField: (key: string, newValue: string) => void;
 }
 
-const renderElement = (
+function renderElement(
   key: string,
   value: any,
-  type: 'textarea' | 'textfield' | 'label',
+  type: string,
   onUpdateValue: (k: string, v: any) => void
-) => {
+) {
   switch (type) {
     case 'textarea':
       return (
@@ -50,23 +50,22 @@ const renderElement = (
   }
 };
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ initialData, dataTypes, onUpdateField }) => {
-  const [data, setData] = useState<{ [key: string]: any }>(initialData);
+export const DynamicForm: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
+  // const [data, setData] = useState<{ [key: string]: any }>(data);
+  // const handleFieldChange = (key: string, newValue: any) => {
+  //   // Update the local state
+  //   setData(v => ({
+  //     ...v,
+  //     [key]: newValue,
+  //   }));
 
-  const handleFieldChange = (key: string, newValue: any) => {
-    // Update the local state
-    setData(v => ({
-      ...v,
-      [key]: newValue,
-    }));
-
-    // Notify the parent component
-    onUpdateField(key, newValue);
-  };
+  //   // Notify the parent component
+  //   onUpdateField(key, newValue);
+  // };
 
   return (
     <div className="p-4">
-      {Object.keys(data).map((key) => renderElement(key, data[key], dataTypes[key], handleFieldChange))}
+      {values && Object.keys(values).map((key) => renderElement(key, values[key], valueTypes[key], onUpdateField))}
     </div>
   );
 }

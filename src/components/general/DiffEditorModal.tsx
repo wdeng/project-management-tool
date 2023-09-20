@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import Modal from '../Modal';
 import { DiffEditor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
+import { getFileExtension, languageMap } from '@/utils';
 
 
 interface EditorModalProps {
@@ -60,14 +61,3 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file
 
 export default EditorModal;
 
-function getFileExtension(filename: string) {
-  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
-}
-
-const languageMap: Record<string, string> = {
-  "py": "python",
-  "js": "javascript",
-  "jsx": "javascript",
-  "ts": "typescript",
-  "tsx": "typescript",
-}

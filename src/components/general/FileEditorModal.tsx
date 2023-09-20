@@ -3,6 +3,8 @@ import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSouceCode, updateFile } from '@/utils/apis';
+import { DynamicForm } from './DescView';
+import { getFileExtension, languageMap } from '@/utils';
 
 interface EditorModalProps {
   onClose: () => void;
@@ -25,7 +27,12 @@ const different = (file1: FileDesign, file2?: FileDesign | null): boolean => {
   return false;
 };
 
-const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, kind="editor" }) => {
+const dispayTypes = {
+  path: "label",
+  goal: "textfield",
+}
+
+const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, kind="editor" }) => {
   const { selectedProjectId } = useSelected();
   const [file, setFile] = useState<FileDesign | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
@@ -64,27 +71,16 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, ki
 
   return (
     <Modal isOpen={fileId != null} onClose={onCloseModal} title="Edit Module">
-      <Editor
+      {kind === "editor" ? <Editor
         height="78vh"
         language={languageType}
         value={file?.content}
         onChange={handleEditorChange}
         theme="vs-dark"
-      />
+      /> : <DynamicForm values={file} valueTypes={dispayTypes} onUpdateField={(k: string, v: any) => setFile(
+        f => f && ({...f, k: v}))} /> }
     </Modal>
   );
 };
 
-export default EditorModal;
-
-function getFileExtension(filename: string) {
-  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
-}
-
-const languageMap: Record<string, string> = {
-  "py": "python",
-  "js": "javascript",
-  "jsx": "javascript",
-  "ts": "typescript",
-  "tsx": "typescript",
-}
+export default FileEditorModal;

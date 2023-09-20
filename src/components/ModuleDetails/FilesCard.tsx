@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/utils/apis';
-import EditorModal from '../general/EditorModal';
+import FileEditorModal from '../general/FileEditorModal';
 
 interface IFileCardProps {
   files: FileDesign[];
@@ -19,7 +19,7 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
 
   return (
     <div>
-      <EditorModal
+      <FileEditorModal
         fileId={editingFileId}
         onClose={closeEditor}
       />
