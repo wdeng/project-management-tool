@@ -13,7 +13,7 @@ interface EditorModalProps {
   kind?: "editor" | "info";
 }
 
-const different = (file1: FileDesign, file2?: FileDesign | null): boolean => {
+const areDiff = (file1: FileDesign, file2?: FileDesign | null): boolean => {
   if (!file2)
     return true
   const allKeys: (keyof FileDesign)[] = ["id", "path", "goal", "content"];
@@ -38,7 +38,6 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   const [languageType, setLanguageType] = useState<string>("");
   const orgFile = useRef<FileDesign | null>(null)
 
-
   useEffect(() => {
     if (fileId != null && selectedProjectId) {
       fetchSouceCode(selectedProjectId, fileId)
@@ -55,9 +54,9 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   }, [selectedProjectId, fileId]);
 
   const onCloseModal = () => {
-    const curr = orgFile.current
-    if (selectedProjectId && file?.id && different(file, curr))
-      updateFile(selectedProjectId, file)
+    // const curr = orgFile.current
+    // if (selectedProjectId && file?.id && areDiff(file, curr))
+    //   updateFile(selectedProjectId, file)
     setTimeout(() => {
       setFile(undefined);
     }, 300);
@@ -69,16 +68,20 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
     onChange && onChange(value);
   };
 
+  const handleInfoChange = (key: string, value: any) => {
+    setFile(v => v ? {...v, [key]: value} : undefined);
+    onChange && onChange(value);
+  }
+
   return (
-    <Modal isOpen={fileId != null} onClose={onCloseModal} title="Edit Module">
+    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"}>
       {kind === "editor" ? <Editor
         height="78vh"
         language={languageType}
         value={file?.content}
         onChange={handleEditorChange}
         theme="vs-dark"
-      /> : <InfoEditor values={file} valueTypes={dispayTypes} onUpdateField={(k: string, v: any) => setFile(
-        f => f && ({...f, k: v}))} /> }
+      /> : <InfoEditor values={file} valueTypes={dispayTypes} onUpdateField={handleInfoChange} /> }
     </Modal>
   );
 };

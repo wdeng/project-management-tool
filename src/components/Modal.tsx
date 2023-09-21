@@ -42,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height,
           >
             <div className={`w-full max-w-4xl text-left align-middle bg-gray-100 shadow-xl rounded-2xl overflow-clip text-gray-700`}>
               <div className="sticky inset-x-0 top-0 flex justify-between items-center z-10 bg-gray-100 border-b p-4">
-                <Dialog.Title as="h3" className="text-xl leading-6 font-semibold">
+                <Dialog.Title as="h3" className="text-lg leading-6 font-semibold">
                   {title}
                 </Dialog.Title>
                 <div>

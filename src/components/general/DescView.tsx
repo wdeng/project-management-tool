@@ -14,40 +14,50 @@ function renderElement(
   type: string,
   onUpdateValue: (k: string, v: any) => void
 ) {
+  const title = camelToTitle(key);
+  let element: React.JSX.Element | null = null;
   switch (type) {
     case 'textarea':
-      return (
+      element = (
         <textarea
-          key={key}
           id={key}
           value={value}
           onChange={(e) => onUpdateValue(key, e.target.value)}
           rows={8}
-          placeholder={camelToTitle(key)}
+          placeholder={title}
           className={textAreaStyles}
         />
       );
+      break;
     case 'textfield':
-      return (
+      element = (
         <input
-          key={key}
           id={key}
           type="text"
           value={value}
           onChange={(e) => onUpdateValue(key, e.target.value)}
-          placeholder={camelToTitle(key)}
+          placeholder={title}
           className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-1"
         />
       );
+      break;
     case 'label':
-      return (
-        <div key={key}>
-          {camelToTitle(key)}: {value}
-        </div>
+      element = (
+        <p>{value}</p>
       );
+      break;
     default:
       return null;
   }
+
+  return (
+    <div key={key}>
+      <h3 className='text-lg font-semibold py-1'
+      >{title}:</h3>
+      <div className='ml-2 mb-4'
+      >{element}</div>
+    </div>
+  )
 };
 
 export const InfoEditor: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {

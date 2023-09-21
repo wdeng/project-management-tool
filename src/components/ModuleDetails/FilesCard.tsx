@@ -8,24 +8,28 @@ interface IFileCardProps {
 }
 
 const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
-  const [editingFileId, setEditingFileId] = useState<number | null>(null);
-  const openEditor = (fileId: number) => {
-    setEditingFileId(fileId);
+  const [editingFileID, setEditingFileID] = useState<number | null>(null);
+  const [editorKind, setEditorKind] = useState<"editor" | "info">("editor");
+  const openEditor = (fileId: number, kind: "editor" | "info" = "editor") => {
+    setEditingFileID(fileId);
+    setEditorKind(kind);
   };
 
   const closeEditor = () => {
-    setEditingFileId(null);
+    setEditingFileID(null);
   };
 
   return (
     <div>
       <FileEditorModal
-        fileId={editingFileId}
+        fileId={editingFileID}
+        kind={editorKind}
         onClose={closeEditor}
       />
       {files.map((file) => (
         <div
-          className="p-2 relative mb-4 inline-block bg-white drop-shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
+          key={file.id}
+          className="p-2 relative mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
           onClick={() => openEditor(file.id)}
           role="button"
           tabIndex={0}
@@ -34,8 +38,11 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
             <h3 className="font-semibold text-l truncate text-gray-700">
               {file.path.split('/').pop()}
             </h3>
-            <button className="text-gray-400 hover:text-gray-600">
-              <MdInfoOutline />
+            <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.5rem]" onClick={(ev)=>{
+              ev.stopPropagation();
+              openEditor(file.id, "info");
+            }}>
+              <MdInfoOutline size={16} />
             </button>
           </div>
           <p className="text-gray-400 mt-4 text-sm">{file.goal}</p>

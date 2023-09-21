@@ -42,7 +42,6 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     else {
       clearHistory();
     }
-    setHistory(h ?? []);
     setProposedChanges([]);
     setResolving(false);
   }
@@ -160,7 +159,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveTo="opacity-0"
       >
         <button
-          className="absolute bottom-4 right-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-3 rounded-3xl drop-shadow-lg"
+          className="absolute bottom-4 right-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-3 rounded-3xl drop-shadow-lg transition ease-in-out hover:scale-105"
           onClick={toggleChat}
         >
           <MdOutlineChat size={20} />

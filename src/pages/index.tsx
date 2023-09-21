@@ -5,6 +5,7 @@ import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
 import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, fetchModuleDetails } from '@/utils/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
+import ProjectDetails from '@/components/ProjectDetails/Project';
 
 
 
@@ -17,6 +18,7 @@ export default function Home() {
     if (selectedProjectId == null) return;
 
     const details = await fetchProjectModules(selectedProjectId);
+    console.log(details)
     if (!(selectedModule?.id && details.moduleIds.includes(selectedModule.id)))
       setSelectedModule(null);
     setProjectDetails(details);
@@ -53,8 +55,11 @@ export default function Home() {
 
   const handleModuleSelect = async (moduleId: number) => {
     if (!selectedProjectId) return;
-    const m = await fetchModuleDetails(selectedProjectId, moduleId);
-    setSelectedModule(m);
+    if (moduleId > 0) {
+      const m = await fetchModuleDetails(selectedProjectId, moduleId);
+      setSelectedModule(m);
+    } else
+      setSelectedModule(null);
   };
 
   const handleModuleBuild = async (moduleName: string, moduleId: number) => {
@@ -95,14 +100,14 @@ export default function Home() {
             nextModuleId={projectDetails.next}
           />}
         </div>
-        {selectedModule && <>
           <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
-            <ModuleDetails
-              moduleBuild={handleModuleBuild}
-              canBuild={canBuild} />
+            {selectedModule ? <>
+              <ModuleDetails
+                moduleBuild={handleModuleBuild}
+                canBuild={canBuild} />
+              <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
+            </> : projectDetails && <ProjectDetails {...projectDetails} />}
           </div>
-          <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
-        </>}
       </div>
     </SelectedContext.Provider>
   );

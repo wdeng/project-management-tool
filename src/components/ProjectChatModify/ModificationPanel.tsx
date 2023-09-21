@@ -11,7 +11,7 @@ const getTagStyle = (type: 'add' | 'delete' | 'modify') => {
     delete: 'red',
     modify: 'yellow',
   }
-  return `px-1.5 py-0.5 rounded-md bg-${mapped[type]}-200 text-${mapped[type]}-800`;
+  return `px-1.5 py-0.5 rounded-md bg-${mapped[type]}-300 text-${mapped[type]}-800`;
 };
 
 interface ChangesReviewPanelProps {

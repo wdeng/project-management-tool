@@ -25,6 +25,9 @@ export interface ProjectDetailResponse {
   modules: ModuleHierarchy[];
   moduleIds: number[];
   next: number;
+  description: string;
+  projectName: string;
+  requirements: string[];
 }
 
 export interface ModuleImplement {
@@ -72,16 +75,6 @@ export interface QAResponse {
 export interface QAAnswer {
   question: string;
   answers: string[];
-}
-
-export interface ProjectMeta {
-  folder: string;
-  // Add other properties as needed
-}
-
-export interface ModuleDetailResponse {
-  id: number;
-  // Add other properties as needed
 }
 
 export async function setProjectGoal(goal: string): Promise<QAResponse> {
@@ -148,7 +141,7 @@ export async function fetchSouceCode(projectId: number, fileId: number): Promise
   return response.data;
 }
 
-export async function fetchProjectModules(projectId: number, projectDetails=false): Promise<ProjectDetailResponse> {
+export async function fetchProjectModules(projectId: number, projectDetails=true): Promise<ProjectDetailResponse> {
   let url = `${API_BASE_URL}/project/${projectId}/modules`;
   if (projectDetails)
     url = `${API_BASE_URL}/project/${projectId}/details`;
