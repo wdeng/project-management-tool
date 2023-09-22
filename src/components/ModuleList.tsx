@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModuleHierarchy } from '../utils/apis';
-import { MdOutlineLogoDev, MdViewStream, MdPlayArrow } from 'react-icons/md';
+import { MdDescription, MdViewStream, MdPlayArrow } from 'react-icons/md';
 import Spinner from './general/Spinner';
 import { useSelected } from '@/hooks/useSelectedContext';
 
@@ -49,13 +49,13 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
   return (
     <div className="w-full h-full overflow-auto">
       <ul>
-        <li className='bg-gray-500 hover:bg-gray-600'>
+        <li>
           <div
           className={buttonStyle(!selectedModule)}
           onClick={() => handleModuleSelect(-1)}
           >
             <div className="flex items-center mr-2">
-              <MdOutlineLogoDev size={16} />
+              <MdDescription size={16} />
             </div>
             <span className='text-lg'>Project Details</span>
           </div>

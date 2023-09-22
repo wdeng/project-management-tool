@@ -35,7 +35,6 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
   }, [changes]);
 
   const { refreshCurrentProject, selectedProjectId } = useSelected();
-  console.log(selectedProjectId, issueId, Array.isArray(changes) && changes.filter(file => fileStatus[file.name] === 'Accept'))
 
   const confirmChange = async () => {
     if (Array.isArray(changes) && selectedProjectId && issueId) {

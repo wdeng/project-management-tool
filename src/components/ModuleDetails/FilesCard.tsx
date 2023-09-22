@@ -20,7 +20,7 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-wrap items-start">
       <FileEditorModal
         fileId={editingFileID}
         kind={editorKind}
@@ -29,23 +29,23 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
       {files.map((file) => (
         <div
           key={file.id}
-          className="p-2 relative mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg p-3 mb-4 cursor-pointer w-52 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
+          className="p-2.5 relative mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-52 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
           onClick={() => openEditor(file.id)}
           role="button"
           tabIndex={0}
         >
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-l truncate text-gray-700">
+            <h3 className="font-medium text-md truncate text-gray-700">
               {file.path.split('/').pop()}
             </h3>
-            <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.5rem]" onClick={(ev)=>{
+            <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.25rem]" onClick={(ev)=>{
               ev.stopPropagation();
               openEditor(file.id, "info");
             }}>
               <MdInfoOutline size={16} />
             </button>
           </div>
-          <p className="text-gray-400 mt-4 text-sm">{file.goal}</p>
+          <p className="text-gray-400 mt-1 text-sm">{file.goal}</p>
         </div>
       ))}
     </div>

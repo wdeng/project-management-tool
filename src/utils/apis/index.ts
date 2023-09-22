@@ -148,7 +148,6 @@ export async function fetchProjectModules(projectId: number, projectDetails=true
   const response = await axios.get<ProjectDetailResponse>(url);
 
   const resp = response.data;
-  console.log(resp);
   const [modules, moduleIds] = parseProjectModules(resp.modules);
   return {...resp, modules, moduleIds};
 }

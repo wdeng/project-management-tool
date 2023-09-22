@@ -1,6 +1,6 @@
 // ProjectDetails.tsx
 import React, { useState } from 'react';
-import ChangesReviewPanel from '../ProjectChatModify/ModificationPanel';
+import TopBar from './TopBar';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -46,33 +46,38 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectName, de
   const [changes, setChanges] = useState([])
 
   return (
-    <div className="flex flex-col">
-      <h1>{projectName}</h1>
-      <p>{description}</p>
-      {/* refresh button */}
-      <h2>Requirements:</h2>
-      <ul>
-        {requirements.map((req: string) => (
-          <li key={req}>{req}</li>
-        ))}
-      </ul>
+    <>
+      <TopBar />
+      <div className="flex flex-col px-6">
 
-      {/* {changes && <ChangesReviewPanel changes={changes} reset={()=> {}} />} */}
-      <h2>Modules:</h2>
-      {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
-        <Module key={index} moduleData={mod} />
-      ))}
-      {projectSchema && (
-        <>
-          <h2>Project Schema:</h2>
-          {
-            projectSchema.map((schema: any, index: number) => ( // Replace 'any' with your schema data type
-              <ApiSchema key={index} schemaData={schema} />
-            ))
-          }
-        </>
-      )}
-    </div>
+        <h1>{projectName}</h1>
+        <p>{description}</p>
+        {/* refresh button */}
+        <h2>Requirements:</h2>
+        <ul>
+          {requirements.map((req: string) => (
+            <li key={req}>{req}</li>
+          ))}
+        </ul>
+
+        {/* {changes && <ChangesReviewPanel changes={changes} reset={()=> {}} />} */}
+        <h2>Modules:</h2>
+        {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
+          <Module key={index} moduleData={mod} />
+        ))}
+        {projectSchema && (
+          <>
+            <h2>Project Schema:</h2>
+            {
+              projectSchema.map((schema: any, index: number) => ( // Replace 'any' with your schema data type
+                <ApiSchema key={index} schemaData={schema} />
+              ))
+            }
+          </>
+        )}
+      </div>
+    </>
+
   );
 };
 

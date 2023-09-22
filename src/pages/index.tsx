@@ -18,7 +18,6 @@ export default function Home() {
     if (selectedProjectId == null) return;
 
     const details = await fetchProjectModules(selectedProjectId);
-    console.log(details)
     if (!(selectedModule?.id && details.moduleIds.includes(selectedModule.id)))
       setSelectedModule(null);
     setProjectDetails(details);
@@ -100,14 +99,14 @@ export default function Home() {
             nextModuleId={projectDetails.next}
           />}
         </div>
-          <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
-            {selectedModule ? <>
-              <ModuleDetails
-                moduleBuild={handleModuleBuild}
-                canBuild={canBuild} />
-              <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
-            </> : projectDetails && <ProjectDetails {...projectDetails} />}
-          </div>
+        <div style={{ flex: '1' }} className="bg-gray-100 h-screen overflow-auto">
+          {selectedModule ? <>
+            <ModuleDetails
+              moduleBuild={handleModuleBuild}
+              canBuild={canBuild} />
+            <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
+          </> : projectDetails && <ProjectDetails {...projectDetails} />}
+        </div>
       </div>
     </SelectedContext.Provider>
   );
