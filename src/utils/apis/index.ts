@@ -1,5 +1,6 @@
 import axios from 'axios';
-export * from './update'
+export * from './update';
+export * from './gitSync';
 
 export const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.wenxiangdeng.com';
 
@@ -136,12 +137,23 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
   return response.data;
 }
 
-export async function fetchSouceCode(projectId: number, fileId: number): Promise<FileDesign> {
-  const response = await axios.get<FileDesign>(`${API_BASE_URL}/sourcecode/${projectId}/${fileId}`);
+export async function fetchSourceCode(projectId: number, fileId?: number, path?: string): Promise<FileDesign> {
+  let apiUrl: string;
+
+  if (path) {
+    const encodedPath = encodeURIComponent(path);
+    apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?path=${encodedPath}`;
+  } else if (fileId != null) {
+    apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?id=${fileId}`;
+  } else {
+    throw new Error("Either path or id must be provided");
+  }
+
+  const response = await axios.get<FileDesign>(apiUrl);
   return response.data;
 }
 
-export async function fetchProjectModules(projectId: number, projectDetails=true): Promise<ProjectDetailResponse> {
+export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
   let url = `${API_BASE_URL}/project/${projectId}/modules`;
   if (projectDetails)
     url = `${API_BASE_URL}/project/${projectId}/details`;
@@ -149,7 +161,7 @@ export async function fetchProjectModules(projectId: number, projectDetails=true
 
   const resp = response.data;
   const [modules, moduleIds] = parseProjectModules(resp.modules);
-  return {...resp, modules, moduleIds};
+  return { ...resp, modules, moduleIds };
 }
 
 function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], number[]] {

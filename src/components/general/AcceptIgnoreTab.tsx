@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
-interface AcceptRejectTabsProps {
+interface AcceptIgnoreTabsProps {
   name: string;
-  defaultValue?: 'Accept' | 'Reject';
+  defaultValue?: 'Accept' | 'Ignore';
   onChange: (value: string) => void;
   className?: string;
 }
 
-const AcceptRejectTabs: React.FC<AcceptRejectTabsProps> = ({ name, defaultValue = 'Accept', onChange, className=''}) => {
+const AcceptIgnoreTabs: React.FC<AcceptIgnoreTabsProps> = ({ name, defaultValue = 'Accept', onChange, className=''}) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
 
-  const handleTabChange = (value: 'Accept' | 'Reject') => {
+  const handleTabChange = (value: 'Accept' | 'Ignore') => {
     setSelectedValue(value);
     onChange(value);
   };
@@ -32,21 +32,21 @@ const AcceptRejectTabs: React.FC<AcceptRejectTabsProps> = ({ name, defaultValue 
         Accept
       </label>
       <label
-        className={`flex-1 text-center py-1 m-1 ml-0.5 cursor-pointer rounded-lg transition-all duration-300 ease-in-out drop-shadow-sm ${selectedValue === 'Reject' ? 'bg-red-500 text-white font-semibold' : 'hover:bg-gray-300 hover:text-gray-100 text-gray-600'}`}
-        onClick={() => handleTabChange('Reject')}
+        className={`flex-1 text-center py-1 m-1 ml-0.5 cursor-pointer rounded-lg transition-all duration-300 ease-in-out drop-shadow-sm ${selectedValue === 'Ignore' ? 'bg-red-500 text-white font-semibold' : 'hover:bg-gray-300 hover:text-gray-100 text-gray-600'}`}
+        onClick={() => handleTabChange('Ignore')}
       >
         <input
           type="radio"
           name={name}
-          value="Reject"
+          value="Ignore"
           className="hidden"
           readOnly
-          checked={selectedValue === 'Reject'}
+          checked={selectedValue === 'Ignore'}
         />
-        Reject
+        Ignore
       </label>
     </div>
   );
 };
 
-export default AcceptRejectTabs;
+export default AcceptIgnoreTabs;

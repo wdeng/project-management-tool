@@ -2,7 +2,11 @@ import React, { useState, Fragment } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdSearch, MdRefresh, MdNotifications, MdSettings } from 'react-icons/md';
 
-const TopBar = () => {
+interface TopBarProps {
+  refresh: () => void;
+}
+
+const TopBar = ({refresh}: TopBarProps) => {
   const [searchActive, setSearchActive] = useState(false);
   const [newNotifications, setNewNotifications] = useState(true); // set to true for demo
 
@@ -42,7 +46,7 @@ const TopBar = () => {
 
         {/* Icons on the right */}
         <div className="flex items-center space-x-4">
-          <button onClick={() => console.log('Refresh clicked')}>
+          <button onClick={refresh}>
             <MdRefresh className="text-gray-600 text-2xl"/>
           </button>
           <button onClick={() => console.log('Notifications clicked')}>

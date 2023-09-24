@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { FileDesign, fetchSouceCode, updateFile } from '@/utils/apis';
+import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
 import { InfoEditor } from './DescView';
 import { getFileExtension, languageMap } from '@/utils';
 
@@ -40,7 +40,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
 
   useEffect(() => {
     if (fileId != null && selectedProjectId) {
-      fetchSouceCode(selectedProjectId, fileId)
+      fetchSourceCode(selectedProjectId, fileId)
         .then(data => {
           setFile(data);
           orgFile.current = data

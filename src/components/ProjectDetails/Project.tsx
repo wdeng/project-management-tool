@@ -1,6 +1,8 @@
 // ProjectDetails.tsx
 import React, { useState } from 'react';
 import TopBar from './TopBar';
+import { checkGitSync } from '@/utils/apis';
+import ChangesReviewPanel from './ProjectSync/ReviewPanel';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -34,6 +36,7 @@ const ApiSchema: React.FC<IApiSchemaProps> = ({ schemaData }) => {
 
 
 interface IProjectDetailsProps {
+  projectId: number;
   projectName: string;
   description: string;
   requirements: string[];
@@ -41,13 +44,21 @@ interface IProjectDetailsProps {
   projectSchema?: any; // Replace 'any' with your schema data type
 }
 
-export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectName, description, requirements, modules, projectSchema }) => {
+export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, modules, projectSchema }) => {
+  const [changes, setChanges] = useState<any>([])
+  const refreshFiles = async () => {
+    console.log('refreshing files', projectId, checkGitSync)
+    const res = await checkGitSync(projectId);
+    console.log(res);
+    if (!res.synced && res.files)
+      setChanges(res.files);
+  }
 
-  const [changes, setChanges] = useState([])
+  
 
   return (
     <>
-      <TopBar />
+      <TopBar refresh={refreshFiles} />
       <div className="flex flex-col px-6">
 
         <h1>{projectName}</h1>
@@ -60,7 +71,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectName, de
           ))}
         </ul>
 
-        {/* {changes && <ChangesReviewPanel changes={changes} reset={()=> {}} />} */}
+        {changes && <ChangesReviewPanel changes={changes}/>}
         <h2>Modules:</h2>
         {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
           <Module key={index} moduleData={mod} />

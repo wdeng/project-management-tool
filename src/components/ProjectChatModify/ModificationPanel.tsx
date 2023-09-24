@@ -3,16 +3,8 @@ import { outlineButtonStyles } from '@/utils/tailwindStyles';
 import { ProposedItem, ProposedDirectAnswer, confirmProjectChanges } from '@/utils/apis/chatRefine';
 import DiffEditorModal from '../general/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import AcceptRejectTabs from '../general/AcceptReject';
-
-const getTagStyle = (type: 'add' | 'delete' | 'modify') => {
-  const mapped = {
-    add: 'green',
-    delete: 'red',
-    modify: 'yellow',
-  }
-  return `px-1.5 py-0.5 rounded-md bg-${mapped[type]}-300 text-${mapped[type]}-800`;
-};
+import AcceptIgnoreTabs from '../general/AcceptIgnoreTab';
+import ModTag from '../general/ModifySpan';
 
 interface ChangesReviewPanelProps {
   changes: ProposedItem[] | ProposedDirectAnswer;
@@ -50,25 +42,25 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
     reset();
   };
 
-  const handleRadioChange = (name: string, value: string) => {
-    setFileStatus({
-      ...fileStatus,
-      [name]: value
-    });
+  const handleRadioChange = (filepath: string, value: string) => {
+    setFileStatus(
+      s => ({
+        ...s,
+        [filepath]: value
+      })
+    );
   };
 
   const renderChangeItem = (change: ProposedItem) => (
     <div key={change.name} className="flex justify-between items-center mb-4 bg-white p-3 rounded-lg drop-shadow-sm">
       <div className='flex-grow'>
-        <span className={getTagStyle(change.revisionType)}>
-          {change.revisionType}
-        </span>
+        <ModTag type={change.revisionType} />
         <button onClick={() => setEditingItem(change)} className="text-blue-500 underline ml-2">
           {change.name}
         </button>
-        {change.type === 'file' && <div className="text-gray-400 text-sm">{change.goal}</div>}
+        {change.type === 'file' && change.goal && <div className="text-gray-400 text-sm">{change.goal}</div>}
       </div>
-      <AcceptRejectTabs
+      <AcceptIgnoreTabs
         name={change.name}
         defaultValue="Accept"
         onChange={(value) => handleRadioChange(change.name, value)}

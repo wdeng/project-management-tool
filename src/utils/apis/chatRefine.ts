@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { API_BASE_URL } from '.'
+import { FileModifyType } from '@/components/general/ModifySpan';
 
 interface BaseProposed {
   type: string;
   name: string;
-  revisionType: 'add' | 'delete' | 'modify';
+  revisionType: FileModifyType;
   content: string;
   original: string;
 }

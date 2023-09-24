@@ -105,7 +105,7 @@ export default function Home() {
               moduleBuild={handleModuleBuild}
               canBuild={canBuild} />
             <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
-          </> : projectDetails && <ProjectDetails {...projectDetails} />}
+          </> : projectDetails && <ProjectDetails {...projectDetails} projectId={selectedProjectId!} />}
         </div>
       </div>
     </SelectedContext.Provider>
