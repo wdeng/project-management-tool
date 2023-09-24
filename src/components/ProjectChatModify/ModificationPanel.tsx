@@ -62,7 +62,7 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
       </div>
       <AcceptIgnoreTabs
         name={change.name}
-        defaultValue="Accept"
+        value={fileStatus[change.name] === 'Accept' ? 'Accept' : 'Ignore'}
         onChange={(value) => handleRadioChange(change.name, value)}
       />
     </div>

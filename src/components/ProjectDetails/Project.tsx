@@ -47,14 +47,10 @@ interface IProjectDetailsProps {
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, modules, projectSchema }) => {
   const [changes, setChanges] = useState<any>([])
   const refreshFiles = async () => {
-    console.log('refreshing files', projectId, checkGitSync)
     const res = await checkGitSync(projectId);
-    console.log(res);
     if (!res.synced && res.files)
       setChanges(res.files);
   }
-
-  
 
   return (
     <>
@@ -71,7 +67,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           ))}
         </ul>
 
-        {changes && <ChangesReviewPanel changes={changes}/>}
+        {changes.length > 0 && <ChangesReviewPanel changes={changes}/>}
         <h2>Modules:</h2>
         {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
           <Module key={index} moduleData={mod} />

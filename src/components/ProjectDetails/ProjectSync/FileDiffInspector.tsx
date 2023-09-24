@@ -7,11 +7,12 @@ interface ChangesReviewPanelProps {
   revisionType: FileModifyType;
   goal: string;
   handleRadioChange: (name: string, value: string) => void;
+  accept: boolean;
   rest?: any;
 }
 
 const ProposeFileChange = ({
-  name, revisionType, goal, handleRadioChange
+  name, revisionType, goal, handleRadioChange, accept
 }: ChangesReviewPanelProps) => {
   return (
     <div key={name} className="flex justify-between items-center mb-4 bg-white p-3 rounded-lg drop-shadow-sm">
@@ -24,7 +25,7 @@ const ProposeFileChange = ({
       </div>
       <AcceptIgnoreTabs
         name={name}
-        defaultValue="Accept"
+        value={accept ? 'Accept' : 'Ignore'}
         onChange={(value) => handleRadioChange(name, value)}
       />
     </div>

@@ -27,6 +27,7 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
   useEffect(() => {
     if (Array.isArray(changes)) {
       setFileStatus(Object.fromEntries(changes.map(file => [file.name, 'Accept'])));
+      console.log(Object.fromEntries(changes.map(file => [file.name, 'Accept'])))
     }
   }, [changes]);
 
@@ -36,6 +37,7 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
     if (Array.isArray(changes) && selectedProjectId) {
       const acceptedChanges = changes.filter(file => fileStatus[file.name] === 'Accept');
       refreshCurrentProject();
+      console.log(acceptedChanges);
     }
   };
 
@@ -52,7 +54,7 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
     <div className="mt-4">
       <span className="mr-6">Document Changed Sources to the Project: </span>
       <div className="mb-3">
-        {changes.map(change => <ProposeFileChange key={change.name} {...change} handleRadioChange={handleRadioChange} />)}
+        {changes.map(change => <ProposeFileChange key={change.name} {...change} handleRadioChange={handleRadioChange} accept={fileStatus[change.name] === 'Accept'} />)}
       </div>
       <div className="flex">
         {Array.isArray(changes) && <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
