@@ -31,7 +31,7 @@ export const DetailsModal: React.FC<ProjectCreationModalProps> = ({ onNewProject
 
 
   return <Modal
-    height='80vh'
+    height='h-[80vh]'
     isOpen={isOpen}
     onClose={close}
     title="Create New Project"

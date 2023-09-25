@@ -5,6 +5,7 @@ import DiffEditorModal from '../../general/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ProposeFileChange from './FileDiffInspector';
 import { FileModifyType } from '@/components/general/ModifySpan';
+import { synchronizeProject } from '@/utils/apis';
 
 interface FileChangeType {
   name: string;
@@ -27,7 +28,6 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
   useEffect(() => {
     if (Array.isArray(changes)) {
       setFileStatus(Object.fromEntries(changes.map(file => [file.name, 'Accept'])));
-      console.log(Object.fromEntries(changes.map(file => [file.name, 'Accept'])))
     }
   }, [changes]);
 
@@ -36,6 +36,8 @@ const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
   const confirmChange = async () => {
     if (Array.isArray(changes) && selectedProjectId) {
       const acceptedChanges = changes.filter(file => fileStatus[file.name] === 'Accept');
+      const res = await synchronizeProject(selectedProjectId, acceptedChanges);
+      console.log(res);
       refreshCurrentProject();
       console.log(acceptedChanges);
     }

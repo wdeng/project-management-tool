@@ -15,7 +15,7 @@ interface ModalProps {
   className?: string; // Add a className prop
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height, svgButton1, onSvgButton1Click, svgButton2, onSvgButton2Click, className }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height='', svgButton1, onSvgButton1Click, svgButton2, onSvgButton2Click, className }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}
       enter="ease-out duration-300"
@@ -61,7 +61,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height,
                   </button>
                 </div>
               </div>
-              <div className={`overflow-y-auto ${height ? `h-[${height}]` : ''} max-h-[80vh] ${className}`}>
+              <div className={`overflow-y-auto max-h-[80vh] ${height} ${className}`}>
                 {children}
               </div>
             </div>

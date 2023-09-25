@@ -139,7 +139,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
         Create Project
       </button>
       <Modal
-        height='80vh'
+        height='h-[80vh]'
         isOpen={isOpen}
         onClose={close}
         title="Create New Project"

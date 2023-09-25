@@ -4,6 +4,7 @@
 - GUI for project level info (currently only modules): outline and schema (future editable)
   - build all modules at the same time, but not build code
 - change switches in refiner to something more obvious
+- refactor refiner: use `useReducer` to manage state and reorganize layout
 
 ## Getting Started
 
