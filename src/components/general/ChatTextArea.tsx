@@ -5,28 +5,30 @@ interface IChatInputProps {
   onSend: (text: string) => Promise<any>;
   sendOnEmpty?: boolean;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const ChatInput: React.FC<IChatInputProps> = ({
   onSend,
+  disabled = false,
   sendOnEmpty = false,
   placeholder = "Write your issues here.."
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>('');
   const maxLines = 12;
-  const disabledButton = !chatText && !sendOnEmpty;
+  const disabledButton = disabled || !(chatText || sendOnEmpty);
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setChatText(e.target.value);
   };
 
   const handleSend = useCallback(async () => {
-    if (!disabledButton) {
-      const text = chatText.trim();
-      setChatText('');
-      await onSend(text);
-    }
+    if (disabledButton)
+      return;
+    const text = chatText.trim();
+    setChatText('');
+    await onSend(text);
   }, [chatText, onSend, disabledButton]);
 
   // Add this useEffect
@@ -68,6 +70,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         value={chatText}
         onChange={handleTextChange}
         placeholder={placeholder}
+        disabled={disabled}
       />
       <button
         disabled={disabledButton}
