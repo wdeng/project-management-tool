@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md';
 import DisclosurePanel from './Disclosure';
@@ -7,10 +7,11 @@ import { ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, r
 import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
-import ChangesReviewPanel from './ModificationPanel';
+import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
 import Spinner from '../general/Spinner';
-import NextSteps from './NextStepsPanel';
+import NextSteps from './AnswerPanels/NextStepsPanel';
+import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -26,14 +27,12 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
 
   const [currentIssueId, setIssueId] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
-  const [proposedChanges, setProposedChanges] = useState<ProposedItem[] | ProposedDirectAnswer>([]);
-  const [nextSteps, setNextSteps] = useState<string[]>([]);
+  const [proposedChanges, setProposedChanges] = useState<ReactElement | null>(null);
   const [resolving, setResolving] = useState(false);
 
   const clearHistory = () => {
     setHistory([]);
     setIssueId(null);
-    setNextSteps([]);
     setResolving(false);
   }
   const resetHistory = (h?: string[] | null) => {
@@ -42,7 +41,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     else {
       clearHistory();
     }
-    setProposedChanges([]);
+    setProposedChanges(null);
     setResolving(false);
   }
   const toggleChat = () => setIsChatOpen(!isChatOpen);
@@ -58,7 +57,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     if (issues != null)
       setHistory(prev => [...prev, `User issue: ${issues}`]);
     setResolving(true);
-    const { toolType, changes, issueId, steps } = await resolveIssues(
+    const { toolType, changes, issueId } = await resolveIssues(
       selectedProjectId, issues, currentIssueId, selectedCheckboxOptions, resourcesEnabled
     );
     if (issueId !== currentIssueId)
@@ -71,11 +70,12 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     } else if (toolType === 'TaskComplete') {
       setHistory(prev => [...prev, `Task completed: ${changes}`]);
       setResolving(false);
-    } else
-      setProposedChanges(changes);
-    const _steps = steps || [];
-    _steps.shift();
-    setNextSteps(_steps);
+    } else if (toolType === 'DirectAnswer')
+      setProposedChanges(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
+    else
+      setProposedChanges(
+        <FilesOutlinePanel changes={changes as ProposedItem[]} issueId={issueId} reset={resetHistory} />
+      );
   }
 
   return (
@@ -129,15 +129,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            {!!Object.keys(proposedChanges).length ? <ChangesReviewPanel
-              changes={proposedChanges}
-              issueId={currentIssueId}
-              reset={resetHistory}
-            /> : <NextSteps
-              steps={nextSteps}
-              proceed={()=>handleChatSubmit(null)}
-              deny={() => setNextSteps([])}
-            />}
+            {proposedChanges}
             <ChatHistory steps={history} clearHistory={clearHistory} />
           </div>
           <div className='p-4 pt-0'>

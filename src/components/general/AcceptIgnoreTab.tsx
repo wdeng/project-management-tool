@@ -7,7 +7,7 @@ interface AcceptIgnoreTabsProps {
   className?: string;
 }
 
-const AcceptIgnoreTabs: React.FC<AcceptIgnoreTabsProps> = ({ name, value = 'Accept', onChange, className=''}) => {
+const AcceptIgnoreTab: React.FC<AcceptIgnoreTabsProps> = ({ name, value = 'Accept', onChange, className=''}) => {
 
   const handleTabChange = (value: 'Accept' | 'Ignore') => {
     onChange(value);
@@ -47,4 +47,4 @@ const AcceptIgnoreTabs: React.FC<AcceptIgnoreTabsProps> = ({ name, value = 'Acce
   );
 };
 
-export default AcceptIgnoreTabs;
+export default AcceptIgnoreTab;

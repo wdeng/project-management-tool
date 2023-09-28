@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/utils/apis';
-import ChangesReviewPanel from './ProjectSync/ReviewPanel';
+import ChangesReviewPanel from './ProjectSync/ReviewGitDiff';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled

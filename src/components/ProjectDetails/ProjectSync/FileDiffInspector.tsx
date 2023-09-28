@@ -1,5 +1,5 @@
 import React from "react";
-import AcceptIgnoreTabs from "../../general/AcceptIgnoreTab";
+import AcceptIgnoreTab from "../../general/AcceptIgnoreTab";
 import ModTag, { FileModifyType } from "../../general/ModifySpan";
 
 interface ChangesReviewPanelProps {
@@ -23,7 +23,7 @@ const ProposeFileChange = ({
         </span>
         {goal && <div className="text-gray-400 text-sm">{goal}</div>}
       </div>
-      <AcceptIgnoreTabs
+      <AcceptIgnoreTab
         name={name}
         value={accept ? 'Accept' : 'Ignore'}
         onChange={(value) => handleRadioChange(name, value)}

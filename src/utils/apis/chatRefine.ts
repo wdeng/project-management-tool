@@ -52,7 +52,7 @@ export async function resolveIssues(
   return response.data;
 }
 
-export async function confirmProjectChanges(projectId: number, issueId: string, changedFiles: ProposedItem[]): Promise<any> {
+export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number, issueId: string | null): Promise<any> {
   const data = {
     projectId,
     issueId,
