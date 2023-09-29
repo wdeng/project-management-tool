@@ -137,17 +137,16 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
   return response.data;
 }
 
-export async function fetchSourceCode(projectId: number, fileId?: number, path?: string): Promise<FileDesign> {
+export async function fetchSourceCode(projectId: number, fileId: number | string): Promise<FileDesign> {
   let apiUrl: string;
 
-  if (path) {
-    const encodedPath = encodeURIComponent(path);
+  if (typeof fileId === 'string') {
+    const encodedPath = encodeURIComponent(fileId);
     apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?path=${encodedPath}`;
-  } else if (fileId != null) {
+  } else if (typeof fileId === 'number')
     apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?id=${fileId}`;
-  } else {
+  else
     throw new Error("Either path or id must be provided");
-  }
 
   const response = await axios.get<FileDesign>(apiUrl);
   return response.data;

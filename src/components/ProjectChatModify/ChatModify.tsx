@@ -28,21 +28,17 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [currentIssueId, setIssueId] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
   const [proposedChanges, setProposedChanges] = useState<ReactElement | null>(null);
-  const [resolving, setResolving] = useState(false);
+  const [spinning, setSpinning] = useState(false);
 
   const clearHistory = () => {
     setHistory([]);
     setIssueId(null);
-    setResolving(false);
+    setSpinning(false);
   }
   const resetHistory = (h?: string[] | null) => {
-    if (h != null)
-      setHistory(h);
-    else {
-      clearHistory();
-    }
+    h == null ? clearHistory() : setHistory(h);
     setProposedChanges(null);
-    setResolving(false);
+    setSpinning(false);
   }
   const toggleChat = () => setIsChatOpen(!isChatOpen);
 
@@ -56,7 +52,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     if (!selectedProjectId || !issues && !currentIssueId) return;
     if (issues != null)
       setHistory(prev => [...prev, `User issue: ${issues}`]);
-    setResolving(true);
+    setSpinning(true);
     const { toolType, changes, issueId } = await resolveIssues(
       selectedProjectId, issues, currentIssueId, selectedCheckboxOptions, resourcesEnabled
     );
@@ -66,10 +62,10 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     if (toolType === 'ReadMoreFiles') {
       setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
       setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
-      setResolving(false);
+      setSpinning(false);
     } else if (toolType === 'TaskComplete') {
       setHistory(prev => [...prev, `Task completed: ${changes}`]);
-      setResolving(false);
+      setSpinning(false);
     } else if (toolType === 'DirectAnswer')
       setProposedChanges(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
     else
@@ -133,7 +129,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <ChatHistory steps={history} clearHistory={clearHistory} />
           </div>
           <div className='p-4 pt-0'>
-            {resolving ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}
+            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}
           </div>
 
         </div>

@@ -1,8 +1,8 @@
 // ProjectDetails.tsx
-import React, { useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/utils/apis';
-import ChangesReviewPanel from './ProjectSync/ReviewGitDiff';
+import GitDiffReview from './ProjectSync/ReviewGitDiff';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -45,11 +45,13 @@ interface IProjectDetailsProps {
 }
 
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, modules, projectSchema }) => {
-  const [changes, setChanges] = useState<any>([])
+  const [reviewer, setReviewer] = useState<ReactElement | null>(null)
   const refreshFiles = async () => {
     const res = await checkGitSync(projectId);
     if (!res.synced && res.files)
-      setChanges(res.files);
+      setReviewer(
+        <GitDiffReview changes={res.files} setElement={setReviewer} />
+      );
   }
 
   return (
@@ -66,8 +68,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
             <li key={req}>{req}</li>
           ))}
         </ul>
-
-        {changes.length > 0 && <ChangesReviewPanel changes={changes}/>}
+        {reviewer}
         <h2>Modules:</h2>
         {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
           <Module key={index} moduleData={mod} />

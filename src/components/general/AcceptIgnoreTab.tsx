@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+export type AcceptIgnoreType = 'Accept' | 'Ignore';
 
 interface AcceptIgnoreTabsProps {
   name: string;
-  value: 'Accept' | 'Ignore';
-  onChange: (value: string) => void;
+  value: AcceptIgnoreType;
+  onChange: (value: AcceptIgnoreType) => void;
   className?: string;
 }
 
 const AcceptIgnoreTab: React.FC<AcceptIgnoreTabsProps> = ({ name, value = 'Accept', onChange, className=''}) => {
 
-  const handleTabChange = (value: 'Accept' | 'Ignore') => {
+  const handleTabChange = (value: AcceptIgnoreType) => {
     onChange(value);
   };
 

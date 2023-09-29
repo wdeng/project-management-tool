@@ -6,30 +6,31 @@ interface IChatInputProps {
   sendOnEmpty?: boolean;
   placeholder?: string;
   disabled?: boolean;
+  disabledPlaceholder?: string;
 }
 
 const ChatInput: React.FC<IChatInputProps> = ({
   onSend,
   disabled = false,
   sendOnEmpty = false,
-  placeholder = "Write your issues here.."
+  placeholder = "Write your issues here..",
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>('');
   const maxLines = 12;
-  const disabledButton = disabled || !(chatText || sendOnEmpty);
+  const buttonDisabled = disabled || !(chatText || sendOnEmpty);
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setChatText(e.target.value);
   };
 
   const handleSend = useCallback(async () => {
-    if (disabledButton)
+    if (buttonDisabled)
       return;
     const text = chatText.trim();
     setChatText('');
     await onSend(text);
-  }, [chatText, onSend, disabledButton]);
+  }, [chatText, onSend, buttonDisabled]);
 
   // Add this useEffect
   useEffect(() => {
@@ -73,8 +74,8 @@ const ChatInput: React.FC<IChatInputProps> = ({
         disabled={disabled}
       />
       <button
-        disabled={disabledButton}
-        className={`absolute right-2 bottom-2 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${disabledButton ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
+        disabled={buttonDisabled}
+        className={`absolute right-2 bottom-2 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
         onClick={handleSend}
       // style={{ marginBottom: '1.5rem' }}
       >

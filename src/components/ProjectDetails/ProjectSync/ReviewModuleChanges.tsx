@@ -1,71 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState,ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem } from '@/utils/apis/chatRefine';
+import { ProposedItem, confirmProjectChanges } from '@/utils/apis/chatRefine';
 import DiffEditorModal from '../../general/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import ProposeFileChange from './FileDiffInspector';
-import { FileModifyType } from '@/components/general/ModifySpan';
-import { synchronizeProject } from '@/utils/apis';
+import ReviewItem from '../../general/ReviewItem';
+import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
 
-interface FileChangeType {
-  name: string;
-  revisionType: FileModifyType;
-  goal: string;
+interface ModuleReviewPanelProps {
+  changes: ProposedItem[];
+  setElement: React.Dispatch<React.SetStateAction<ReactElement | null>>;
 }
 
-interface ChangesReviewPanelProps {
-  changes: FileChangeType[];
-}
-
-const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
-  changes
+const ModuleReviewPanel: React.FC<ModuleReviewPanelProps> = ({
+  changes, setElement
 }) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
 
-  const [fileStatus, setFileStatus] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (Array.isArray(changes)) {
-      setFileStatus(Object.fromEntries(changes.map(file => [file.name, 'Accept'])));
-    }
-  }, [changes]);
-
+  const [accepts, setAccepts] = useState<Record<string, AcceptIgnoreType>>({});
   const { refreshCurrentProject, selectedProjectId } = useSelected();
-
+  // Move to outside module
   const confirmChange = async () => {
-    if (Array.isArray(changes) && selectedProjectId) {
-      const acceptedChanges = changes.filter(file => fileStatus[file.name] === 'Accept');
-      const res = await synchronizeProject(selectedProjectId, acceptedChanges);
-      console.log(res);
+    if (selectedProjectId) {
+      const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
+      if (acceptedChanges.length == 0)
+        return
+      await confirmProjectChanges(acceptedChanges, selectedProjectId, null);
       refreshCurrentProject();
-      console.log(acceptedChanges);
+      setElement(null);
     }
-  };
-
-  const handleRadioChange = (filepath: string, value: string) => {
-    setFileStatus(
-      s => ({
-        ...s,
-        [filepath]: value
-      })
-    );
   };
 
   return (
     <div className="mt-4">
-      <span className="mr-6">Document Changed Sources to the Project: </span>
+      <span className="mr-6">Proposed Module modifications: </span>
       <div className="mb-3">
-        {changes.map(change => <ProposeFileChange key={change.name} {...change} handleRadioChange={handleRadioChange} accept={fileStatus[change.name] === 'Accept'} />)}
+        {changes.map(
+          c => <ReviewItem
+            key={c.name} change={c} accept={accepts[c.name] ?? 'Accept'} setAccepts={setAccepts} setEditingItem={setEditingItem}
+          />
+        )}
       </div>
       <div className="flex">
-        {Array.isArray(changes) && <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
-          Next
-        </button>}
+        <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
+          Done
+        </button>
       </div>
       {editingItem && <DiffEditorModal onClose={closeEditor} file={editingItem} />}
     </div>
   );
 };
 
-export default ChangesReviewPanel;
+export default ModuleReviewPanel;

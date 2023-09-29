@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
 import { ProposedItem } from '@/utils/apis/chatRefine';
-import DiffEditorModal from '../../general/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import ProposeFileChange from './FileDiffInspector';
 import { FileModifyType } from '@/components/general/ModifySpan';
 import { synchronizeProject } from '@/utils/apis';
+import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
+import ReviewItem from '@/components/general/ReviewItem';
+import FileEditorModal from '@/components/general/FileEditorModal';
+import ModuleReviewPanel from './ReviewModuleChanges';
 
 interface FileChangeType {
   name: string;
@@ -15,57 +17,45 @@ interface FileChangeType {
 
 interface ChangesReviewPanelProps {
   changes: FileChangeType[];
+  setElement: React.Dispatch<React.SetStateAction<ReactElement | null>>;
 }
 
-const ChangesReviewPanel: React.FC<ChangesReviewPanelProps> = ({
-  changes
+const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
+  changes, setElement
 }) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
 
-  const [fileStatus, setFileStatus] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (Array.isArray(changes)) {
-      setFileStatus(Object.fromEntries(changes.map(file => [file.name, 'Accept'])));
-    }
-  }, [changes]);
-
-  const { refreshCurrentProject, selectedProjectId } = useSelected();
+  const [accepts, setAccepts] = useState<Record<string, AcceptIgnoreType>>({});
+  const { selectedProjectId } = useSelected();
 
   const confirmChange = async () => {
-    if (Array.isArray(changes) && selectedProjectId) {
-      const acceptedChanges = changes.filter(file => fileStatus[file.name] === 'Accept');
+    if (selectedProjectId) {
+      const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
       const res = await synchronizeProject(selectedProjectId, acceptedChanges);
       console.log(res);
-      refreshCurrentProject();
-      console.log(acceptedChanges);
+      setElement(<ModuleReviewPanel changes={res} setElement={setElement} />)
     }
-  };
-
-  const handleRadioChange = (filepath: string, value: string) => {
-    setFileStatus(
-      s => ({
-        ...s,
-        [filepath]: value
-      })
-    );
   };
 
   return (
     <div className="mt-4">
       <span className="mr-6">Document Changed Sources to the Project: </span>
       <div className="mb-3">
-        {changes.map(change => <ProposeFileChange key={change.name} {...change} handleRadioChange={handleRadioChange} accept={fileStatus[change.name] === 'Accept'} />)}
+        {changes.map(
+          c => <ReviewItem
+            key={c.name} change={c} accept={accepts[c.name] ?? 'Accept'} setAccepts={setAccepts} setEditingItem={setEditingItem}
+          />
+        )}
       </div>
       <div className="flex">
         {Array.isArray(changes) && <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
           Next
         </button>}
       </div>
-      {editingItem && <DiffEditorModal onClose={closeEditor} file={editingItem} />}
+      {editingItem && <FileEditorModal onClose={closeEditor} fileId={editingItem.name} />}
     </div>
   );
 };
 
-export default ChangesReviewPanel;
+export default GitDiffReview;
