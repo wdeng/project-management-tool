@@ -1,6 +1,0 @@
-moduleDevSequence:
-  step1: APIUtils
-  step2: ProjectList
-  step3: ModuleList
-  step4: ModuleDetails
-  step5: ProjectCreationModal

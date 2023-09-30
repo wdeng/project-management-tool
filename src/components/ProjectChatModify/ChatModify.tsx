@@ -12,6 +12,7 @@ import ChatHistory from './ChatHistory';
 import Spinner from '../general/Spinner';
 import NextSteps from './AnswerPanels/NextStepsPanel';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
+import useScrollToBottom from '@/hooks/useScrollToBottom';
 
 interface ChatButtonProps {
   moduleIdPath: number[];
@@ -74,6 +75,8 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
       );
   }
 
+  const bottomRef = useScrollToBottom(proposedChanges)
+
   return (
     <div className="z-10 fixed bottom-10 right-12">
       <Transition
@@ -125,8 +128,9 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            {proposedChanges}
             <ChatHistory steps={history} clearHistory={clearHistory} />
+            {proposedChanges}
+            <div ref={bottomRef} />
           </div>
           <div className='p-4 pt-0'>
             {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}

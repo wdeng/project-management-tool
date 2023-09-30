@@ -1,5 +1,5 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement, useEffect } from 'react';
+import React, { useState, ReactElement, useEffect, useCallback } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/utils/apis';
 import GitDiffReview from './ProjectSync/ReviewGitDiff';
@@ -47,14 +47,19 @@ interface IProjectDetailsProps {
 
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, projectSchema }) => {
   const [reviewer, setReviewer] = useState<ReactElement | null>(null)
-  const refreshFiles = async () => {
+  const refreshFiles = useCallback(async () => {
+    console.log('refreshing', projectId)
     const res = await checkGitSync(projectId);
     if (!res.synced && res.files)
       setReviewer(
         <GitDiffReview changes={res.files} setElement={setReviewer} />
       );
-  }
+  }, [projectId])
   const bottomRef = useScrollToBottom(reviewer);
+
+  // useEffect(() => {
+  //   refreshFiles();
+  // }, [refreshFiles])
 
   return (
     <>
@@ -68,9 +73,11 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
         <h2 className='text-xl font-medium pt-4 pb-2'
         >Requirements:</h2>
         <ul className='pl-2'>
-          {requirements.map((req: string) => (
-            <li className='pb-1' key={req}>- {req}</li>
-          ))}
+          {
+            requirements.map((req: string) => (
+              <li className='pb-1' key={req}>- {req}</li>
+            ))
+          }
         </ul>
         {reviewer}
         {projectSchema && (
@@ -84,7 +91,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           </>
         )}
       </div>
-      <div ref={bottomRef}></div>
+      <div ref={bottomRef} />
     </>
   );
 };
