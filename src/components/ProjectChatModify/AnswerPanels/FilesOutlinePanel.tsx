@@ -22,14 +22,13 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
 
   const { refreshCurrentProject, selectedProjectId } = useSelected();
 
-  const confirmChange = async () => {
+  const confirmChange = async (next: boolean) => {
     if (selectedProjectId) {
       const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
       const newHistory = await confirmProjectChanges(acceptedChanges, selectedProjectId, issueId);
       reset(newHistory);
       refreshCurrentProject();
-    } else
-      reset();
+    }
   };
 
   const denyChange = () => {
@@ -47,11 +46,14 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
         )}
       </div>
       <div className="flex">
-        <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
+        <button className={`${outlineButtonStyles} mr-2`} onClick={() => confirmChange(true)}>
           Next
         </button>
+        <button className={`${outlineButtonStyles} mr-2`} onClick={() => confirmChange(false)}>
+          Finish
+        </button>
         <button className={`${outlineButtonStyles}`} onClick={denyChange}>
-          Cancel
+          Cancel (maybe upper right corner)
         </button>
       </div>
       {editingItem && <DiffEditorModal onClose={closeEditor} file={editingItem} />}

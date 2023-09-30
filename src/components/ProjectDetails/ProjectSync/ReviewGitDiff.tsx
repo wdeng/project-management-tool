@@ -34,7 +34,7 @@ const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
       const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
       const res = await synchronizeProject(selectedProjectId, acceptedChanges);
       console.log(res);
-      setElement(<ModuleReviewPanel changes={res} setElement={setElement} />)
+      setElement(<ModuleReviewPanel changes={res.outline} additions={res.files} setElement={setElement} />)
     }
   };
 

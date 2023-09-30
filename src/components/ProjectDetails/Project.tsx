@@ -57,7 +57,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
   return (
     <>
       <TopBar refresh={refreshFiles} />
-      <div className="flex flex-col px-6">
+      <div className="flex flex-col px-6 py-8">
 
         <h1>{projectName}</h1>
         <p>{description}</p>
@@ -69,10 +69,6 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           ))}
         </ul>
         {reviewer}
-        <h2>Modules:</h2>
-        {modules.map((mod: any, index: number) => ( // Replace 'any' with your module data type
-          <Module key={index} moduleData={mod} />
-        ))}
         {projectSchema && (
           <>
             <h2>Project Schema:</h2>

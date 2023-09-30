@@ -1,18 +1,20 @@
 import React, { useState,ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem, confirmProjectChanges } from '@/utils/apis/chatRefine';
+import { ProposedItem } from '@/utils/apis/chatRefine';
 import DiffEditorModal from '../../general/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ReviewItem from '../../general/ReviewItem';
 import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
+import { finalizeSyncGit } from '@/utils/apis';
 
 interface ModuleReviewPanelProps {
   changes: ProposedItem[];
+  additions: ProposedItem[];
   setElement: React.Dispatch<React.SetStateAction<ReactElement | null>>;
 }
 
 const ModuleReviewPanel: React.FC<ModuleReviewPanelProps> = ({
-  changes, setElement
+  changes, setElement, additions
 }) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
@@ -22,12 +24,12 @@ const ModuleReviewPanel: React.FC<ModuleReviewPanelProps> = ({
   // Move to outside module
   const confirmChange = async () => {
     if (selectedProjectId) {
-      const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
+      const acceptedChanges = changes.filter(m => accepts[m.name] !== 'Ignore');
       if (acceptedChanges.length == 0)
         return
-      await confirmProjectChanges(acceptedChanges, selectedProjectId, null);
-      refreshCurrentProject();
+      await finalizeSyncGit(selectedProjectId, acceptedChanges, additions);
       setElement(null);
+      refreshCurrentProject();
     }
   };
 
