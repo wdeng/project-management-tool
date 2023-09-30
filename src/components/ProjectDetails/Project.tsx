@@ -1,8 +1,9 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, useEffect } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/utils/apis';
 import GitDiffReview from './ProjectSync/ReviewGitDiff';
+import useScrollToBottom from '@/hooks/useScrollToBottom';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -44,7 +45,7 @@ interface IProjectDetailsProps {
   projectSchema?: any; // Replace 'any' with your schema data type
 }
 
-export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, modules, projectSchema }) => {
+export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, projectSchema }) => {
   const [reviewer, setReviewer] = useState<ReactElement | null>(null)
   const refreshFiles = async () => {
     const res = await checkGitSync(projectId);
@@ -53,19 +54,22 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
         <GitDiffReview changes={res.files} setElement={setReviewer} />
       );
   }
+  const bottomRef = useScrollToBottom(reviewer);
 
   return (
     <>
       <TopBar refresh={refreshFiles} />
-      <div className="flex flex-col px-6 py-8">
+      <div className="flex flex-col px-6 pb-8 text-gray-700 ">
 
-        <h1>{projectName}</h1>
+        <h1 className='text-3xl font-medium pb-2'
+        >{projectName}</h1>
         <p>{description}</p>
         {/* refresh button */}
-        <h2>Requirements:</h2>
-        <ul>
+        <h2 className='text-xl font-medium pt-4 pb-2'
+        >Requirements:</h2>
+        <ul className='pl-2'>
           {requirements.map((req: string) => (
-            <li key={req}>{req}</li>
+            <li className='pb-1' key={req}>- {req}</li>
           ))}
         </ul>
         {reviewer}
@@ -80,8 +84,8 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           </>
         )}
       </div>
+      <div ref={bottomRef}></div>
     </>
-
   );
 };
 

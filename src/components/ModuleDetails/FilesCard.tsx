@@ -29,14 +29,14 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
       {files.map((file) => (
         <div
           key={file.id}
-          className="p-2.5 relative mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-52 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
+          className="p-2.5 relative mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-64 text-left transition ease-in-out delay-100 hover:scale-110 duration-300"
           onClick={() => openEditor(file.id)}
           role="button"
           tabIndex={0}
         >
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-md truncate text-gray-700">
-              {file.path.split('/').pop()}
+            <h3 className="font-medium text-base truncate text-gray-700">
+              {file.path.substring(0, file.path.lastIndexOf('.'))}
             </h3>
             <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.25rem]" onClick={(ev)=>{
               ev.stopPropagation();
