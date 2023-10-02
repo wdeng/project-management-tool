@@ -32,6 +32,19 @@ const dispayTypes = {
   goal: "textfield",
 }
 
+function handleEditorWillMount(monaco: any) {
+  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: true,
+    noSyntaxValidation: true
+  });
+
+  // For JavaScript:
+  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: true,
+    noSyntaxValidation: true
+  });
+}
+
 const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, kind = "editor" }) => {
   const { selectedProjectId } = useSelected();
   const [file, setFile] = useState<FileDesign | undefined>(undefined);
@@ -74,11 +87,16 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   return (
     <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"}>
       {kind === "editor" ? <Editor
-        height="78vh"
+        beforeMount={handleEditorWillMount}
+        height="90vh"
         language={languageType}
         value={file?.content}
         onChange={handleEditorChange}
         theme="vs-dark"
+        options={{
+          fontSize: 13,
+          minimap: { enabled: false },
+        }}
       /> : <InfoEditor values={file} valueTypes={dispayTypes} onUpdateField={handleInfoChange} />}
     </Modal>
   );

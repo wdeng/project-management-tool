@@ -10,7 +10,6 @@ import ChatInput from '../general/ChatTextArea';
 import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
 import Spinner from '../general/Spinner';
-import NextSteps from './AnswerPanels/NextStepsPanel';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 
@@ -49,11 +48,12 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
-  const handleChatSubmit = async (issues: string | null = null) => {
+  const issueSubmit = async (issues: string | null = null) => {
     if (!selectedProjectId || !issues && !currentIssueId) return;
     if (issues != null)
       setHistory(prev => [...prev, `User issue: ${issues}`]);
     setSpinning(true);
+    setProposedChanges(null);
     const { toolType, changes, issueId } = await resolveIssues(
       selectedProjectId, issues, currentIssueId, selectedCheckboxOptions, resourcesEnabled
     );
@@ -63,16 +63,15 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     if (toolType === 'ReadMoreFiles') {
       setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
       setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
-      setSpinning(false);
-    } else if (toolType === 'TaskComplete') {
+    } else if (toolType === 'TaskComplete') 
       setHistory(prev => [...prev, `Task completed: ${changes}`]);
-      setSpinning(false);
-    } else if (toolType === 'DirectAnswer')
+    else if (toolType === 'DirectAnswer')
       setProposedChanges(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
     else
       setProposedChanges(
-        <FilesOutlinePanel changes={changes as ProposedItem[]} issueId={issueId} reset={resetHistory} />
+        <FilesOutlinePanel changes={changes as ProposedItem[]} issueId={issueId} reset={resetHistory} nextStep={issueSubmit} />
       );
+    setSpinning(false);
   }
 
   const bottomRef = useScrollToBottom(proposedChanges)
@@ -133,7 +132,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <div ref={bottomRef} />
           </div>
           <div className='p-4 pt-0'>
-            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={handleChatSubmit} />}
+            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={issueSubmit} />}
           </div>
 
         </div>

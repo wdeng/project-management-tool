@@ -48,7 +48,6 @@ interface IProjectDetailsProps {
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, projectSchema }) => {
   const [reviewer, setReviewer] = useState<ReactElement | null>(null)
   const refreshFiles = useCallback(async () => {
-    console.log('refreshing', projectId)
     const res = await checkGitSync(projectId);
     if (!res.synced && res.files)
       setReviewer(
@@ -70,14 +69,11 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
         >{projectName}</h1>
         <p>{description}</p>
         {/* refresh button */}
-        <h2 className='text-xl font-medium pt-4 pb-2'
-        >Requirements:</h2>
+        <h2 className='text-xl font-medium pt-4 pb-2'>Requirements:</h2>
         <ul className='pl-2'>
-          {
-            requirements.map((req: string) => (
-              <li className='pb-1' key={req}>- {req}</li>
-            ))
-          }
+          {requirements.map((req: string) => (
+            <li className='pb-1' key={req}> - {req}</li>
+          ))}
         </ul>
         {reviewer}
         {projectSchema && (

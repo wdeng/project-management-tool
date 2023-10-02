@@ -5,6 +5,7 @@ interface Proposed {
   projectId: number;
   files: any[];
   outline: any[];
+  synced?: boolean;
 };
 
 export async function checkGitSync(projectId: number): Promise<any> {

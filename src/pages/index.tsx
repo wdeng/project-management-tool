@@ -103,7 +103,9 @@ export default function Home() {
           {selectedModule ? <>
             <ModuleDetails
               moduleBuild={handleModuleBuild}
-              canBuild={canBuild} />
+              canBuild={canBuild}
+              moduleDetails={selectedModule}
+            />
             <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
           </> : projectDetails && <ProjectDetails {...projectDetails} projectId={selectedProjectId!} />}
         </div>

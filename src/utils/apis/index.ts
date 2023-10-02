@@ -45,6 +45,7 @@ export interface ModuleHierarchy {
   tabLevel?: number;
   name: string;
   description: string;
+  functionalRequirements: string[];
   files: FileDesign[];
   modules?: ModuleHierarchy[];
 }

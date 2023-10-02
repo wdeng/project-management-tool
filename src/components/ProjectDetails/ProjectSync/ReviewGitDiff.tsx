@@ -8,6 +8,7 @@ import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
 import ReviewItem from '@/components/general/ReviewItem';
 import FileEditorModal from '@/components/general/FileEditorModal';
 import ModuleReviewPanel from './ReviewModuleChanges';
+import Spinner from '@/components/general/Spinner';
 
 interface FileChangeType {
   name: string;
@@ -28,13 +29,18 @@ const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
 
   const [accepts, setAccepts] = useState<Record<string, AcceptIgnoreType>>({});
   const { selectedProjectId } = useSelected();
+  const [spinning, setSpinning] = useState(false);
 
   const confirmChange = async () => {
     if (selectedProjectId) {
       const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
+      setSpinning(true);
       const res = await synchronizeProject(selectedProjectId, acceptedChanges);
-      console.log(res);
-      setElement(<ModuleReviewPanel changes={res.outline} additions={res.files} setElement={setElement} />)
+      setSpinning(false);
+      if (res?.synced)
+        setElement(null);
+      else
+        setElement(<ModuleReviewPanel changes={res.outline} additions={res.files} setElement={setElement} />)
     }
   };
 
@@ -49,7 +55,7 @@ const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
         )}
       </div>
       <div className="flex">
-        {Array.isArray(changes) && <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
+        {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <button className={`${outlineButtonStyles} mr-2`} onClick={confirmChange}>
           Next
         </button>}
       </div>

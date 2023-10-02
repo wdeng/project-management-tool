@@ -67,7 +67,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
     <div className="relative flex justify-between items-end">
       <textarea
         ref={textareaRef}
-        className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
+        className="w-full rounded-lg p-3 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
         value={chatText}
         onChange={handleTextChange}
         placeholder={placeholder}

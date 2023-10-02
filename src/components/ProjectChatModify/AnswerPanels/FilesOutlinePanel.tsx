@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
 import { ProposedItem, confirmProjectChanges } from '@/utils/apis/chatRefine';
 import DiffEditorModal from '../../general/DiffEditorModal';
@@ -10,10 +10,11 @@ interface FilesOutlinePanelProps {
   changes: ProposedItem[];
   issueId?: string | null;
   reset: (history?: string[] | null) => void;
+  nextStep: () => void;
 }
 
 const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
-  changes, issueId = null, reset
+  changes, issueId = null, reset, nextStep
 }) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
@@ -25,14 +26,14 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
   const confirmChange = async (next: boolean) => {
     if (selectedProjectId) {
       const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
+      if (acceptedChanges.length == 0)
+        return reset();
+
       const newHistory = await confirmProjectChanges(acceptedChanges, selectedProjectId, issueId);
+      next && await nextStep();
       reset(newHistory);
       refreshCurrentProject();
     }
-  };
-
-  const denyChange = () => {
-    reset();
   };
 
   return (
@@ -51,9 +52,6 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
         </button>
         <button className={`${outlineButtonStyles} mr-2`} onClick={() => confirmChange(false)}>
           Finish
-        </button>
-        <button className={`${outlineButtonStyles}`} onClick={denyChange}>
-          Cancel (maybe upper right corner)
         </button>
       </div>
       {editingItem && <DiffEditorModal onClose={closeEditor} file={editingItem} />}
