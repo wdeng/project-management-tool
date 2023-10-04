@@ -28,10 +28,9 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
       const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
       if (acceptedChanges.length == 0)
         return reset();
-
       const newHistory = await confirmProjectChanges(acceptedChanges, selectedProjectId, issueId);
-      next && await nextStep();
       reset(newHistory);
+      next && await nextStep();
       refreshCurrentProject();
     }
   };
