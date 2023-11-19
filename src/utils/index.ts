@@ -22,8 +22,12 @@ export const languageMap: Record<string, string> = {
 
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://skapi.wenxiangdeng.com';
 
+const instance = axios.create({
+  withCredentials: true,
+});
+
 export const postReq = async (url: string, data: any = undefined) => {
-  const response = await axios.post<any>(`${API_BASE_URL}/${url}`, data, { withCredentials: true });
+  const response = await instance.post<any>(`${API_BASE_URL}/${url}`, data);
   return response.data;
 }
 
