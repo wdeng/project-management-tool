@@ -1,8 +1,6 @@
-import axios from 'axios';
+import { getReq, postReq } from '..';
 export * from './update';
 export * from './gitSync';
-
-export const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://skapi.wenxiangdeng.com';
 
 export interface ComponentSpecs {
   [key: string]: string | ComponentSpecs | ComponentSpecs[];
@@ -83,10 +81,7 @@ export async function setProjectGoal(goal: string): Promise<QAResponse> {
   const data = {
     goal,
   };
-  const response = await axios.post<QAResponse>(
-    `${API_BASE_URL}/project/collect_requirements`, data
-  );
-  return response.data;
+  return await postReq('project/collect_requirements', data);
 }
 
 export async function anwerProjectQAs(
@@ -96,15 +91,12 @@ export async function anwerProjectQAs(
     questionAnswers,
     projectId,
   };
-  const response = await axios.post<QAResponse>(
-    `${API_BASE_URL}/project/collect_requirements`, data
-  );
-  return response.data;
+
+  return await postReq('project/collect_requirements', data);
 }
 
 export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> {
-  const response = await axios.get<ProjectSpecs>(`${API_BASE_URL}/project/requirement_specs/${projectId}`);
-  return response.data;
+  return await getReq(`project/requirement_specs/${projectId}`);
 }
 
 export async function fixProjectIssue(issues: string, projectId: number): Promise<QAResponse> {
@@ -112,21 +104,15 @@ export async function fixProjectIssue(issues: string, projectId: number): Promis
     issues,
     projectId,
   };
-  const response = await axios.post<QAResponse>(
-    `${API_BASE_URL}/project/requirement_specs/fix_specs`, data
-  );
-  return response.data;
+  return await postReq('project/requirement_specs/fix_specs', data);
 }
 
 export async function buildProject(projectId: number): Promise<ProjectDetailResponse> {
-  const response = await axios.post<ProjectDetailResponse>(`${API_BASE_URL}/project/build/${projectId}`);
-  return response.data;
+  return await postReq(`project/build/${projectId}`);
 }
 
 export async function initProject(name: string, folder: string, requirements: string): Promise<any> {
-  console.log(name, folder, requirements);
-  const response = await axios.post<any>(`${API_BASE_URL}/project/init`, { name, folder, requirements });
-  return response.data;
+  return await postReq('project/init', { name, folder, requirements });
 }
 
 export async function buildModule(projectId: number, moduleId: number): Promise<any> {
@@ -134,8 +120,8 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
     projectId,
     moduleId,
   };
-  const response = await axios.post<any>(`${API_BASE_URL}/module/build/${projectId}-${moduleId}`, data);
-  return response.data;
+
+  return await postReq(`module/build/${projectId}-${moduleId}`, data);
 }
 
 export async function fetchSourceCode(projectId: number, fileId: number | string): Promise<FileDesign> {
@@ -143,23 +129,21 @@ export async function fetchSourceCode(projectId: number, fileId: number | string
 
   if (typeof fileId === 'string') {
     const encodedPath = encodeURIComponent(fileId);
-    apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?path=${encodedPath}`;
+    apiUrl = `sourcecode/${projectId}?path=${encodedPath}`;
   } else if (typeof fileId === 'number')
-    apiUrl = `${API_BASE_URL}/sourcecode/${projectId}?id=${fileId}`;
+    apiUrl = `sourcecode/${projectId}?id=${fileId}`;
   else
     throw new Error("Either path or id must be provided");
 
-  const response = await axios.get<FileDesign>(apiUrl);
-  return response.data;
+  return await getReq(apiUrl);
 }
 
 export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
-  let url = `${API_BASE_URL}/project/${projectId}/modules`;
+  let url = `project/${projectId}/modules`;
   if (projectDetails)
-    url = `${API_BASE_URL}/project/${projectId}/details`;
-  const response = await axios.get<ProjectDetailResponse>(url);
+    url = `project/${projectId}/details`;
+  const resp = await getReq(url);
 
-  const resp = response.data;
   const [modules, moduleIds] = parseProjectModules(resp.modules);
   return { ...resp, modules, moduleIds };
 }
@@ -181,18 +165,15 @@ function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], nu
 }
 
 export async function fetchModuleDetails(projectId: number, moduleId: number): Promise<ModuleHierarchy> {
-  const response = await axios.get<ModuleHierarchy>(`${API_BASE_URL}/module/${projectId}/${moduleId}/details`);
-  return response.data;
+  return await getReq(`module/${projectId}/${moduleId}/details`);
 }
 
 export async function fetchProjects(): Promise<Project[]> {
-  const response = await axios.get<Project[]>(`${API_BASE_URL}/projects/list`);
-  return response.data;
+  return await getReq('projects/list');
 }
 
 export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]> {
-  const response = await axios.get<ModuleHierarchy[]>(`${API_BASE_URL}/project/${projectId}/modules`);
-  const modules = response.data;
+  const modules = await getReq(`project/${projectId}/modules`);
 
   // Create tabLevels for modules and include files
   const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {

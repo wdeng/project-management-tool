@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { API_BASE_URL } from '.'
 import { FileModifyType } from '@/components/general/ModifySpan';
+import { getReq, postReq } from '..';
 
 interface BaseProposed {
   type: string;
@@ -47,9 +46,7 @@ export async function resolveIssues(
     resourcesAllowed,
   };
   console.log(data);
-  const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues`, data);
-  console.log(response.data);
-  return response.data;
+  return await postReq('project/resolve_issues', data);
 }
 
 export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number, issueId: string | null): Promise<any> {
@@ -59,12 +56,9 @@ export async function confirmProjectChanges(changedFiles: ProposedItem[], projec
     changes: changedFiles,
   };
   console.log(data);
-  const response = await axios.post<any>(`${API_BASE_URL}/project/resolve_issues/confirm`, data);
-  console.log(response.data);
-  return response.data;
+  return await postReq('project/resolve_issues/confirm', data);
 }
 
 export async function getIssueHistory(projectId: number, issueId: string): Promise<any> {
-  const response = await axios.get<any>(`${API_BASE_URL}/project=${projectId}/issue=${issueId}/history`);
-  return response.data;
+  return await getReq(`project=${projectId}/issue=${issueId}/history`);
 }
