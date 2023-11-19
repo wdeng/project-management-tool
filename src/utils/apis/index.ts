@@ -2,7 +2,7 @@ import axios from 'axios';
 export * from './update';
 export * from './gitSync';
 
-export const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.wenxiangdeng.com';
+export const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://skapi.wenxiangdeng.com';
 
 export interface ComponentSpecs {
   [key: string]: string | ComponentSpecs | ComponentSpecs[];
