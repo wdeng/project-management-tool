@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export function camelToTitle(camelStr: string) {
   return camelStr
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')  // Add a space before each uppercase letter that follows a lowercase letter or number
@@ -10,6 +8,17 @@ export function camelToTitle(camelStr: string) {
 
 export function getFileExtension(filename: string) {
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+}
+
+export function createQueryString(params: Record<string, any>) {
+  // if not use URLSearchParams, the query string will not be escaped
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined) {
+      query.set(key, value.toString());
+    }
+  }
+  return query.toString();
 }
 
 export const languageMap: Record<string, string> = {
@@ -41,7 +50,8 @@ export const postReq = async (url: string, data: any = undefined) => {
     method: 'POST',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-Forwarded-Method': 'POST',
     },
     body: JSON.stringify(data)
   });

@@ -1,4 +1,4 @@
-import { getReq, postReq } from "..";
+import { createQueryString, getReq, postReq } from "..";
 
 interface Proposed {
   projectId: number;
@@ -8,7 +8,8 @@ interface Proposed {
 };
 
 export async function checkGitSync(projectId: number): Promise<any> {
-  return await getReq(`project/${projectId}/check_sync`);
+  const queries = createQueryString({ 'project-id': projectId });
+  return await getReq(`project-sync/is-sync?${queries}`);
 }
 
 export async function synchronizeProject(projectId: number, files: any[]): Promise<Proposed> {
@@ -16,7 +17,7 @@ export async function synchronizeProject(projectId: number, files: any[]): Promi
     projectId,
     files,
   }
-  return await postReq('project/sync', data);
+  return await postReq('project-sync/propose', data);
 }
 
 export async function finalizeSyncGit(projectId: number, outline: any[], files: any[]): Promise<any> {
@@ -26,5 +27,5 @@ export async function finalizeSyncGit(projectId: number, outline: any[], files: 
     files
   }
   console.log(data);
-  return await postReq('project/sync_finalize', data);
+  return await postReq('project-sync/finalize', data);
 }

@@ -81,7 +81,7 @@ export async function setProjectGoal(goal: string): Promise<QAResponse> {
   const data = {
     goal,
   };
-  return await postReq('project/collect_requirements', data);
+  return await postReq('project-init/collect_requirements', data);
 }
 
 export async function anwerProjectQAs(
@@ -92,11 +92,11 @@ export async function anwerProjectQAs(
     projectId,
   };
 
-  return await postReq('project/collect_requirements', data);
+  return await postReq('project-init/collect-requirements', data);
 }
 
 export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> {
-  return await getReq(`project/requirement_specs/${projectId}`);
+  return await getReq(`project-init/requirement-specs/${projectId}`);
 }
 
 export async function fixProjectIssue(issues: string, projectId: number): Promise<QAResponse> {
@@ -104,15 +104,19 @@ export async function fixProjectIssue(issues: string, projectId: number): Promis
     issues,
     projectId,
   };
-  return await postReq('project/requirement_specs/fix_specs', data);
+  return await postReq('project-init/requirement-specs/fix_specs', data);
 }
 
 export async function buildProject(projectId: number): Promise<ProjectDetailResponse> {
-  return await postReq(`project/build/${projectId}`);
+  const data = {
+    projectId,
+  };
+
+  return await postReq(`build/project`, data);
 }
 
 export async function initProject(name: string, folder: string, requirements: string): Promise<any> {
-  return await postReq('project/init', { name, folder, requirements });
+  return await postReq('project-init/init', { name, folder, requirements });
 }
 
 export async function buildModule(projectId: number, moduleId: number): Promise<any> {
@@ -121,7 +125,7 @@ export async function buildModule(projectId: number, moduleId: number): Promise<
     moduleId,
   };
 
-  return await postReq(`module/build/${projectId}-${moduleId}`, data);
+  return await postReq(`build/module`, data);
 }
 
 export async function fetchSourceCode(projectId: number, fileId: number | string): Promise<FileDesign> {
@@ -169,7 +173,7 @@ export async function fetchModuleDetails(projectId: number, moduleId: number): P
 }
 
 export async function fetchProjects(): Promise<Project[]> {
-  return await getReq('projects/list');
+  return await getReq('projects');
 }
 
 export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]> {

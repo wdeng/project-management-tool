@@ -36,18 +36,6 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  // useEffect(() => {
-  //   const fetchProjectSpecs = async () => {
-  //     const projectId = 19;
-  //     const res = await getProjectSpecs(projectId);
-  //     setProjectSpecs(res);
-  //     setProjectId(projectId);
-  //     setCurrentStep('ReviewProjectSpecs');
-  //   }
-
-  //   fetchProjectSpecs();
-  // }, []);
-
   const handleProjectGoalSubmit = async (goal: string) => {
     // Start the loading state
     setIsLoading(true);
@@ -58,8 +46,6 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
       setProjectId(res.projectId);
       setQuestions(res.QAs);
 
-      // After submitting the project goal, we want to show the Multiple Choice Questions
-      console.log(goal)
       setCurrentStep('MultipleChoiceQuestions');
     } catch (error) {
       console.error(error);
@@ -127,7 +113,6 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     close();
     await onNewProject(projectName, requirements, schema);
   }
-
 
   return (
     <>

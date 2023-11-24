@@ -1,5 +1,5 @@
 import { FileModifyType } from '@/components/general/ModifySpan';
-import { getReq, postReq } from '..';
+import { createQueryString, getReq, postReq } from '..';
 
 interface BaseProposed {
   type: string;
@@ -46,7 +46,7 @@ export async function resolveIssues(
     resourcesAllowed,
   };
   console.log(data);
-  return await postReq('project/resolve_issues', data);
+  return await postReq('/resolve-issues/propose', data);
 }
 
 export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number, issueId: string | null): Promise<any> {
@@ -56,9 +56,10 @@ export async function confirmProjectChanges(changedFiles: ProposedItem[], projec
     changes: changedFiles,
   };
   console.log(data);
-  return await postReq('project/resolve_issues/confirm', data);
+  return await postReq('/resolve-issues/confirm', data);
 }
 
 export async function getIssueHistory(projectId: number, issueId: string): Promise<any> {
-  return await getReq(`project=${projectId}/issue=${issueId}/history`);
+  const queries = createQueryString({ 'project-id': projectId, 'issue-id': issueId });
+  return await getReq(`/resolve-issues/history?${queries}`);
 }
