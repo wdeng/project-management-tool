@@ -3,7 +3,7 @@ import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md';
 import DisclosurePanel from './Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, resolveIssues } from '@/utils/apis/chatRefine';
+import { ChatInputType, ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, resolveIssues } from '@/utils/apis/chatRefine';
 import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
@@ -27,7 +27,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
 
   const [currentIssueId, setIssueId] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
-  const [proposedChanges, setProposedChanges] = useState<ReactElement | null>(null);
+  const [ChangesPanel, setProposedChanges] = useState<ReactElement | null>(null);
   const [spinning, setSpinning] = useState(false);
 
   const clearHistory = () => {
@@ -48,10 +48,13 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
-  const issueSubmit = async (issues: string | null = null) => {
+  const issueSubmit = async (issues: ChatInputType = null) => {
     if (!selectedProjectId || !issues && !currentIssueId) return;
     if (issues != null)
-      setHistory(prev => [...prev, `User issue: ${issues}`]);
+      if (typeof issues === 'string')
+        setHistory(prev => [...prev, `User issue: ${issues}`]);
+      else
+        setHistory(prev => [...prev, `User issue: ${issues.text}`]);
     setSpinning(true);
     setProposedChanges(null);
     const { toolType, changes, issueId } = await resolveIssues(
@@ -74,7 +77,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     setSpinning(false);
   }
 
-  const bottomRef = useScrollToBottom(proposedChanges)
+  const bottomRef = useScrollToBottom(ChangesPanel)
 
   return (
     <div className="z-10 fixed bottom-10 right-12">
@@ -128,7 +131,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
               ))}
             </div>
             <ChatHistory steps={history} clearHistory={clearHistory} />
-            {proposedChanges}
+            {ChangesPanel}
             <div ref={bottomRef} />
           </div>
           <div className='p-4 pt-0'>

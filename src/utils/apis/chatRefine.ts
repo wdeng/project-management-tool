@@ -28,6 +28,8 @@ export type ProposedItem = ProposedFile | ProposedModule;
 
 export type RefineResource = 'outline' | 'schema' | 'read_more_files' | 'direct_answer';
 
+export type ChatInputType = string | null | { images: string[]; text: string };
+
 export const REFINE_RESOURCES: Record<RefineResource, string> = {
   outline: "Project Outline",
   schema: "Data and API Schema",
@@ -36,7 +38,7 @@ export const REFINE_RESOURCES: Record<RefineResource, string> = {
 };
 
 export async function resolveIssues(
-  projectId: number, issues: string | null, issueId: string | null, fileIds?: number[], resourcesAllowed: RefineResource[] = []
+  projectId: number, issues: ChatInputType, issueId: string | null, fileIds?: number[], resourcesAllowed: RefineResource[] = []
 ): Promise<any> {
   const data = {
     projectId,
@@ -46,7 +48,7 @@ export async function resolveIssues(
     resourcesAllowed,
   };
   console.log(data);
-  return await postReq('/resolve-issues/propose', data);
+  return await postReq('resolve-issues/propose', data);
 }
 
 export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number, issueId: string | null): Promise<any> {
@@ -56,10 +58,11 @@ export async function confirmProjectChanges(changedFiles: ProposedItem[], projec
     changes: changedFiles,
   };
   console.log(data);
-  return await postReq('/resolve-issues/confirm', data);
+  const resp = await postReq('resolve-issues/confirm', data);
+  return resp;
 }
 
 export async function getIssueHistory(projectId: number, issueId: string): Promise<any> {
   const queries = createQueryString({ 'project-id': projectId, 'issue-id': issueId });
-  return await getReq(`/resolve-issues/history?${queries}`);
+  return await getReq(`resolve-issues/history?${queries}`);
 }

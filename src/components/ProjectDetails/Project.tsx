@@ -1,9 +1,10 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement, useEffect, useCallback } from 'react';
+import React, { useState, ReactElement, useCallback } from 'react';
 import TopBar from './TopBar';
-import { checkGitSync } from '@/utils/apis';
+import { checkGitSync, deleteProject } from '@/utils/apis';
 import GitDiffReview from './ProjectSync/ReviewGitDiff';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
+import { useSelected } from '@/hooks/useSelectedContext';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
@@ -46,6 +47,7 @@ interface IProjectDetailsProps {
 }
 
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, projectSchema }) => {
+  const { setSelectedProjectId, setSelectedModule } = useSelected();
   const [reviewer, setReviewer] = useState<ReactElement | null>(null)
   const refreshFiles = useCallback(async () => {
     const res = await checkGitSync(projectId);
@@ -56,13 +58,21 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
   }, [projectId])
   const bottomRef = useScrollToBottom(reviewer);
 
+  const _deleteProject = async () => {
+    if (projectId && window.confirm("Are you sure to delete this project?")) {
+      await deleteProject(projectId);
+      setSelectedModule(null);
+      setSelectedProjectId(null);
+    }
+  };
+
   // useEffect(() => {
   //   refreshFiles();
   // }, [refreshFiles])
 
   return (
     <>
-      <TopBar refresh={refreshFiles} />
+      <TopBar syncProject={refreshFiles} deleteProject={_deleteProject} />
       <div className="flex flex-col px-6 pb-8 text-gray-700 ">
 
         <h1 className='text-3xl font-medium pb-2'

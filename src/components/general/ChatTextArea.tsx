@@ -1,14 +1,40 @@
-import Image from 'next/image';
+import { ChatInputType } from '@/utils/apis/chatRefine';
+import NextImage from 'next/image';
 import React, { useRef, useEffect, useState, ChangeEvent, useCallback } from 'react';
 import { MdSend, MdImage, MdClose } from 'react-icons/md';
 
 interface IChatInputProps {
-  onSend: (data: string | { images: File[]; text: string }) => Promise<any>;
+  onSend: (data: ChatInputType) => Promise<void>;
   sendOnEmpty?: boolean;
   placeholder?: string;
   disabled?: boolean;
   disabledPlaceholder?: string;
 }
+
+export
+
+const convertToBase64JPEG = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx!.drawImage(img, 0, 0);
+        const base64JPEG = canvas.toDataURL('image/jpeg');
+        resolve(base64JPEG);
+      };
+      img.onerror = reject;
+      img.src = e.target!.result as string;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
 
 const ChatInput: React.FC<IChatInputProps> = ({
   onSend,
@@ -18,7 +44,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>('');
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagesBase64, setImagesBase64] = useState<string[]>([]);
   const maxLines = 12;
   const buttonDisabled = disabled || !(chatText || sendOnEmpty);
 
@@ -26,25 +52,32 @@ const ChatInput: React.FC<IChatInputProps> = ({
     setChatText(e.target.value);
   };
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files != null)
-      setImageFiles(prevImages => [...prevImages, ...Array.from(e.target.files || [])]);
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    const base64JPEGs = await Promise.all(files.map(convertToBase64JPEG));
+    setImagesBase64(prevImages => {
+      const newImages = [...prevImages, ...base64JPEGs];
+      while (newImages.length > 4)
+        newImages.shift(); // Removes the first element
+      return newImages;
+    });
   };
 
   const removeImage = (index: number) => {
-    setImageFiles(prevImages => prevImages.filter((_, i) => i !== index));
+    setImagesBase64(prevImages => prevImages.filter((_, i) => i !== index));
   };
 
   const handleSend = useCallback(async () => {
     if (buttonDisabled) return;
     const text = chatText.trim();
     setChatText('');
-    if (imageFiles.length === 0)
+    if (imagesBase64.length === 0)
       await onSend(text);
     else
-      await onSend({ images: imageFiles, text });
-    setImageFiles([]); // Clear the images after sending
-  }, [chatText, imageFiles, onSend, buttonDisabled]);
+      await onSend({ images: imagesBase64, text });
+    setImagesBase64([]); // Clear the images after sending
+  }, [chatText, imagesBase64, onSend, buttonDisabled]);
 
   // Add this useEffect
   useEffect(() => {
@@ -80,20 +113,20 @@ const ChatInput: React.FC<IChatInputProps> = ({
   return (
     <div className="relative flex flex-col">
       <div className="flex space-x-2 p-2">
-        {imageFiles.map((file, index) => (
+        {imagesBase64.map((file, index) => (
           <div key={index} className="relative">
-            <Image src={URL.createObjectURL(file)} className="w-16 h-16 object-cover" alt="thumbnail" />
+            <NextImage src={file} className="w-16 h-16 object-cover" alt="thumbnail" width={8} height={8} />
             <button
               className="absolute top-1 right-1 rounded-full bg-black p-1"
               onClick={() => removeImage(index)}
             >
-              <MdClose size={20} className="text-white" />
+              <MdClose size={14} className="text-white" />
             </button>
           </div>
         ))}
       </div>
       <div className="relative flex justify-between items-end">
-        <label htmlFor="image-upload" className="absolute left-2 bottom-2">
+        <label htmlFor="image-upload" className="absolute left-2 top-4 cursor-pointer">
           <MdImage size={20} />
           <input
             id="image-upload"
@@ -106,7 +139,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         </label>
         <textarea
           ref={textareaRef}
-          className="w-full rounded-lg p-3 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
+          className="w-full rounded-lg p-3 pl-7 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
           value={chatText}
           onChange={handleTextChange}
           placeholder={placeholder}

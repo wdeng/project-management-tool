@@ -81,7 +81,7 @@ export async function setProjectGoal(goal: string): Promise<QAResponse> {
   const data = {
     goal,
   };
-  return await postReq('project-init/collect_requirements', data);
+  return await postReq('project-init/collect-requirements', data);
 }
 
 export async function anwerProjectQAs(
@@ -104,7 +104,11 @@ export async function fixProjectIssue(issues: string, projectId: number): Promis
     issues,
     projectId,
   };
-  return await postReq('project-init/requirement-specs/fix_specs', data);
+  return await postReq('project-init/requirement-specs/fix-specs', data);
+}
+
+export async function deleteProject(projectId: number): Promise<any> {
+  return await postReq(`project/${projectId}/delete`);
 }
 
 export async function buildProject(projectId: number): Promise<ProjectDetailResponse> {
@@ -169,7 +173,7 @@ function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], nu
 }
 
 export async function fetchModuleDetails(projectId: number, moduleId: number): Promise<ModuleHierarchy> {
-  return await getReq(`module/${projectId}/${moduleId}/details`);
+  return await getReq(`project/${projectId}/module/${moduleId}/details`);
 }
 
 export async function fetchProjects(): Promise<Project[]> {

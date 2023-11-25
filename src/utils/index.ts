@@ -45,7 +45,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:
 //   return response.data;
 // }
 
-export const postReq = async (url: string, data: any = undefined) => {
+export const postReq = async (url: string, data: any = {}) => {
   const response = await fetch(`${API_BASE_URL}/${url}`, {
     method: 'POST',
     credentials: 'include',

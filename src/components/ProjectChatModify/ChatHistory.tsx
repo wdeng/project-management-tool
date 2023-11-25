@@ -2,11 +2,6 @@
 
 import React from 'react';
 
-export interface HistoryItem {
-  title?: string;
-  description: string;
-}
-
 interface ChatHistoryProps {
   steps: string[];
   clearHistory: () => void
@@ -25,9 +20,9 @@ const ChatHistory = ({ steps, clearHistory }: ChatHistoryProps) => {
         <button className="text-red-500" onClick={handleClearHistory}>Reset</button>
       </div>
       <ul>
-        {steps.map((description, index) => (
+        {steps.map((s, index) => (
           <li key={index} className="mb-2">
-            <div className="text-gray-700">{description}</div>
+            <div className="text-gray-700">{s}</div>
           </li>
         ))}
       </ul>
