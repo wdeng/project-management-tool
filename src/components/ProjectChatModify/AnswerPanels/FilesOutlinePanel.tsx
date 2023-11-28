@@ -8,28 +8,27 @@ import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
 
 interface FilesOutlinePanelProps {
   changes: ProposedItem[];
-  issueId?: string | null;
-  reset: (history?: string[] | null) => void;
+  syncHistory: (history?: string[] | null) => void;
   nextStep: () => void;
 }
 
 const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
-  changes, issueId = null, reset, nextStep
+  changes, syncHistory, nextStep
 }) => {
   const [editingItem, setEditingItem] = useState<ProposedItem | null>(null);
   const closeEditor = () => setEditingItem(null);
 
-  const [accepts, setAccepts] = useState<Record<string, AcceptIgnoreType>>({});
+  const [changesAccepted, acceptChanges] = useState<Record<string, AcceptIgnoreType>>({});
 
   const { refreshCurrentProject, selectedProjectId } = useSelected();
 
   const confirmChange = async (next: boolean) => {
     if (selectedProjectId) {
-      const acceptedChanges = changes.filter(file => accepts[file.name] !== 'Ignore');
-      if (acceptedChanges.length == 0)
-        return reset();
-      const newHistory = await confirmProjectChanges(acceptedChanges, selectedProjectId, issueId);
-      reset(newHistory);
+      const acceptedChanges = changes.filter(file => changesAccepted[file.name] !== 'Ignore');
+      if (acceptedChanges.length > 0) {
+        const newHistory = await confirmProjectChanges(acceptedChanges, selectedProjectId);
+        syncHistory(newHistory);
+      }
       next && await nextStep();
       refreshCurrentProject();
     }
@@ -41,13 +40,13 @@ const FilesOutlinePanel: React.FC<FilesOutlinePanelProps> = ({
       <div className="mb-3">
         {changes.map(
           c => <ReviewItem
-          key={c.name} change={c} accept={accepts[c.name] ?? 'Accept'} setAccepts={setAccepts} setEditingItem={setEditingItem}
-        />
+            key={c.name} change={c} accept={changesAccepted[c.name] ?? 'Accept'} acceptChanges={acceptChanges} setEditingItem={setEditingItem}
+          />
         )}
       </div>
       <div className="flex">
         <button className={`${outlineButtonStyles} mr-2`} onClick={() => confirmChange(true)}>
-          Next
+          Next Step
         </button>
         <button className={`${outlineButtonStyles} mr-2`} onClick={() => confirmChange(false)}>
           Finish

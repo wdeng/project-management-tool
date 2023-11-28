@@ -9,7 +9,7 @@ interface ChatHistoryProps {
 
 const ChatHistory = ({ steps, clearHistory }: ChatHistoryProps) => {
   const handleClearHistory = () => {
-    if (window.confirm('Are you sure you want to reset the chat history?'))
+    if (confirm('Are you sure you want to reset the chat history?'))
       clearHistory();
   };
 

@@ -12,13 +12,13 @@ export interface Item {
 interface ReviewItemProps {
   change: Item;
   accept: AcceptIgnoreType;
-  setAccepts: React.Dispatch<React.SetStateAction<Record<string, AcceptIgnoreType>>>;
+  acceptChanges: React.Dispatch<React.SetStateAction<Record<string, AcceptIgnoreType>>>;
   setEditingItem: (item: any) => void;
 }
 
-const ReviewItem: React.FC<ReviewItemProps> = ({ change, accept, setEditingItem, setAccepts }) => {
+const ReviewItem: React.FC<ReviewItemProps> = ({ change, accept, setEditingItem, acceptChanges }) => {
   const handleRadioChange = (filepath: string, value: AcceptIgnoreType) => {
-    setAccepts(
+    acceptChanges(
       s => ({
         ...s,
         [filepath]: value

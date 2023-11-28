@@ -8,14 +8,11 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   height?: string;
-  svgButton1?: ReactNode;
-  onSvgButton1Click?: () => void;
-  svgButton2?: ReactNode;
-  onSvgButton2Click?: () => void;
+  MoreButtons?: ReactNode[];
   className?: string; // Add a className prop
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height='', svgButton1, onSvgButton1Click, svgButton2, onSvgButton2Click, className }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height='', MoreButtons, className }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}
       enter="ease-out duration-300"
@@ -45,19 +42,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height=
                 <Dialog.Title as="h3" className="text-lg leading-6 font-semibold">
                   {title}
                 </Dialog.Title>
-                <div>
-                  {svgButton1 && (
-                    <button onClick={onSvgButton1Click} className="mr-2">
-                      {svgButton1}
-                    </button>
-                  )}
-                  {svgButton2 && (
-                    <button onClick={onSvgButton2Click} className="mr-2">
-                      {svgButton2}
-                    </button>
-                  )}
+                <div className="flex space-x-3 text-lg">
+                  {MoreButtons}
                   <button onClick={onClose}>
-                    <MdClose className="text-gray-400 hover:text-gray-500" />
+                    <MdClose className="text-gray-500 hover:text-gray-700" />
                   </button>
                 </div>
               </div>

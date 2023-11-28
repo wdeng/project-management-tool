@@ -1,9 +1,9 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md';
 import DisclosurePanel from './Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ChatInputType, ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, resolveIssues } from '@/utils/apis/chatRefine';
+import { ChatInputType, ProposedDirectAnswer, ProposedItem, REFINE_RESOURCES, RefineResource, clearIssueHistory, getIssueHistory, resolveIssues } from '@/utils/apis/chatRefine';
 import { ModuleHierarchy } from '@/utils/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
@@ -25,22 +25,29 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
   const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
 
-  const [currentIssueId, setIssueId] = useState<string | null>(null);
-  const [history, setHistory] = useState<string[]>([]);
-  const [ChangesPanel, setProposedChanges] = useState<ReactElement | null>(null);
+  const [interactHistory, setHistory] = useState<string[]>([]);
+  const [ChangesPanel, setProposePanel] = useState<ReactElement | null>(null);
   const [spinning, setSpinning] = useState(false);
 
-  const clearHistory = () => {
-    setHistory([]);
-    setIssueId(null);
-    setSpinning(false);
-  }
-  const resetHistory = (h?: string[] | null) => {
-    h == null ? clearHistory() : setHistory(h);
-    setProposedChanges(null);
+  const syncHistory = async (h?: string[] | null) => {
+    h && setHistory(h);
+    setProposePanel(null);
     setSpinning(false);
   }
   const toggleChat = () => setIsChatOpen(!isChatOpen);
+
+  useEffect(() => {
+    if (isChatOpen && selectedProjectId) {
+      const getHistory = async () => {
+        const data = await getIssueHistory(selectedProjectId);
+        setHistory(data.history);
+        if (data.toolType)
+          applyIssueResolve(data.toolType, data.changes);
+      }
+      getHistory();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatOpen, selectedProjectId])
 
   const handleCheckboxChange = (option: number) => {
     setSelectedCheckboxOptions((prev) =>
@@ -48,33 +55,36 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     );
   };
 
-  const issueSubmit = async (issues: ChatInputType = null) => {
-    if (!selectedProjectId || !issues && !currentIssueId) return;
+  const submitUserIssue = async (issues: ChatInputType = null) => {
+    if (!selectedProjectId) return;
     if (issues != null)
-      if (typeof issues === 'string')
-        setHistory(prev => [...prev, `User issue: ${issues}`]);
-      else
-        setHistory(prev => [...prev, `User issue: ${issues.text}`]);
+      setHistory(prev => [...prev, `userIssue: ${issues.text}`]);
     setSpinning(true);
-    setProposedChanges(null);
-    const { toolType, changes, issueId } = await resolveIssues(
-      selectedProjectId, issues, currentIssueId, selectedCheckboxOptions, resourcesEnabled
+    setProposePanel(null);
+    const { toolType, changes } = await resolveIssues(
+      selectedProjectId, issues, selectedCheckboxOptions, resourcesEnabled
     );
-    if (issueId !== currentIssueId)
-      setIssueId(issueId);
-
-    if (toolType === 'ReadMoreFiles') {
-      setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
-      setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
-    } else if (toolType === 'TaskComplete') 
-      setHistory(prev => [...prev, `Task completed: ${changes}`]);
-    else if (toolType === 'DirectAnswer')
-      setProposedChanges(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
-    else
-      setProposedChanges(
-        <FilesOutlinePanel changes={changes as ProposedItem[]} issueId={issueId} reset={resetHistory} nextStep={issueSubmit} />
-      );
+    applyIssueResolve(toolType, changes);
     setSpinning(false);
+  }
+
+  const applyIssueResolve = (toolType: string, changes: any) => {
+    switch (toolType) {
+      case 'ReadMoreFiles':
+        setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
+        setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
+        break;
+      case 'TaskComplete':
+        setHistory(prev => [...prev, `Task completed: ${changes}`]);
+        break;
+      case 'DirectAnswer':
+        setProposePanel(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
+        break;
+      default:
+        setProposePanel(
+          <FilesOutlinePanel changes={changes as ProposedItem[]} syncHistory={syncHistory} nextStep={submitUserIssue} />
+        );
+    }
   }
 
   const bottomRef = useScrollToBottom(ChangesPanel)
@@ -130,14 +140,21 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 />
               ))}
             </div>
-            <ChatHistory steps={history} clearHistory={clearHistory} />
+            <ChatHistory
+              steps={interactHistory}
+              clearHistory={() => {
+                clearIssueHistory(selectedProjectId!);
+                syncHistory([]);
+                setProposePanel(null);
+                setSpinning(false);
+              }}
+            />
             {ChangesPanel}
             <div ref={bottomRef} />
           </div>
           <div className='p-4 pt-0'>
-            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={issueSubmit} />}
+            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={submitUserIssue} />}
           </div>
-
         </div>
       </Transition>
 

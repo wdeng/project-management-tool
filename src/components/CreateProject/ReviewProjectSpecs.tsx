@@ -1,14 +1,15 @@
 import { ComponentSpecs, ProjectSpecs } from '@/utils/apis';
 import React from 'react';
 import ChatInput from '../general/ChatTextArea';
+import { ChatInputType } from '@/utils/apis/chatRefine';
 
 interface ProjectSpecsProps {
   projectSpecs: ProjectSpecs;
   setProjectSpecs: React.Dispatch<React.SetStateAction<ProjectSpecs | undefined>>;
-  onSubmitIssue: (issue: string) => Promise<ProjectSpecs | void>;
+  onSubmitIssue: (issue: ChatInputType) => Promise<ProjectSpecs | void>;
 }
 
-const RecursiveComponent: React.FC<{ data: ComponentSpecs[], level?: number }> = ({ data, level=0 }) => (
+const RecursiveComponent: React.FC<{ data: ComponentSpecs[], level?: number }> = ({ data, level = 0 }) => (
   <ul className='ml-4'>
     {data.map((item, index) => (
       <li key={index}>
@@ -30,7 +31,7 @@ const RecursiveComponent: React.FC<{ data: ComponentSpecs[], level?: number }> =
 export const ReviewProjectSpecs: React.FC<ProjectSpecsProps> = ({ projectSpecs, onSubmitIssue, setProjectSpecs }) => {
   // const [issue, setIssue] = React.useState('');
 
-  const handleSubmit = async (issue: string) => {
+  const handleSubmit = async (issue: ChatInputType) => {
     const newProjSpecs = await onSubmitIssue(issue);
     if (newProjSpecs)
       setProjectSpecs(newProjSpecs)
@@ -45,7 +46,7 @@ export const ReviewProjectSpecs: React.FC<ProjectSpecsProps> = ({ projectSpecs, 
       <h4 className='font-bold text-lg pt-2'>Components</h4>
       <RecursiveComponent data={projectSpecs.components} />
       <div className='p-3' />
-      <ChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if none"/>
+      <ChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if none" />
     </div>
   );
 };

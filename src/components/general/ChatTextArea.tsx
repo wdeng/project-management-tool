@@ -9,9 +9,8 @@ interface IChatInputProps {
   placeholder?: string;
   disabled?: boolean;
   disabledPlaceholder?: string;
+  defaultText?: string;
 }
-
-export
 
 const convertToBase64JPEG = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -41,10 +40,11 @@ const ChatInput: React.FC<IChatInputProps> = ({
   disabled = false,
   sendOnEmpty = false,
   placeholder = "Write your issues here..",
+  defaultText = '',
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [chatText, setChatText] = useState<string>('');
-  const [imagesBase64, setImagesBase64] = useState<string[]>([]);
+  const [chatText, setChatText] = useState<string>(defaultText);
+  const [chatImages, setBase64Images] = useState<string[]>([]);
   const maxLines = 12;
   const buttonDisabled = disabled || !(chatText || sendOnEmpty);
 
@@ -56,7 +56,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
     const base64JPEGs = await Promise.all(files.map(convertToBase64JPEG));
-    setImagesBase64(prevImages => {
+    setBase64Images(prevImages => {
       const newImages = [...prevImages, ...base64JPEGs];
       while (newImages.length > 4)
         newImages.shift(); // Removes the first element
@@ -65,26 +65,24 @@ const ChatInput: React.FC<IChatInputProps> = ({
   };
 
   const removeImage = (index: number) => {
-    setImagesBase64(prevImages => prevImages.filter((_, i) => i !== index));
+    setBase64Images(prevImages => prevImages.filter((_, i) => i !== index));
   };
 
   const handleSend = useCallback(async () => {
     if (buttonDisabled) return;
-    const text = chatText.trim();
+    const chat: ChatInputType = { text: chatText.trim() };
+    if (chatImages.length > 0)
+      chat.images = chatImages;
+    await onSend(chat);
+    setBase64Images([]); // Clear the images after sending
     setChatText('');
-    if (imagesBase64.length === 0)
-      await onSend(text);
-    else
-      await onSend({ images: imagesBase64, text });
-    setImagesBase64([]); // Clear the images after sending
-  }, [chatText, imagesBase64, onSend, buttonDisabled]);
+  }, [chatText, chatImages, onSend, buttonDisabled]);
 
   // Add this useEffect
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter')
         handleSend();
-      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -113,7 +111,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   return (
     <div className="relative flex flex-col">
       <div className="flex space-x-2 p-2">
-        {imagesBase64.map((file, index) => (
+        {chatImages.map((file, index) => (
           <div key={index} className="relative">
             <NextImage src={file} className="w-16 h-16 object-cover" alt="thumbnail" width={8} height={8} />
             <button

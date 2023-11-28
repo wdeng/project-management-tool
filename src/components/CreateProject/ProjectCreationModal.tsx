@@ -14,6 +14,7 @@ import {
   fixProjectIssue,
 } from '@/utils/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
+import { ChatInputType } from '@/utils/apis/chatRefine';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -76,11 +77,10 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     }
   };
 
-  const handleIssueSubmit = async (issues: string) => {
+  const handleIssueSubmit = async (issues: ChatInputType) => {
     // Handle the issue here
     // Maybe sending it to your backend
-    console.log('issues:', issues);
-    if (issues) {
+    if (issues?.text) {
       const resps = await fixProjectIssue(issues, projectId)
       setProjectSpecs(resps.projectSpecs);
     } else {

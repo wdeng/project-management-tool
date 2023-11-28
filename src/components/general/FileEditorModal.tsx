@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
 import { InfoEditor } from './DescView';
 import { getFileExtension, languageMap } from '@/utils';
+import { MdSaveAlt } from 'react-icons/md';
 
 interface EditorModalProps {
   onClose: () => void;
@@ -55,7 +56,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
     if (fileId != null && selectedProjectId) {
       fetchSourceCode(selectedProjectId, fileId).then(data => {
         setFile(data);
-        orgFile.current = data
+        orgFile.current = { ...data }
         const ext = getFileExtension(data.path);
         setLanguageType(languageMap[ext] || ext);
       }).catch(err => {
@@ -65,9 +66,6 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   }, [selectedProjectId, fileId]);
 
   const onCloseModal = () => {
-    // const curr = orgFile.current
-    // if (selectedProjectId && file?.id && areDiff(file, curr))
-    //   updateFile(selectedProjectId, file)
     setTimeout(() => {
       setFile(undefined);
     }, 300);
@@ -80,12 +78,33 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   };
 
   const handleInfoChange = (key: string, value: any) => {
+    console.log(key, value)
     setFile(v => v ? { ...v, [key]: value } : undefined);
     onChange && onChange(value);
   }
 
+  const Button = useMemo(() => {
+    const curr = orgFile.current
+    if (!selectedProjectId || !file?.id) return null
+    if (curr?.content === file?.content && curr?.goal === file?.goal)
+      return null
+    return <button key="save" onClick={() => {
+      if (!selectedProjectId || !file?.id) return
+      const org = orgFile.current
+      const payload: any = { fileId: file.id }
+      if (file?.content && org?.content !== file?.content)
+        payload["newContent"] = file?.content
+      if (file?.goal && org?.goal !== file?.goal)
+        payload["newGoal"] = file?.goal
+      updateFile(selectedProjectId, payload)
+    }}>
+      <MdSaveAlt />
+    </button>
+  }, [file, selectedProjectId])
+
+
   return (
-    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"}>
+    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={[Button]}>
       {kind === "editor" ? <Editor
         beforeMount={handleEditorWillMount}
         height="90vh"

@@ -28,7 +28,7 @@ export type ProposedItem = ProposedFile | ProposedModule;
 
 export type RefineResource = 'outline' | 'schema' | 'read_more_files' | 'direct_answer';
 
-export type ChatInputType = string | null | { images: string[]; text: string };
+export type ChatInputType = { images?: string[]; text: string } | null;
 
 export const REFINE_RESOURCES: Record<RefineResource, string> = {
   outline: "Project Outline",
@@ -38,11 +38,11 @@ export const REFINE_RESOURCES: Record<RefineResource, string> = {
 };
 
 export async function resolveIssues(
-  projectId: number, issues: ChatInputType, issueId: string | null, fileIds?: number[], resourcesAllowed: RefineResource[] = []
+  projectId: number, issues: ChatInputType, fileIds?: number[], resourcesAllowed: RefineResource[] = []
 ): Promise<any> {
+  if (!issues?.text) issues = null;
   const data = {
     projectId,
-    issueId,
     issues,
     fileIds,
     resourcesAllowed,
@@ -51,10 +51,9 @@ export async function resolveIssues(
   return await postReq('resolve-issues/propose', data);
 }
 
-export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number, issueId: string | null): Promise<any> {
+export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number): Promise<any> {
   const data = {
     projectId,
-    issueId,
     changes: changedFiles,
   };
   console.log(data);
@@ -62,7 +61,15 @@ export async function confirmProjectChanges(changedFiles: ProposedItem[], projec
   return resp;
 }
 
-export async function getIssueHistory(projectId: number, issueId: string): Promise<any> {
-  const queries = createQueryString({ 'project-id': projectId, 'issue-id': issueId });
+export async function clearIssueHistory(projectId: number): Promise<any> {
+  const data = {
+    projectId,
+  };
+  return await postReq('resolve-issues/reset', data);
+}
+
+export async function getIssueHistory(projectId: number): Promise<any> {
+  const queries = createQueryString({ 'project-id': projectId });
+  console.log(`resolve-issues/history?${queries}`);
   return await getReq(`resolve-issues/history?${queries}`);
 }

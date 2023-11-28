@@ -50,7 +50,7 @@ const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
       <div className="mb-3">
         {changes.map(
           c => <ReviewItem
-            key={c.name} change={c} accept={accepts[c.name] ?? 'Accept'} setAccepts={setAccepts} setEditingItem={setEditingItem}
+            key={c.name} change={c} accept={accepts[c.name] ?? 'Accept'} acceptChanges={setAccepts} setEditingItem={setEditingItem}
           />
         )}
       </div>

@@ -1,4 +1,5 @@
 import { getReq, postReq } from '..';
+import { ChatInputType } from './chatRefine';
 export * from './update';
 export * from './gitSync';
 
@@ -99,7 +100,7 @@ export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> 
   return await getReq(`project-init/requirement-specs/${projectId}`);
 }
 
-export async function fixProjectIssue(issues: string, projectId: number): Promise<QAResponse> {
+export async function fixProjectIssue(issues: ChatInputType, projectId: number): Promise<QAResponse> {
   const data = {
     issues,
     projectId,
