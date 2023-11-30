@@ -30,7 +30,7 @@ export default function Home() {
     return [];
   }, [selectedModule, projectDetails]);
 
-  const [executingName, setExecuting] = useState("");
+  const [executingName, setExecuting] = useState<string>("");
 
   const canBuild = useMemo(() => {
     if (!selectedModule || executingName) return false;
@@ -63,22 +63,18 @@ export default function Home() {
 
   const handleModuleBuild = async (moduleName: string, moduleId: number) => {
     if (executingName || !selectedProjectId) return;
-    try {
-      setExecuting(moduleName);
-      const next = await buildModule(selectedProjectId, moduleId);
-      setProjectDetails((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          next,
-        };
-      });
-      setExecuting("");
-      const m = await fetchModuleDetails(selectedProjectId, moduleId);
-      setSelectedModule(m);
-    } catch (error) {
-      console.log('Failed to update module description');
-    }
+    setExecuting(moduleName);
+    const next = await buildModule(selectedProjectId, moduleId);
+    setProjectDetails((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        next,
+      };
+    });
+    setExecuting("");
+    const m = await fetchModuleDetails(selectedProjectId, moduleId);
+    setSelectedModule(m);
   };
 
   return (

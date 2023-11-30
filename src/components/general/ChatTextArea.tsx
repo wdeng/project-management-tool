@@ -1,6 +1,6 @@
 import { ChatInputType } from '@/utils/apis/chatRefine';
 import NextImage from 'next/image';
-import React, { useRef, useEffect, useState, ChangeEvent, useCallback } from 'react';
+import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode } from 'react';
 import { MdSend, MdImage, MdClose } from 'react-icons/md';
 
 interface IChatInputProps {
@@ -10,6 +10,7 @@ interface IChatInputProps {
   disabled?: boolean;
   disabledPlaceholder?: string;
   defaultText?: string;
+  children?: ReactNode;
 }
 
 const convertToBase64JPEG = (file: File): Promise<string> => {
@@ -37,6 +38,7 @@ const convertToBase64JPEG = (file: File): Promise<string> => {
 
 const ChatInput: React.FC<IChatInputProps> = ({
   onSend,
+  children,
   disabled = false,
   sendOnEmpty = false,
   placeholder = "Write your issues here..",
@@ -110,6 +112,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
 
   return (
     <div className="relative flex flex-col">
+      {children}
       <div className="flex space-x-2 p-2">
         {chatImages.map((file, index) => (
           <div key={index} className="relative">

@@ -52,20 +52,20 @@ const ModuleList: React.FC<IModuleListProps> = ({ projectId, onModuleSelect }) =
 
   const renderModules = (modules: IModuleWithChildren[]) => (
     <ul>
-      {modules.map((module) => (
+      {modules.map((m) => (
         <li
-          key={module.id}
-          className={`p-4 hover:bg-gray-100 cursor-pointer ${selectedModule?.id === module.id ? 'bg-gray-200' : ''}`}
-          onClick={() => handleModuleSelect(module)}
-          style={{ paddingLeft: `${(module.tabLevel || 0) * 16 + 10}px` }}
+          key={m.id}
+          className={`p-4 hover:bg-gray-100 cursor-pointer ${selectedModule?.id === m.id ? 'bg-gray-200' : ''}`}
+          onClick={() => handleModuleSelect(m)}
+          style={{ paddingLeft: `${(m.tabLevel || 0) * 16 + 10}px` }}
         >
-          {module.name}
-          {module.children.length > 0 && (
-            <button onClick={() => handleToggle(module.id)}>
-              {expandedModuleIds[module.id] ? 'Collapse' : 'Expand'}
+          {m.name}
+          {m.children.length > 0 && (
+            <button onClick={() => handleToggle(m.id)}>
+              {expandedModuleIds[m.id] ? 'Collapse' : 'Expand'}
             </button>
           )}
-          {module.children.length > 0 && expandedModuleIds[module.id] && renderModules(module.children)}
+          {m.children.length > 0 && expandedModuleIds[m.id] && renderModules(m.children)}
         </li>
       ))}
     </ul>
