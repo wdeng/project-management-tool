@@ -9,7 +9,6 @@ import ToggleSwitch from '../general/ToggleSwitch';
 import ChatInput from '../general/ChatTextArea';
 import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
-import Spinner from '../general/Spinner';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 
@@ -21,18 +20,15 @@ interface ChatButtonProps {
 const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
   const { selectedProjectId } = useSelected();
   const [isChatOpen, setIsChatOpen] = useState(false);
-  // resources for GPT
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
   const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
 
   const [interactHistory, setHistory] = useState<string[]>([]);
   const [ChangesPanel, setProposePanel] = useState<ReactElement | null>(null);
-  const [spinning, setSpinning] = useState(false);
 
   const syncHistory = async (h?: string[] | null) => {
     h && setHistory(h);
     setProposePanel(null);
-    setSpinning(false);
   }
   const toggleChat = () => setIsChatOpen(!isChatOpen);
 
@@ -53,19 +49,23 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
     setSelectedCheckboxOptions((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
     );
-  };
+  }
 
-  const submitUserIssue = async (issues: ChatInputType = null) => {
+  const submitUserIssue = async (issues: ChatInputType = null, abortController: AbortController | undefined = undefined) => {
     if (!selectedProjectId) return;
     if (issues != null)
       setHistory(prev => [...prev, `userIssue: ${issues.text}`]);
-    setSpinning(true);
-    setProposePanel(null);
-    const { toolType, changes } = await resolveIssues(
-      selectedProjectId, issues, selectedCheckboxOptions, resourcesEnabled
+    const data = await resolveIssues(
+      selectedProjectId,
+      issues,
+      selectedCheckboxOptions,
+      resourcesEnabled,
+      abortController,
     );
-    applyIssueResolve(toolType, changes);
-    setSpinning(false);
+    if (data) {
+      setProposePanel(null);
+      applyIssueResolve(data.toolType, data.changes);
+    }
   }
 
   const applyIssueResolve = (toolType: string, changes: any) => {
@@ -146,14 +146,13 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
                 clearIssueHistory(selectedProjectId!);
                 syncHistory([]);
                 setProposePanel(null);
-                setSpinning(false);
               }}
             />
             {ChangesPanel}
             <div ref={bottomRef} />
           </div>
-          <div className='p-4 pt-0'>
-            {spinning ? <Spinner spinnerSize={24} className='mt-4' /> : <ChatInput onSend={submitUserIssue} />}
+          <div className='p-2 pt-0'>
+            <ChatInput onSend={submitUserIssue} />
           </div>
         </div>
       </Transition>
@@ -170,7 +169,7 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
         leaveTo="opacity-0"
       >
         <button
-          className="absolute bottom-4 right-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-3 rounded-3xl drop-shadow-lg transition ease-in-out hover:scale-105"
+          className="absolute bottom-3 right-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg transition ease-in-out hover:scale-105"
           onClick={toggleChat}
         >
           <MdOutlineChat size={20} />

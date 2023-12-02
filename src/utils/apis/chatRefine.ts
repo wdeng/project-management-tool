@@ -38,7 +38,11 @@ export const REFINE_RESOURCES: Record<RefineResource, string> = {
 };
 
 export async function resolveIssues(
-  projectId: number, issues: ChatInputType, fileIds?: number[], resourcesAllowed: RefineResource[] = []
+  projectId: number,
+  issues: ChatInputType,
+  fileIds?: number[],
+  resourcesAllowed: RefineResource[] = [],
+  abortController: AbortController | undefined = undefined,
 ): Promise<any> {
   if (!issues?.text) issues = null;
   const data = {
@@ -48,7 +52,7 @@ export async function resolveIssues(
     resourcesAllowed,
   };
   console.log(data);
-  return await postReq('resolve-issues/propose', data);
+  return await postReq('resolve-issues/propose', data, abortController);
 }
 
 export async function confirmProjectChanges(changedFiles: ProposedItem[], projectId: number): Promise<any> {

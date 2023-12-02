@@ -87,7 +87,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
     setChatText('');
     await onSend(chat, abortController.current);
     setIsSending(false); // Reset sending state after sending
-    
+
   }, [chatText, chatImages, onSend, buttonDisabled]);
 
   const handleStop = useCallback(() => {
@@ -99,7 +99,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   // Add this useEffect
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter')
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && isSending)
         handleSend();
     };
 
@@ -108,7 +108,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [chatText, handleSend]); // Depend on chatText
+  }, [handleSend, isSending]); // Depend on chatText
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -142,7 +142,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         ))}
       </div>
       <div className="relative flex justify-between items-end">
-        <label htmlFor="image-upload" className="absolute left-2 top-4 cursor-pointer">
+        <label htmlFor="image-upload" className="absolute left-2 top-3 cursor-pointer">
           <MdImage size={20} />
           <input
             id="image-upload"
@@ -155,7 +155,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         </label>
         <textarea
           ref={textareaRef}
-          className="w-full rounded-lg p-3 pl-7 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-200 focus:border-indigo-200 shadow-md resize-none"
+          className="w-full rounded-lg p-2 pl-7 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-200 focus:border-indigo-200 shadow-md resize-none"
           value={chatText}
           onChange={handleTextChange}
           placeholder={placeholder}
@@ -163,7 +163,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         />
         {isSending ? (
           <button
-            className={`${buttonStyle} right-2 bottom-2 text-indigo-600 hover:text-indigo-700 cursor-pointer flex justify-center items-center p-1`}
+            className={`${buttonStyle} right-1 bottom-1 text-indigo-600 hover:text-indigo-700 cursor-pointer flex justify-center items-center p-1`}
             onClick={handleStop}
           >
             <MdStop size={24} /> {/* Assuming MdClose is the icon for stop */}
@@ -172,7 +172,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         ) : (
           <button
             disabled={buttonDisabled}
-            className={`${buttonStyle} bg-indigo-600 right-2 bottom-2 py-2 px-2 text-white rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-700 cursor-pointer'}`}
+            className={`${buttonStyle} bg-indigo-600 right-1.5 bottom-1.5 py-1.5 px-1.5 text-white rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-700 cursor-pointer'}`}
             onClick={handleSend}
           // style={{ marginBottom: '1.5rem' }}
           >
