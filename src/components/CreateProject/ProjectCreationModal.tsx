@@ -77,12 +77,12 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
     }
   };
 
-  const handleIssueSubmit = async (issues: ChatInputType) => {
+  const handleIssueSubmit = async (issues: ChatInputType, abortController: AbortController) => {
     // Handle the issue here
     // Maybe sending it to your backend
     if (issues?.text) {
-      const resps = await fixProjectIssue(issues, projectId)
-      setProjectSpecs(resps.projectSpecs);
+      const resps = await fixProjectIssue(issues, projectId, abortController)
+      resps && setProjectSpecs(resps.projectSpecs);
     } else {
       setCurrentStep('SetProjectGoal');
       close();

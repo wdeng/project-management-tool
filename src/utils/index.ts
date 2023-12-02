@@ -45,7 +45,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:
 //   return response.data;
 // }
 
-export const postReq = async (url: string, data: any = {}) => {
+export const postReq = async (url: string, data: any = {}, controller?: AbortController) => {
   const response = await fetch(`${API_BASE_URL}/${url}`, {
     method: 'POST',
     credentials: 'include',
@@ -53,11 +53,12 @@ export const postReq = async (url: string, data: any = {}) => {
       'Content-Type': 'application/json',
       'X-Forwarded-Method': 'POST',
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+    signal: controller?.signal,
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    console.log(`HTTP error! status: ${response.status}`);
   }
 
   return response.json();

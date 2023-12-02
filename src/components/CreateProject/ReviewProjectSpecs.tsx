@@ -6,7 +6,7 @@ import { ChatInputType } from '@/utils/apis/chatRefine';
 interface ProjectSpecsProps {
   projectSpecs: ProjectSpecs;
   setProjectSpecs: React.Dispatch<React.SetStateAction<ProjectSpecs | undefined>>;
-  onSubmitIssue: (issue: ChatInputType) => Promise<ProjectSpecs | void>;
+  onSubmitIssue: (issue: ChatInputType, abortController: AbortController) => Promise<ProjectSpecs | void>;
 }
 
 const RecursiveComponent: React.FC<{ data: ComponentSpecs[], level?: number }> = ({ data, level = 0 }) => (
@@ -31,8 +31,8 @@ const RecursiveComponent: React.FC<{ data: ComponentSpecs[], level?: number }> =
 export const ReviewProjectSpecs: React.FC<ProjectSpecsProps> = ({ projectSpecs, onSubmitIssue, setProjectSpecs }) => {
   // const [issue, setIssue] = React.useState('');
 
-  const handleSubmit = async (issue: ChatInputType) => {
-    const newProjSpecs = await onSubmitIssue(issue);
+  const handleSubmit = async (issue: ChatInputType, abort: AbortController) => {
+    const newProjSpecs = await onSubmitIssue(issue, abort);
     if (newProjSpecs)
       setProjectSpecs(newProjSpecs)
   }

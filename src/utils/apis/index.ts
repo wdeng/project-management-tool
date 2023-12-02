@@ -100,12 +100,16 @@ export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> 
   return await getReq(`project-init/requirement-specs/${projectId}`);
 }
 
-export async function fixProjectIssue(issues: ChatInputType, projectId: number): Promise<QAResponse> {
+export async function fixProjectIssue(
+  issues: ChatInputType,
+  projectId: number,
+  abortController?: AbortController
+  ): Promise<QAResponse> {
   const data = {
     issues,
     projectId,
   };
-  return await postReq('project-init/requirement-specs/fix-specs', data);
+  return await postReq('project-init/requirement-specs/fix-specs', data, abortController);
 }
 
 export async function deleteProject(projectId: number): Promise<any> {

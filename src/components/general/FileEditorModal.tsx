@@ -5,7 +5,8 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
 import { InfoEditor } from './DescView';
 import { getFileExtension, languageMap } from '@/utils';
-import { MdSaveAlt } from 'react-icons/md';
+import { MdOutlineChat, MdSave } from 'react-icons/md';
+import ChatInput from './ChatTextArea';
 
 interface EditorModalProps {
   onClose: () => void;
@@ -88,23 +89,33 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
     if (!selectedProjectId || !file?.id) return null
     if (curr?.content === file?.content && curr?.goal === file?.goal)
       return null
-    return <button key="save" onClick={() => {
-      if (!selectedProjectId || !file?.id) return
-      const org = orgFile.current
-      const payload: any = { fileId: file.id }
-      if (file?.content && org?.content !== file?.content)
-        payload["newContent"] = file?.content
-      if (file?.goal && org?.goal !== file?.goal)
-        payload["newGoal"] = file?.goal
-      updateFile(selectedProjectId, payload)
-    }}>
-      <MdSaveAlt />
-    </button>
+    return <>
+      <button key='chat'>
+        <MdOutlineChat />
+      </button>
+      <button key="save" onClick={() => {
+        if (!selectedProjectId || !file?.id) return
+        const org = orgFile.current
+        const payload: any = { fileId: file.id }
+        if (file?.content && org?.content !== file?.content)
+          payload["newContent"] = file?.content
+        if (file?.goal && org?.goal !== file?.goal)
+          payload["newGoal"] = file?.goal
+        updateFile(selectedProjectId, payload)
+      }}>
+        <MdSave />
+      </button>
+
+    </>
   }, [file, selectedProjectId])
 
+  const Chat = useMemo(() => {
+    // return <ChatInput onSend={async () => { }} />
+    return null
+  }, [])
 
   return (
-    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={[Button]}>
+    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Button} FieldBelow={Chat}>
       {kind === "editor" ? <Editor
         beforeMount={handleEditorWillMount}
         height="90vh"

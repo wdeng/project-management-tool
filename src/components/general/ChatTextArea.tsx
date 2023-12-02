@@ -1,16 +1,18 @@
 import { ChatInputType } from '@/utils/apis/chatRefine';
 import NextImage from 'next/image';
 import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode } from 'react';
-import { MdSend, MdImage, MdClose } from 'react-icons/md';
+import { ImSpinner2, ImSpinner8 } from 'react-icons/im';
+import { MdSend, MdImage, MdClose, MdStop } from 'react-icons/md';
 
 interface IChatInputProps {
-  onSend: (data: ChatInputType) => Promise<void>;
+  onSend: (data: ChatInputType, abortController: AbortController) => Promise<void>;
   sendOnEmpty?: boolean;
   placeholder?: string;
   disabled?: boolean;
   disabledPlaceholder?: string;
   defaultText?: string;
   children?: ReactNode;
+  maxLines?: number;
 }
 
 const convertToBase64JPEG = (file: File): Promise<string> => {
@@ -36,19 +38,21 @@ const convertToBase64JPEG = (file: File): Promise<string> => {
   });
 };
 
+const buttonStyle = 'absolute font-bold'
+
 const ChatInput: React.FC<IChatInputProps> = ({
   onSend,
-  children,
   disabled = false,
   sendOnEmpty = false,
   placeholder = "Write your issues here..",
   defaultText = '',
+  maxLines = 12,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>(defaultText);
   const [chatImages, setBase64Images] = useState<string[]>([]);
-  const maxLines = 12;
   const buttonDisabled = disabled || !(chatText || sendOnEmpty);
+  const [isSending, setIsSending] = useState(false);
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setChatText(e.target.value);
@@ -66,19 +70,31 @@ const ChatInput: React.FC<IChatInputProps> = ({
     });
   };
 
+  const abortController = useRef<AbortController | null>(null);
+
   const removeImage = (index: number) => {
     setBase64Images(prevImages => prevImages.filter((_, i) => i !== index));
   };
 
   const handleSend = useCallback(async () => {
     if (buttonDisabled) return;
+    setIsSending(true); // Set sending state to true
     const chat: ChatInputType = { text: chatText.trim() };
     if (chatImages.length > 0)
       chat.images = chatImages;
-    await onSend(chat);
-    setBase64Images([]); // Clear the images after sending
+    abortController.current = new AbortController();
+    setBase64Images([]);
     setChatText('');
+    await onSend(chat, abortController.current);
+    setIsSending(false); // Reset sending state after sending
+    
   }, [chatText, chatImages, onSend, buttonDisabled]);
+
+  const handleStop = useCallback(() => {
+    if (abortController.current)
+      abortController.current.abort();
+    setIsSending(false); // Reset sending state when stopped
+  }, []);
 
   // Add this useEffect
   useEffect(() => {
@@ -108,12 +124,11 @@ const ChatInput: React.FC<IChatInputProps> = ({
 
       textareaElem.rows = calculatedRows;
     }
-  }, [chatText]);
+  }, [chatText, maxLines]);
 
   return (
-    <div className="relative flex flex-col">
-      {children}
-      <div className="flex space-x-2 p-2">
+    <div className="relative flex flex-col p-1">
+      <div className="flex space-x-2">
         {chatImages.map((file, index) => (
           <div key={index} className="relative">
             <NextImage src={file} className="w-16 h-16 object-cover" alt="thumbnail" width={8} height={8} />
@@ -140,20 +155,29 @@ const ChatInput: React.FC<IChatInputProps> = ({
         </label>
         <textarea
           ref={textareaRef}
-          className="w-full rounded-lg p-3 pl-7 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 shadow-md resize-none"
+          className="w-full rounded-lg p-3 pl-7 pr-9 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-200 focus:border-indigo-200 shadow-md resize-none"
           value={chatText}
           onChange={handleTextChange}
           placeholder={placeholder}
           disabled={disabled}
         />
-        <button
-          disabled={buttonDisabled}
-          className={`absolute right-2 bottom-2 bg-indigo-500 text-white font-bold py-2 px-2 rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-600 cursor-pointer'}`}
-          onClick={handleSend}
-        // style={{ marginBottom: '1.5rem' }}
-        >
-          <MdSend size={16} />
-        </button>
+        {isSending ? (
+          <button
+            className={`${buttonStyle} right-2 bottom-2 text-indigo-600 hover:text-indigo-700 cursor-pointer flex justify-center items-center p-1`}
+            onClick={handleStop}
+          >
+            <MdStop size={24} /> {/* Assuming MdClose is the icon for stop */}
+            <ImSpinner8 className="slow-spin absolute" size={28} />
+          </button>
+        ) : (
+          <button
+            disabled={buttonDisabled}
+            className={`${buttonStyle} bg-indigo-600 right-2 bottom-2 py-2 px-2 text-white rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-700 cursor-pointer'}`}
+            onClick={handleSend}
+          // style={{ marginBottom: '1.5rem' }}
+          >
+            <MdSend size={16} />
+          </button>)}
       </div>
     </div>
   );
