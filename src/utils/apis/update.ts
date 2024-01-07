@@ -2,7 +2,7 @@ import { FileDesign } from '.';
 import { postReq } from '..';
 
 export async function updateFile(projectId: number, fields: Object): Promise<any> {
-  return await postReq(`project/${projectId}/sourcecode`, fields);
+  return await postReq(`project/${projectId}/update-file`, fields);
 }
 
 export async function createFile(projectId: number, file: FileDesign): Promise<any> {

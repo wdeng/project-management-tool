@@ -98,9 +98,9 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
         const org = orgFile.current
         const payload: any = { fileId: file.id }
         if (file?.content && org?.content !== file?.content)
-          payload["newContent"] = file?.content
+          payload["content"] = file?.content
         if (file?.goal && org?.goal !== file?.goal)
-          payload["newGoal"] = file?.goal
+          payload["goal"] = file?.goal
         updateFile(selectedProjectId, payload)
       }}>
         <MdSave />

@@ -47,7 +47,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
             <Disclosure.Button className="flex justify-between w-full px-4 py-2 mt-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200">
               <span>{aModule.name}</span>
               <MdKeyboardArrowDown
-                className={`${open ? 'transform rotate-180' : ''
+                className={`transition-transform ${open ? 'rotate-180' : ''
                   } w-5 h-5 text-indigo-500`}
               />
             </Disclosure.Button>

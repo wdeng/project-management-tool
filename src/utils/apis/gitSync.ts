@@ -17,7 +17,8 @@ export async function synchronizeProject(projectId: number, files: any[]): Promi
     projectId,
     files,
   }
-  return await postReq('project-sync/propose', data);
+  const resp = await postReq('project-sync/propose', data);
+  return resp;
 }
 
 export async function finalizeSyncGit(projectId: number, outline: any[], files: any[]): Promise<any> {

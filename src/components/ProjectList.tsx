@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Project, fetchProjects, initProject, buildProject, ProjectDetailResponse } from '../utils/apis';
 import ProjectCreationModal from './CreateProject/ProjectCreationModal';
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdDriveFileMove } from "react-icons/md";
 import Spinner from './general/Spinner';
+import RetractMenu from './general/RetractMenu';
 
 interface ProjectListProps {
   selectedProjectId: number | null;
@@ -61,30 +62,30 @@ export const ProjectList: React.FC<ProjectListProps> = ({
     }
   }
 
-  function handleProjectClick(project: Project) {
+  function selectProject(project: Project) {
     // Avoid selection if the project is building
     if (!buildingProjects.includes(project.id)) {
       onProjectSelect(project);
     }
   }
 
-
   return (
     <div className="overflow-y-auto h-full">
       <ProjectCreationModal onNewProject={handleNewProject} onProjectBuild={handleProjectBuild} />
       {error && <p className="text-red-500">{error}</p>}
+      <RetractMenu />
       <ul>
         {projects.map((project) => (
           <li
             key={project.id}
-            className={`px-2 py-4 flex items-center rounded-l-md text-white cursor-pointer transition-all ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === project.id ? 'bg-indigo-500' : ''}`}
-            onClick={() => handleProjectClick(project)}
+            className={`px-2 py-3 flex items-center rounded-l-md text-white cursor-pointer transition-all ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === project.id ? 'bg-indigo-500' : ''}`}
+            onClick={() => selectProject(project)}
           >
             <div className="mr-2">
               {buildingProjects.includes(project.id) ? (
                 <Spinner spinnerSize={16} />
               ) : (
-                <MdDashboard size={16} />
+                <MdDriveFileMove size={16} />
               )}
             </div>
             <span>{project.name}</span>

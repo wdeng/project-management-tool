@@ -142,9 +142,9 @@ export async function fetchSourceCode(projectId: number, fileId: number | string
 
   if (typeof fileId === 'string') {
     const encodedPath = encodeURIComponent(fileId);
-    apiUrl = `sourcecode/${projectId}?path=${encodedPath}`;
+    apiUrl = `project/${projectId}/source-file?path=${encodedPath}`;
   } else if (typeof fileId === 'number')
-    apiUrl = `sourcecode/${projectId}?id=${fileId}`;
+    apiUrl = `project/${projectId}/source-file?id=${fileId}`;
   else
     throw new Error("Either path or id must be provided");
 

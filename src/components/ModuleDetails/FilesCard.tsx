@@ -8,6 +8,7 @@ interface IFileCardProps {
 }
 
 const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
+  console.log(files);
   const [editingFileID, setEditingFileID] = useState<number | null>(null);
   const [editorKind, setEditorKind] = useState<"editor" | "info">("editor");
   const openEditor = (fileId: number, kind: "editor" | "info" = "editor") => {

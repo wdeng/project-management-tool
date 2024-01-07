@@ -3,6 +3,7 @@ import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-ic
 import { buttonStyles } from '@/utils/tailwindStyles';
 import FilesCard from './FilesCard';
 import { ModuleHierarchy } from '@/utils/apis';
+import * as yaml from 'js-yaml';
 
 interface IModuleDetailsProps {
   moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;

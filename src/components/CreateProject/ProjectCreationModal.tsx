@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Tab } from '@headlessui/react';
-import { MdAdd } from 'react-icons/md';
+import React, { useState } from 'react';
+import { Menu, Tab } from '@headlessui/react';
+import { MdAdd, MdDashboard } from 'react-icons/md'; // MdDriveFileMove
+import { FaFileImport } from "react-icons/fa";
+import { ImMakeGroup } from "react-icons/im";
 import Modal from '../Modal';
 import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
@@ -15,6 +17,7 @@ import {
 } from '@/utils/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 import { ChatInputType } from '@/utils/apis/chatRefine';
+import Dropdown from '../general/Dropdown';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -116,13 +119,40 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
   return (
     <>
-      <button
-        className="w-full flex items-center py-5 px-2 mb-2 bg-gray-900 text-white shadow-md hover:bg-gray-800 transition-colors duration-300 ease-in-out cursor-pointer"
-        onClick={open}
-      >
-        <MdAdd className="mr-2" />
-        Create Project
-      </button>
+      <Menu as="div" className="relative mb-2">
+        <Menu.Button as="button" className="w-full flex justify-between items-center p-5 bg-gray-900 text-white shadow-md hover:bg-gray-800 transition-colors duration-300 ease-in-out cursor-pointer font-semibold">
+          New
+          <MdAdd size={20} />
+        </Menu.Button>
+        <Dropdown>
+          <Menu.Items className="absolute z-10 right-0 mt-0 w-48 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none overflow-hidden">
+            <Menu.Item>
+              <button
+                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                onClick={open}
+              >
+                <MdDashboard className="mr-3" /> New Project
+              </button>
+            </Menu.Item>
+            <Menu.Item>
+              <button
+                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                onClick={() => { console.log('Import Project') }}
+              >
+                <FaFileImport className="mr-3" /> Import Project
+              </button>
+            </Menu.Item>
+            <Menu.Item>
+              <button
+                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                onClick={() => { console.log('New Group') }}
+              >
+                <ImMakeGroup className="mr-3" /> New Group
+              </button>
+            </Menu.Item>
+          </Menu.Items>
+        </Dropdown>
+      </Menu>
       <Modal
         height='h-[80vh]'
         isOpen={isOpen}
