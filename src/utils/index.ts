@@ -31,20 +31,6 @@ export const languageMap: Record<string, string> = {
 
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://skapi.wenxiangdeng.com';
 
-// const instance = axios.create({
-//   withCredentials: true,
-// });
-
-// export const postReq = async (url: string, data: any = undefined) => {
-//   const response = await instance.post<any>(`${API_BASE_URL}/${url}`, data);
-//   return response.data;
-// }
-
-// export const getReq = async (url: string) => {
-//   const response = await axios.get<any>(`${API_BASE_URL}/${url}`, { withCredentials: true });
-//   return response.data;
-// }
-
 export const postReq = async (url: string, data: any = {}, controller?: AbortController) => {
   const response = await fetch(`${API_BASE_URL}/${url}`, {
     method: 'POST',
@@ -75,6 +61,22 @@ export const getReq = async (url: string) => {
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export const deleteReq = async (url: string) => {
+  const response = await fetch(`${API_BASE_URL}/${url}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Accept': 'application/json'
+    },
+  });
+
+  if (!response.ok) {
+    console.log(`HTTP error! status: ${response.status}`);
   }
 
   return response.json();

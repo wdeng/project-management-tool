@@ -14,14 +14,25 @@ export default function Home() {
   const [selectedModule, setSelectedModule] = useState<ModuleHierarchy | null | undefined>(null);
   const [projectDetails, setProjectDetails] = useState<ProjectDetailResponse | null>(null);
 
+  const handleModuleSelect = useCallback(async (moduleId: number) => {
+    if (!selectedProjectId) return;
+    if (moduleId > 0) {
+      const m = await fetchModuleDetails(selectedProjectId, moduleId);
+      setSelectedModule(m);
+    } else
+      setSelectedModule(null);
+  }, [selectedProjectId]);
+
   const refreshCurrentProject = useCallback(async () => {
     if (selectedProjectId == null) return;
 
     const details = await fetchProjectModules(selectedProjectId);
     if (!(selectedModule?.id && details.moduleIds.includes(selectedModule.id)))
       setSelectedModule(null);
+    else
+      await handleModuleSelect(selectedModule.id);
     setProjectDetails(details);
-  }, [selectedProjectId, selectedModule])
+  }, [selectedProjectId, selectedModule, handleModuleSelect])
 
   const moduleIdPath = useMemo(() => {
     if (selectedModule && projectDetails?.modules) {
@@ -52,19 +63,10 @@ export default function Home() {
     selectedModule && setSelectedModule(null);
   };
 
-  const handleModuleSelect = async (moduleId: number) => {
-    if (!selectedProjectId) return;
-    if (moduleId > 0) {
-      const m = await fetchModuleDetails(selectedProjectId, moduleId);
-      setSelectedModule(m);
-    } else
-      setSelectedModule(null);
-  };
-
-  const handleModuleBuild = async (moduleName: string, moduleId: number) => {
+  const handleModuleBuild = async (moduleName: string, moduleId: number, targets?: string) => {
     if (executingName || !selectedProjectId) return;
     setExecuting(moduleName);
-    const next = await buildModule(selectedProjectId, moduleId);
+    const next = await buildModule(selectedProjectId, moduleId, targets);
     setProjectDetails((prev) => {
       if (!prev) return null;
       return {

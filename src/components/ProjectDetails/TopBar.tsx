@@ -1,16 +1,32 @@
-import React, { useState, Fragment } from 'react';
-import { Transition, Menu } from '@headlessui/react';
-import { MdSearch, MdRefresh, MdNotifications, MdSettings, MdDelete } from 'react-icons/md';
+import React, { useState } from 'react';
+import { Menu } from '@headlessui/react';
+import { MdSearch, MdRefresh, MdNotifications, MdSettings } from 'react-icons/md';
 import Dropdown from '../general/Dropdown';
+import { useSelected } from '@/hooks/useSelectedContext';
+import { deleteAllFiles, deleteProject } from '@/utils/apis';
 
 interface TopBarProps {
   syncProject: () => void;
-  deleteProject: () => void; // Assuming you have a deleteProject prop
 }
 
-const TopBar = ({ syncProject, deleteProject }: TopBarProps) => {
+const TopBar = ({ syncProject }: TopBarProps) => {
+  const { selectedProjectId, setSelectedProjectId, setSelectedModule } = useSelected();
   const [searchActive, setSearchActive] = useState(false);
   const [newNotifications, setNewNotifications] = useState(true); // set to true for demo
+
+  const _deleteProject = async () => {
+    if (selectedProjectId && window.confirm("Are you sure to delete this project?")) {
+      await deleteProject(selectedProjectId);
+      setSelectedModule(null);
+      setSelectedProjectId(null);
+    }
+  };
+
+  const _deleteAllFiles = async () => {
+    if (selectedProjectId && window.confirm("Are you sure to delete all files in this project?")) {
+      await deleteAllFiles(selectedProjectId);
+    }
+  }
 
 
   return (
@@ -55,12 +71,19 @@ const TopBar = ({ syncProject, deleteProject }: TopBarProps) => {
                 <Menu.Item>
                   <button
                     className='hover:bg-gray-100 group flex items-center w-full px-4 py-2 text-sm text-gray-700'
-                    onClick={deleteProject}
+                    onClick={_deleteProject}
                   >
-                    <MdDelete className="mr-2" /> Delete Project
+                    Delete Project
                   </button>
                 </Menu.Item>
-                {/* Other Menu Items... */}
+                <Menu.Item>
+                  <button
+                    className='hover:bg-gray-100 group flex items-center w-full px-4 py-2 text-sm text-gray-700'
+                    onClick={_deleteAllFiles}
+                  >
+                    Clear Files
+                  </button>
+                </Menu.Item>
               </Menu.Items>
             </Dropdown>
           </Menu>

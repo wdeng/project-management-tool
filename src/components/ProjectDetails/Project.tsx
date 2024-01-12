@@ -1,32 +1,22 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement, useCallback } from 'react';
+import React, { useState, ReactElement, useCallback, useMemo } from 'react';
 import TopBar from './TopBar';
-import { checkGitSync, deleteProject } from '@/utils/apis';
+import { checkGitSync, updateProjectSpecs } from '@/utils/apis';
 import GitDiffReview from './ProjectSync/ReviewGitDiff';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import { useSelected } from '@/hooks/useSelectedContext';
+import { MdOutlineSubject } from 'react-icons/md';
+import TextEditor from '../general/TextEditor';
+import * as yaml from 'js-yaml';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
-interface IModuleProps {
-  moduleData: any; // Replace 'any' with your module data type
-}
 
-const Module: React.FC<IModuleProps> = ({ moduleData }) => {
-  return (
-    <div>
-      <h3>{moduleData.name}</h3>
-      <p>{moduleData.description}</p>
-      {/* Add more attributes as needed */}
-    </div>
-  );
-};
-
-interface IApiSchemaProps {
+interface ApiSchemaProps {
   schemaData: any; // Replace 'any' with your schema data type
 }
 
-const ApiSchema: React.FC<IApiSchemaProps> = ({ schemaData }) => {
+const ApiSchema: React.FC<ApiSchemaProps> = ({ schemaData }) => {
   return (
     <div>
       <h3>{schemaData.name}</h3>
@@ -47,24 +37,28 @@ interface IProjectDetailsProps {
 }
 
 export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, projectName, description, requirements, projectSchema }) => {
-  const { setSelectedProjectId, setSelectedModule } = useSelected();
-  const [reviewer, setReviewer] = useState<ReactElement | null>(null)
+  const { refreshCurrentProject } = useSelected();
+  const [gitReview, setReview] = useState<ReactElement | null>(null)
+  const [editorOpen, setEditorOpen] = useState(false);
   const refreshFiles = useCallback(async () => {
     const res = await checkGitSync(projectId);
     if (!res.synced && res.files)
-      setReviewer(
-        <GitDiffReview changes={res.files} setElement={setReviewer} />
+      setReview(
+        <GitDiffReview changes={res.files} setElement={setReview} />
       );
   }, [projectId])
-  const bottomRef = useScrollToBottom(reviewer);
+  const bottomRef = useScrollToBottom(gitReview);
 
-  const _deleteProject = async () => {
-    if (projectId && window.confirm("Are you sure to delete this project?")) {
-      await deleteProject(projectId);
-      setSelectedModule(null);
-      setSelectedProjectId(null);
-    }
-  };
+  
+
+  const saveProjectSpecs = async (content: string) => {
+    await updateProjectSpecs(projectId, content);
+    refreshCurrentProject();
+  }
+
+  const projectSpecs = useMemo(() => {
+    return yaml.dump({ projectName, description, requirements })
+  }, [projectName, description, requirements])
 
   // useEffect(() => {
   //   refreshFiles();
@@ -72,11 +66,18 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
 
   return (
     <>
-      <TopBar syncProject={refreshFiles} deleteProject={_deleteProject} />
-      <div className="flex flex-col px-6 pb-8 text-gray-700 ">
+      <TextEditor isOpen={editorOpen} initialContent={projectSpecs} handleSave={saveProjectSpecs} onClose={() => setEditorOpen(false)} />
+      <TopBar syncProject={refreshFiles} />
+      <div className="flex flex-col px-6 pb-8 text-gray-700">
+        <div className="flex justify-between items-center">
+          <h1 className='text-3xl font-medium pb-2'>
+            {projectName}
+          </h1>
+          <button type="button" className="hover:text-indigo-700 text-xl" onClick={() => setEditorOpen(true)}>
+            <MdOutlineSubject />
+          </button>
+        </div>
 
-        <h1 className='text-3xl font-medium pb-2'
-        >{projectName}</h1>
         <p>{description}</p>
         {/* refresh button */}
         <h2 className='text-xl font-medium pt-4 pb-2'>Requirements:</h2>
@@ -85,7 +86,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
             <li className='pb-1' key={req}> - {req}</li>
           ))}
         </ul>
-        {reviewer}
+        {gitReview}
         {projectSchema && (
           <>
             <h2>Project Schema:</h2>

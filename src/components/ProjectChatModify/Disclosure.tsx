@@ -62,29 +62,32 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
             >
               <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-500">
                 <div className="flex flex-wrap items-center">
-                  {aModule.files?.map((file) => (
-                    <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
-                      <div className="hover:scale-110">
-                        <input
-                          type="checkbox"
-                          id={file.path}
-                          checked={selectedCheckboxOptions.includes(file.id)}
-                          onChange={() => handleCheckboxChange(file.id)}
-                          className={checkboxStyles}
-                        />
+                  {aModule.files?.map((file) => {
+                    if (file.status === "pending") return null;
+                    return (
+                      <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
+                        <div className="hover:scale-110">
+                          <input
+                            type="checkbox"
+                            id={file.path}
+                            checked={selectedCheckboxOptions.includes(file.id)}
+                            onChange={() => handleCheckboxChange(file.id)}
+                            className={checkboxStyles}
+                          />
+                        </div>
+                        <label
+                          htmlFor={file.path}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            openEditor(file.id);
+                          }}
+                          className="cursor-pointer hover:text-indigo-700 hover:underline"
+                        >
+                          {file.path}
+                        </label>
                       </div>
-                      <label
-                        htmlFor={file.path}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          openEditor(file.id);
-                        }}
-                        className="cursor-pointer hover:text-indigo-700 hover:underline"
-                      >
-                        {file.path}
-                      </label>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
                 {aModule.modules?.map((subModule) => (
                   <DisclosurePanel

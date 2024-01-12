@@ -1,4 +1,4 @@
-import { getReq, postReq } from '..';
+import { deleteReq, getReq, postReq } from '..';
 import { ChatInputType } from './chatRefine';
 export * from './update';
 export * from './gitSync';
@@ -54,6 +54,7 @@ export interface FileDesign {
   path: string;
   goal?: string;
   content?: string;
+  status?: 'pending' | 'done';
 }
 
 export interface QuestionOption {
@@ -112,10 +113,6 @@ export async function fixProjectIssue(
   return await postReq('project-init/requirement-specs/fix-specs', data, abortController);
 }
 
-export async function deleteProject(projectId: number): Promise<any> {
-  return await postReq(`project/${projectId}/delete`);
-}
-
 export async function buildProject(projectId: number): Promise<ProjectDetailResponse> {
   const data = {
     projectId,
@@ -128,10 +125,11 @@ export async function initProject(name: string, folder: string, requirements: st
   return await postReq('project-init/init', { name, folder, requirements });
 }
 
-export async function buildModule(projectId: number, moduleId: number): Promise<any> {
+export async function buildModule(projectId: number, moduleId: number, targets?: string): Promise<any> {
   const data = {
     projectId,
     moduleId,
+    targets,
   };
 
   return await postReq(`build/module`, data);
@@ -179,6 +177,10 @@ function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], nu
 
 export async function fetchModuleDetails(projectId: number, moduleId: number): Promise<ModuleHierarchy> {
   return await getReq(`project/${projectId}/module/${moduleId}/details`);
+}
+
+export async function deleteModule(projectId: number, moduleId: number): Promise<any> {
+  return await deleteReq(`project/${projectId}/module/${moduleId}`);
 }
 
 export async function fetchProjects(): Promise<Project[]> {

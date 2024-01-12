@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/utils/tailwindStyles';
 import FilesCard from './FilesCard';
-import { ModuleHierarchy } from '@/utils/apis';
+import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/utils/apis';
 import * as yaml from 'js-yaml';
+import TextEditor from '../general/TextEditor';
+import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleDetailsProps {
-  moduleBuild: (moduleName: string, moduleId: number) => Promise<void>;
+  moduleBuild: (moduleName: string, moduleId: number, target?: string) => Promise<void>;
   canBuild?: "warning" | true | false | null;
   moduleDetails: ModuleHierarchy;
 }
 
 export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canBuild, moduleDetails }) => {
+  const { selectedProjectId, refreshCurrentProject } = useSelected();
   const [name, setName] = useState('');
   const [error, _] = useState<string | null>(null);
 
@@ -26,21 +29,40 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
     if (name === 'name') setName(value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const build = async (ev: React.MouseEvent) => {
+    ev.preventDefault();
     if (moduleDetails) {
-      if (canBuild === "warning" ? window.confirm('This moudule is not next in the implementation sequence. Are you sure?') : true) {
-        moduleBuild(moduleDetails.name, moduleDetails.id);
+      if (canBuild === "warning" ? window.confirm('This module is not next in the implementation sequence. Are you sure?') : true) {
+        moduleBuild(moduleDetails.name, moduleDetails.id, 'module');
       }
     }
   };
 
+  const implement = async () => {
+    if (moduleDetails && canBuild) {
+      moduleBuild(moduleDetails.name, moduleDetails.id, 'code');
+    }
+  }
+
+  const [moduleEditorOpen, setModuleEditorOpen] = useState(false);
+  const saveModuleSpecs = async (content: string) => {
+    await updateModuleSpecs(selectedProjectId!, moduleDetails.id, content);
+    refreshCurrentProject();
+  }
+
   const requires = moduleDetails?.functionalRequirements
+  const moduleSpecs = useMemo(() => {
+    if (!moduleDetails) return null;
+    const { name, description, functionalRequirements } = moduleDetails;
+    return yaml.dump({ name, description, functionalRequirements })
+  }, [moduleDetails]);
 
   return (
     <div className="flex flex-col justify-between h-full p-6 text-gray-700">
       {error && <p className="absolute text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="mb-4">
+      <TextEditor isOpen={moduleEditorOpen} initialContent={moduleSpecs} handleSave={saveModuleSpecs} onClose={() => setModuleEditorOpen(false)} />
+      {/* <form onSubmit={handleSubmit} className="mb-4"> */}
+      <div className="mb-4">
         <div className="flex justify-between items-center">
           <input
             type="text"
@@ -51,7 +73,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
             className="-ml-3 block w-full text-3xl font-medium border-none outline-none bg-transparent focus:ring-0"
             placeholder="Module Name"
           />
-          <button type="button" className="hover:text-indigo-700 text-xl">
+          <button type="button" className="hover:text-indigo-700 text-xl" onClick={() => setModuleEditorOpen(true)}>
             <MdOutlineSubject />
           </button>
         </div>
@@ -64,17 +86,33 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
             ))}
           </ul>
         </>}
-        <div className="flex">
+        <div className="flex space-x-3">
           <button
-            type="submit"
+            onClick={build}
             disabled={!canBuild}
-            className={`${buttonStyles} my-4 px-4`}
+            className={`${buttonStyles} my-3`}
           >
             Build
           </button>
+          {moduleDetails.files.length > 0 && <button
+            onClick={implement}
+            disabled={!canBuild}
+            className={`${buttonStyles} my-3`}
+          >
+            Implement
+          </button>}
+          <button
+            onClick={
+              () => window.confirm('Are you sure to delete this module?') && deleteModule(selectedProjectId!, moduleDetails.id)
+            }
+            disabled={!canBuild}
+            className={`${buttonStyles} my-3 bg-red-500`}
+          >
+            Delete
+          </button>
         </div>
-      </form>
-      {!!moduleDetails?.files && <FilesCard files={moduleDetails?.files} />}
+      </div>
+      {moduleDetails.files.length > 0 && <FilesCard files={moduleDetails?.files} />}
     </div>
   );
 };

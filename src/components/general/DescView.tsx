@@ -1,6 +1,6 @@
 import { camelToTitle } from '@/utils';
-import { textAreaStyles } from '@/utils/tailwindStyles';
-import React, { useState } from 'react';
+import { buttonStyles, textAreaStyles } from '@/utils/tailwindStyles';
+import React from 'react';
 
 interface DynamicFormProps {
   values: { [key: string]: any } | undefined;
@@ -61,22 +61,25 @@ function renderElement(
 };
 
 export const InfoEditor: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
-  // TODO: check if the data should set 
-  // const [data, setData] = useState<{ [key: string]: any }>(data);
-  // const handleFieldChange = (key: string, newValue: any) => {
-  //   // Update the local state
-  //   setData(v => ({
-  //     ...v,
-  //     [key]: newValue,
-  //   }));
-
-  //   // Notify the parent component
-  //   onUpdateField(key, newValue);
-  // };
 
   return (
     <div className="p-4">
       {values && Object.keys(values).map((key) => renderElement(key, values[key], valueTypes[key], onUpdateField))}
+      <div className="flex space-x-3">
+          <button
+            className={`${buttonStyles} my-3 px-3`}
+          >
+            Implement
+          </button>
+          <button
+            onClick={
+              () => window.confirm('Are you sure to delete this module?')
+            }
+            className={`${buttonStyles} my-3 px-3 bg-red-500`}
+          >
+            Delete
+          </button>
+        </div>
     </div>
   );
 }

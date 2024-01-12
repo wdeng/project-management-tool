@@ -18,6 +18,7 @@ import {
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 import { ChatInputType } from '@/utils/apis/chatRefine';
 import Dropdown from '../general/Dropdown';
+import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
@@ -125,10 +126,10 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
           <MdAdd size={20} />
         </Menu.Button>
         <Dropdown>
-          <Menu.Items className="absolute z-10 right-0 mt-0 w-48 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none overflow-hidden">
+          <Menu.Items className={contextMenuStyles}>
             <Menu.Item>
               <button
-                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                className={contextMenuItemStyles}
                 onClick={open}
               >
                 <MdDashboard className="mr-3" /> New Project
@@ -136,7 +137,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
             </Menu.Item>
             <Menu.Item>
               <button
-                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                className={contextMenuItemStyles}
                 onClick={() => { console.log('Import Project') }}
               >
                 <FaFileImport className="mr-3" /> Import Project
@@ -144,7 +145,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
             </Menu.Item>
             <Menu.Item>
               <button
-                className='hover:bg-gray-100 group flex items-center w-full p-3 text-sm text-gray-700'
+                className={contextMenuItemStyles}
                 onClick={() => { console.log('New Group') }}
               >
                 <ImMakeGroup className="mr-3" /> New Group
