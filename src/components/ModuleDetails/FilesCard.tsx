@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { use, useMemo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/utils/apis';
 import FileEditorModal from '../modals/FileEditorModal';
 import FileCreation from './CreateFile';
+import InfoEditorModal from '../modals/InfoEditorModal';
 
 interface IFileCardProps {
   files: FileDesign[];
@@ -17,17 +18,15 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
     setEditorKind(kind);
   };
 
-  const closeEditor = () => {
-    setEditingFileID(null);
-  };
+  const modal = useMemo(() => {
+    const closeEditor = () => setEditingFileID(null);
+    const Modal = editorKind === "editor" ? FileEditorModal : InfoEditorModal;
+    return <Modal fileId={editingFileID} onClose={closeEditor} />
+  }, [editingFileID, editorKind]);
 
   return (
     <div className="flex flex-wrap items-start">
-      <FileEditorModal
-        fileId={editingFileID}
-        kind={editorKind}
-        onClose={closeEditor}
-      />
+      {modal}
       {files.map((file) => (
         <div
           key={file.id}

@@ -3,6 +3,7 @@ import Modal from './Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
+import { InfoEditor } from '../general/DescView';
 import { getFileExtension, languageMap } from '@/utils';
 import { MdOutlineChat, MdSave } from 'react-icons/md';
 import ChatInput from '../general/ChatFields/ChatTextArea';
@@ -11,6 +12,13 @@ interface EditorModalProps {
   onClose: () => void;
   fileId?: number | null | string;
   onChange?: (value: string | undefined) => void;
+  kind?: "editor" | "info";
+}
+
+const displayTypes = {
+  path: "label",
+  goal: "textfield",
+  content: "textarea",
 }
 
 function handleEditorWillMount(monaco: any) {
@@ -18,67 +26,91 @@ function handleEditorWillMount(monaco: any) {
     noSemanticValidation: true,
     noSyntaxValidation: true
   });
+
+  // For JavaScript:
   monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: true,
     noSyntaxValidation: true
   });
 }
 
-const FileEditor: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) => {
+const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange, kind = "editor" }) => {
   const { selectedProjectId } = useSelected();
   const [showChat, setShowChat] = useState(false);
   const [file, setFile] = useState<FileDesign | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
-  const orgFile = useRef<FileDesign | null>(null);
+  const orgFile = useRef<FileDesign | null>(null)
 
   useEffect(() => {
     if (fileId != null && selectedProjectId) {
-      fetchSourceCode(selectedProjectId, fileId).then(file => {
+      let target: "guidelines" | undefined = undefined
+      if (kind === "info")
+        target = "guidelines"
+      fetchSourceCode(selectedProjectId, fileId, target).then(file => {
         setFile(file);
-        orgFile.current = { ...file };
-        const ext = getFileExtension(file.path) || "yaml";
+        orgFile.current = { ...file }
+        let ext = "yaml"
+        if (file.status !== "pending")
+          ext = getFileExtension(file.path);
         setLanguageType(languageMap[ext] || ext);
       }).catch(err => {
         console.error(err);
       });
     }
-  }, [selectedProjectId, fileId]);
+  }, [selectedProjectId, fileId, kind]);
 
   const onCloseModal = () => {
     setTimeout(() => {
       setFile(undefined);
     }, 300);
     onClose();
-  };
+  }
 
   const handleEditorChange = (value: string | undefined) => {
     setFile(v => v ? { ...v, content: value } : undefined);
     onChange && onChange(value);
   };
 
+  const handleInfoChange = (key: string, value: any) => {
+    console.log(key, value)
+    setFile(v => v ? { ...v, [key]: value } : undefined);
+    onChange && onChange(value);
+  }
+
   const Buttons = useMemo(() => {
     const buttons = [
       <button key='chat' onClick={() => setShowChat(prev => !prev)}>
         <MdOutlineChat />
       </button>
-    ];
-    const curr = orgFile.current;
-    if (!selectedProjectId || !file?.id || (curr?.content === file?.content)) return buttons;
+    ]
+    const curr = orgFile.current
+    if (!selectedProjectId || !file?.id) return null
+    if (curr?.content === file?.content && curr?.goal === file?.goal)
+      return buttons
 
     const save = () => {
-      updateFile(selectedProjectId, { fileId: file.id, content: file?.content });
-    };
+      const fields: any = { fileId: file.id }
+      if (file?.content && curr?.content !== file?.content)
+        fields["content"] = file?.content
+      if (file?.goal && curr?.goal !== file?.goal)
+        fields["goal"] = file?.goal
+      if (kind === "info")
+        fields["target"] = "guidelines"
+      updateFile(selectedProjectId, fields)
+    }
     buttons.push(<button key="save" onClick={save}>
       <MdSave />
-    </button>);
-    return buttons;
-  }, [file, selectedProjectId]);
+    </button>)
+    return buttons
+  }, [file, selectedProjectId, kind])
 
-  const Chat = useMemo(() => showChat && <ChatInput onSend={async () => { }} />, [showChat]);
+  const Chat = useMemo(() => {
+    return showChat && <ChatInput onSend={async () => { }} />
+  }, [showChat])
 
   return (
     <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Buttons} FieldBelow={Chat}>
-      <Editor
+      {kind === "editor" ? <Editor
         beforeMount={handleEditorWillMount}
         height="90vh"
         language={languageType}
@@ -89,23 +121,9 @@ const FileEditor: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) =
           fontSize: 13,
           minimap: { enabled: false },
         }}
-      />
+      /> : <InfoEditor values={file} valueTypes={displayTypes} onUpdateField={handleInfoChange} />}
     </Modal>
   );
 };
 
-export default FileEditor;
-
-const areDiff = (file1: FileDesign, file2?: FileDesign | null): boolean => {
-  if (!file2)
-    return true
-  const allKeys: (keyof FileDesign)[] = ["id", "path", "goal", "content"];
-
-  for (const key of allKeys) {
-    if (file1[key] !== file2[key as keyof FileDesign]) {
-      return true;
-    }
-  }
-
-  return false;
-};
+export default FileEditorModal;

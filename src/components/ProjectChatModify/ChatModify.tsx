@@ -3,12 +3,12 @@ import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { ChatInputType, ProposedDirectAnswer, ProposedItem, RefineResource, clearIssueHistory, getIssueHistory, resolveIssues } from '@/utils/apis/chatRefine';
-import {ImageChatInput} from '../general/ChatTextArea';
 import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import ResourcesSelector from '../general/ResourcesSelector';
+import ImageChatInput from '../general/ChatFields/ImageChat';
 
 interface ChatButtonProps {
 }
