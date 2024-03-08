@@ -16,7 +16,6 @@ interface DisclosurePanelProps {
   handleCheckboxChange: (fileRelPath: number) => void,
   selectedCheckboxOptions: number[],  // relative paths
   isInitOpen: boolean,
-  moduleIdPath: number[],
 }
 
 // TODO:
@@ -26,7 +25,6 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   handleCheckboxChange,
   selectedCheckboxOptions,
   isInitOpen,
-  moduleIdPath,
 }) => {
   // Create new state for the modal open state and the content to display
   const [editingFileId, setEditingFileId] = useState<number | null>(null);
@@ -89,14 +87,13 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                     )
                   })}
                 </div>
-                {aModule.modules?.map((subModule) => (
+                {aModule.modules?.map((subModule, idx) => (
                   <DisclosurePanel
                     key={subModule.id}
                     aModule={subModule}
                     handleCheckboxChange={handleCheckboxChange}
                     selectedCheckboxOptions={selectedCheckboxOptions}
-                    isInitOpen={moduleIdPath[0] === subModule.id}
-                    moduleIdPath={moduleIdPath.slice(1)}
+                    isInitOpen={idx === 0}
                   />
                 ))}
               </Disclosure.Panel>

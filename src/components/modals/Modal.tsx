@@ -13,7 +13,7 @@ interface ModalProps {
   className?: string; // Add a className prop
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height='', MoreButtons, FieldBelow, className }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height = '', MoreButtons, FieldBelow, className }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}
       enter="ease-out duration-300"
@@ -49,12 +49,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height=
                     <MdClose className="text-gray-500 hover:text-gray-700" />
                   </button>
                 </div>
-                
               </div>
-              {FieldBelow && <div className="w-full p-1">{FieldBelow}</div>}
               <div className={`overflow-y-auto max-h-[80vh] ${height} ${className}`}>
                 {children}
               </div>
+              {/* <div className="absolute bottom-0 w-full bg-white">
+                {FieldBelow}
+              </div> */}
             </div>
           </Transition.Child>
         </div>

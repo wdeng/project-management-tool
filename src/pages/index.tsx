@@ -34,13 +34,6 @@ export default function Home() {
     setProjectDetails(details);
   }, [selectedProjectId, selectedModule, handleModuleSelect])
 
-  const moduleIdPath = useMemo(() => {
-    if (selectedModule && projectDetails?.modules) {
-      return findModuleAncestors(selectedModule.id, projectDetails.modules);
-    }
-    return [];
-  }, [selectedModule, projectDetails]);
-
   const [executingName, setExecuting] = useState<string>("");
 
   const canBuild = useMemo(() => {
@@ -104,7 +97,7 @@ export default function Home() {
               canBuild={canBuild}
               moduleDetails={selectedModule}
             />
-            <ChatButton moduleIdPath={moduleIdPath} />
+            <ChatButton />
           </> : projectDetails && <ProjectDetails {...projectDetails} projectId={selectedProjectId!} />}
         </div>
       </div>

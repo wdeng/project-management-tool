@@ -1,6 +1,6 @@
 import { ComponentSpecs, ProjectSpecs } from '@/utils/apis';
 import React from 'react';
-import ChatInput from '../general/ChatTextArea';
+import { ImageChatInput } from '../general/ChatTextArea';
 import { ChatInputType } from '@/utils/apis/chatRefine';
 
 interface ProjectSpecsProps {
@@ -46,7 +46,7 @@ export const ReviewProjectSpecs: React.FC<ProjectSpecsProps> = ({ projectSpecs, 
       <h4 className='font-bold text-lg pt-2'>Components</h4>
       <RecursiveComponent data={projectSpecs.components} />
       <div className='p-3' />
-      <ChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if none" />
+      <ImageChatInput onSend={handleSubmit} sendOnEmpty={true} placeholder="Your issues, leave empty if none" />
     </div>
   );
 };

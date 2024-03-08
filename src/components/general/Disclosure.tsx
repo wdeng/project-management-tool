@@ -15,16 +15,14 @@ interface DisclosurePanelProps {
   aModule: ModuleHierarchy,
   handleCheckboxChange: (fileRelPath: number) => void,
   selectedCheckboxOptions: number[],  // relative paths
-  isInitOpen: boolean,
-  moduleIdPath: number[],
+  isInitOpen?: boolean,
 }
 
 const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   aModule,
   handleCheckboxChange,
   selectedCheckboxOptions,
-  isInitOpen,
-  moduleIdPath,
+  isInitOpen = false,
 }) => {
   const [menuHeight, isMenuOpen, toggleMenu, menuRef] = useRetract(isInitOpen);
 
@@ -78,14 +76,13 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                 )
             })}
           </div>
-          {aModule.modules?.map((subModule) => (
+          {aModule.modules?.map((subModule, idx) => (
             <DisclosurePanel
               key={subModule.id}
               aModule={subModule}
               handleCheckboxChange={handleCheckboxChange}
               selectedCheckboxOptions={selectedCheckboxOptions}
-              isInitOpen={moduleIdPath[0] === subModule.id}
-              moduleIdPath={moduleIdPath.slice(1)}
+              isInitOpen={idx === 0}
             />
           ))}
         </div>}

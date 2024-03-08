@@ -90,11 +90,15 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
     onChange && onChange(value);
   }
 
-  const Button = useMemo(() => {
+  const Buttons = useMemo(() => {
     const curr = orgFile.current
     if (!selectedProjectId || !file?.id) return null
     if (curr?.content === file?.content && curr?.goal === file?.goal)
-      return null
+      return (
+        <button key='chat'>
+          <MdOutlineChat />
+        </button>
+      )
 
     const save = () => {
       const fields: any = { fileId: file.id }
@@ -107,9 +111,9 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
       updateFile(selectedProjectId, fields)
     }
     return <>
-      {/* <button key='chat'>
+      <button key='chat'>
         <MdOutlineChat />
-      </button> */}
+      </button>
       <button key="save" onClick={save}>
         <MdSave />
       </button>
@@ -118,12 +122,11 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
   }, [file, selectedProjectId, kind])
 
   const Chat = useMemo(() => {
-    // return <ChatInput onSend={async () => { }} />
-    return null
+    return <ChatInput onSend={async () => { }} />
   }, [])
 
   return (
-    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Button} FieldBelow={Chat}>
+    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Buttons} FieldBelow={Chat}>
       {kind === "editor" ? <Editor
         beforeMount={handleEditorWillMount}
         height="90vh"

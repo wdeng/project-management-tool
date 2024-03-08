@@ -17,13 +17,14 @@ export const SetFileGoal: React.FC<Props> = ({
   const validateForm = () => overview.length > 0;
 
   const handleSubmit = (event: React.FormEvent) => {
+    console.log('submitting file goal');
     event.preventDefault();
     onSubmit(overview);
     setOverview(""); // reset form
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
+    <div className="p-4">
       <h2 className='font-medium pt-3'>What this file is about? Please provide an overview or description.</h2>
       <textarea
         id="overview"
@@ -33,18 +34,18 @@ export const SetFileGoal: React.FC<Props> = ({
         className={`mt-4 ${textAreaStyles}`}
         rows={5}
       />
-      <div className="mt-6">
+      <div className="my-4">
         <ResourcesSelector
+        resourcesAvailable={['outline', 'read_more_files']}
           resourcesEnabled={resourcesEnabled}
           setResourcesEnabled={setResourcesEnabled}
           selectedCheckboxOptions={selectedCheckboxOptions}
           setSelectedCheckboxOptions={setSelectedCheckboxOptions}
-          moduleIdPath={[]}
         />
       </div>
-      <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`}>
+      <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`} onClick={handleSubmit}>
         Submit
       </button>
-    </form>
+    </div>
   );
 };

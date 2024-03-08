@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MdInfoOutline, MdAddCircleOutline } from 'react-icons/md'; // Importing MdAddCircleOutline for the add icon
+import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/utils/apis';
 import FileEditorModal from '../modals/FileEditorModal';
-import CreationModal from './CreateFile';
+import FileCreation from './CreateFile';
 
 interface IFileCardProps {
   files: FileDesign[];
@@ -50,7 +50,7 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
           <p className="text-gray-400 mt-1 text-sm">{file.goal}</p>
         </div>
       ))}
-      <CreationModal />
+      <FileCreation />
     </div>
   );
 };

@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { MdAdd } from 'react-icons/md'; // MdDriveFileMove
+import { MdAddCircleOutline } from 'react-icons/md'; // MdDriveFileMove
 import ItemCreationModal from '@/components/modals/ItemCreationModal';
-import { SetProjectGoal } from '@/components/CreateProject/SetProjectGoal';
+import { SetFileGoal } from './SetFileGoal';
 
 interface Props {
 }
 
-export const CreationModal: React.FC<Props> = ({ }) => {
+const FileCreation: React.FC<Props> = ({ }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState('SetGoal');
   const [isLoading, setIsLoading] = useState(false);
-  const [projectId, setProjectId] = useState<number>(19);
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
@@ -23,7 +22,7 @@ export const CreationModal: React.FC<Props> = ({ }) => {
     try {
       // Simulate an async operation e.g. making API request.
       // const res = await 
-      setCurrentStep('MultipleChoiceQuestions');
+      setCurrentStep('SetGoal');
     } catch (error) {
       console.error(error);
     } finally {
@@ -32,10 +31,12 @@ export const CreationModal: React.FC<Props> = ({ }) => {
     }
   };
 
+  
+
   let currentComponent;
   switch (currentStep) {
     case 'SetGoal':
-      currentComponent = <SetProjectGoal onProjectGoalSubmit={handleGoalSubmit} />;
+      currentComponent = <SetFileGoal onSubmit={handleGoalSubmit} />;
       break;
     default:
       currentComponent = null;
@@ -49,8 +50,8 @@ export const CreationModal: React.FC<Props> = ({ }) => {
         role="button"
         tabIndex={0}
       >
-        <MdAdd size={24} className="mr-2" />
-        Add New File
+        <MdAddCircleOutline size={20} className="mr-3" />
+        New File
       </button>
       <ItemCreationModal title="Create File" isLoading={isLoading} directInputComponent={null} isOpen={isOpen} close={close}>
         {currentComponent}
@@ -59,4 +60,4 @@ export const CreationModal: React.FC<Props> = ({ }) => {
   );
 };
 
-export default CreationModal;
+export default FileCreation;

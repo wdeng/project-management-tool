@@ -1,3 +1,27 @@
+
+export const convertToBase64JPEG = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx!.drawImage(img, 0, 0);
+        const base64JPEG = canvas.toDataURL('image/jpeg');
+        resolve(base64JPEG);
+      };
+      img.onerror = reject;
+      img.src = e.target!.result as string;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
 export function camelToTitle(camelStr: string) {
   return camelStr
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')  // Add a space before each uppercase letter that follows a lowercase letter or number
