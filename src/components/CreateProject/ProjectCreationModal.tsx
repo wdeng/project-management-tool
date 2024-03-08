@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Menu, Tab } from '@headlessui/react';
+import { Menu } from '@headlessui/react';
 import { MdAdd, MdDashboard } from 'react-icons/md'; // MdDriveFileMove
 import { FaFileImport } from "react-icons/fa";
 import { ImMakeGroup } from "react-icons/im";
-import Modal from '../Modal';
 import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
 import { SetProjectGoal } from './SetProjectGoal';
-import Spinner from '../general/Spinner';
 import {
   QuestionChoices,
   setProjectGoal,
@@ -19,15 +17,12 @@ import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 import { ChatInputType } from '@/utils/apis/chatRefine';
 import Dropdown from '../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
+import ItemCreationModal from '../modals/ItemCreationModal';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
   onProjectBuild: (projectId: number) => Promise<void>;
 }
-
-const tabStyle = ({ selected }: any) => (
-  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-800 rounded-lg ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-400 focus:outline-none focus:ring-2 ${selected ? 'bg-white shadow' : 'text-indigo-100 hover:bg-white/[0.12] hover:text-white'}`
-)
 
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, onProjectBuild }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,8 +77,6 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   };
 
   const handleIssueSubmit = async (issues: ChatInputType, abortController: AbortController) => {
-    // Handle the issue here
-    // Maybe sending it to your backend
     if (issues?.text) {
       const resps = await fixProjectIssue(issues, projectId, abortController)
       resps && setProjectSpecs(resps.projectSpecs);
@@ -154,37 +147,9 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
           </Menu.Items>
         </Dropdown>
       </Menu>
-      <Modal
-        height='h-[80vh]'
-        isOpen={isOpen}
-        onClose={close}
-        title="Create New Project"
-        className={isLoading ? 'pointer-events-none' : ''}
-      >
-        {isLoading && (
-          <div className={`absolute inset-0 flex items-center justify-center bg-white bg-opacity-40 z-50 pointer-events-auto`}>
-            <Spinner />
-          </div>
-        )}
-        <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-xl bg-indigo-500 p-1 mx-4">
-            <Tab className={tabStyle}>
-              Multiple Choice Questions
-            </Tab>
-            <Tab className={tabStyle}>
-              Direct Input
-            </Tab>
-          </Tab.List>
-          <Tab.Panels className="mt-2">
-            <Tab.Panel>
-              {currentComponent}
-            </Tab.Panel>
-            <Tab.Panel>
-              <ProjectForm onNewProject={directNewProject} />
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
-      </Modal>
+      <ItemCreationModal title="Create Project" isLoading={isLoading} directInputComponent={<ProjectForm onNewProject={directNewProject} />} isOpen={isOpen} close={close}>
+        {currentComponent}
+      </ItemCreationModal>
     </>
   );
 };

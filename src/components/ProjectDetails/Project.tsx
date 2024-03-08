@@ -6,7 +6,7 @@ import GitDiffReview from './ProjectSync/ReviewGitDiff';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { MdOutlineSubject } from 'react-icons/md';
-import TextEditor from '../general/TextEditor';
+import TextEditor from '../modals/TextEditor';
 import * as yaml from 'js-yaml';
 // MdOutlineLogoDev
 // MdDescription
@@ -48,8 +48,6 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
       );
   }, [projectId])
   const bottomRef = useScrollToBottom(gitReview);
-
-  
 
   const saveProjectSpecs = async (content: string) => {
     await updateProjectSpecs(projectId, content);

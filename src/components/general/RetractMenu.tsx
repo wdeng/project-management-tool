@@ -1,5 +1,5 @@
 import { Menu } from '@headlessui/react';
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { MdKeyboardArrowDown, MdMenu } from 'react-icons/md';
 import Dropdown from './Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';

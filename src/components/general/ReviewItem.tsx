@@ -16,7 +16,16 @@ interface ReviewItemProps {
   setEditingItem: (item: any) => void;
 }
 
+/**
+ * A single item in the Git Diff or Module review list
+ * @param change The change to review
+ * @param accept The current accept state
+ * @param acceptChanges The function to change the accept state
+ * @param setEditingItem The function to set the editing item
+ * @returns The review item
+ */
 const ReviewItem: React.FC<ReviewItemProps> = ({ change, accept, setEditingItem, acceptChanges }) => {
+
   const handleRadioChange = (filepath: string, value: AcceptIgnoreType) => {
     acceptChanges(
       s => ({

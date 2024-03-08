@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Modal from '../Modal';
+import Modal from './Modal';
 import Editor, { Monaco } from "@monaco-editor/react";
 import { MdOutlineChat, MdSave } from 'react-icons/md';
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import Modal from '../Modal';
+import Modal from './Modal';
 import { DiffEditor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import { getFileExtension, languageMap } from '@/utils';

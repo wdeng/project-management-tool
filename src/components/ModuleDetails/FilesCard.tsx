@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { MdInfoOutline } from 'react-icons/md';
+import { MdInfoOutline, MdAddCircleOutline } from 'react-icons/md'; // Importing MdAddCircleOutline for the add icon
 import { FileDesign } from '@/utils/apis';
-import FileEditorModal from '../general/FileEditorModal';
+import FileEditorModal from '../modals/FileEditorModal';
+import CreationModal from './CreateFile';
 
 interface IFileCardProps {
   files: FileDesign[];
@@ -10,6 +11,7 @@ interface IFileCardProps {
 const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
   const [editingFileID, setEditingFileID] = useState<number | null>(null);
   const [editorKind, setEditorKind] = useState<"editor" | "info">("editor");
+
   const openEditor = (fileId: number, kind: "editor" | "info" = "editor") => {
     setEditingFileID(fileId);
     setEditorKind(kind);
@@ -38,7 +40,7 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
             <h3 className="font-medium text-base truncate text-gray-700">
               {file.path.substring(0, file.path.lastIndexOf('.'))}
             </h3>
-            <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.25rem]" onClick={(ev)=>{
+            <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.25rem]" onClick={(ev) => {
               ev.stopPropagation();
               openEditor(file.id, "info");
             }}>
@@ -48,8 +50,9 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
           <p className="text-gray-400 mt-1 text-sm">{file.goal}</p>
         </div>
       ))}
+      <CreationModal />
     </div>
-  )
+  );
 };
 
 export default FilesCard;

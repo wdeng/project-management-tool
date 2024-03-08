@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Modal from '../Modal';
+import Modal from './Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
-import { InfoEditor } from './DescView';
+import { InfoEditor } from '../general/DescView';
 import { getFileExtension, languageMap } from '@/utils';
 import { MdOutlineChat, MdSave } from 'react-icons/md';
-import ChatInput from './ChatTextArea';
+import ChatInput from '../general/ChatTextArea';
 
 interface EditorModalProps {
   onClose: () => void;

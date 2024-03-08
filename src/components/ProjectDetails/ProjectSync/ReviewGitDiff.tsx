@@ -6,7 +6,7 @@ import { FileModifyType } from '@/components/general/ModifySpan';
 import { synchronizeProject } from '@/utils/apis';
 import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
 import ReviewItem from '@/components/general/ReviewItem';
-import FileEditorModal from '@/components/general/FileEditorModal';
+import FileEditorModal from '@/components/modals/FileEditorModal';
 import ModuleReviewPanel from './ReviewModuleChanges';
 import Spinner from '@/components/general/Spinner';
 

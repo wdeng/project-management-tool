@@ -80,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId, refreshCurrentProject }}>
+    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId, refreshCurrentProject, projectModules: projectDetails?.modules }}>
       <div className="flex">
         <div style={{ flex: '0 0 250px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
           <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />
@@ -104,7 +104,7 @@ export default function Home() {
               canBuild={canBuild}
               moduleDetails={selectedModule}
             />
-            <ChatButton moduleIdPath={moduleIdPath} modules={projectDetails!.modules} />
+            <ChatButton moduleIdPath={moduleIdPath} />
           </> : projectDetails && <ProjectDetails {...projectDetails} projectId={selectedProjectId!} />}
         </div>
       </div>

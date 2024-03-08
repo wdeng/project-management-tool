@@ -4,7 +4,7 @@ import { buttonStyles } from '@/utils/tailwindStyles';
 import FilesCard from './FilesCard';
 import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/utils/apis';
 import * as yaml from 'js-yaml';
-import TextEditor from '../general/TextEditor';
+import TextEditor from '../modals/TextEditor';
 import { useSelected } from '@/hooks/useSelectedContext';
 
 interface IModuleDetailsProps {
