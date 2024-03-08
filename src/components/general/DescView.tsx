@@ -37,7 +37,7 @@ function renderElement(
           value={value}
           onChange={(e) => onUpdateValue(key, e.target.value)}
           placeholder={title}
-          className="w-full mb-4 border-none outline-none resize-none rounded-md focus:ring-1"
+          className="w-full border-none outline-none resize-none rounded-md focus:ring-1"
         />
       );
       break;
@@ -54,7 +54,7 @@ function renderElement(
     <div key={key}>
       <h3 className='text-lg font-semibold py-1'
       >{title}:</h3>
-      <div className='ml-2 mb-4'
+      <div className='ml-2 mb-2'
       >{element}</div>
     </div>
   )
@@ -62,24 +62,34 @@ function renderElement(
 
 export const InfoEditor: React.FC<DynamicFormProps> = ({ values, valueTypes, onUpdateField }) => {
 
+  // const save = () => {
+  //   const fields: any = { fileId: obj.id }
+  //   if (obj?.content && curr?.content !== obj?.content)
+  //     fields["content"] = obj?.content
+  //   if (obj?.goal && curr?.goal !== obj?.goal)
+  //     fields["goal"] = obj?.goal
+  //   fields["target"] = "guidelines"
+  //   updateFile(selectedProjectId, fields)
+  // }
+
   return (
     <div className="p-4">
       {values && Object.keys(values).map((key) => renderElement(key, values[key], valueTypes[key], onUpdateField))}
       <div className="flex space-x-3">
-          <button
-            className={`${buttonStyles} my-3 px-3`}
-          >
-            Implement
-          </button>
-          <button
-            onClick={
-              () => window.confirm('Are you sure to delete this module?')
-            }
-            className={`${buttonStyles} my-3 px-3 bg-red-500`}
-          >
-            Delete
-          </button>
-        </div>
+        <button
+          className={`${buttonStyles} my-3 px-3`}
+        >
+          Implement
+        </button>
+        <button
+          onClick={
+            () => window.confirm('Are you sure to delete this module?')
+          }
+          className={`${buttonStyles} my-3 px-3 bg-red-500`}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { ChatInputType } from '@/utils/apis/chatRefine';
 import NextImage from 'next/image';
 import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode } from 'react';
-import { ImSpinner2, ImSpinner8 } from 'react-icons/im';
 import { MdSend, MdImage, MdClose, MdStop } from 'react-icons/md';
+import { CgSpinner } from "react-icons/cg";
 
 interface IChatInputProps {
   onSend: (data: ChatInputType, abortController: AbortController) => Promise<void>;
@@ -163,16 +163,16 @@ const ChatInput: React.FC<IChatInputProps> = ({
         />
         {isSending ? (
           <button
-            className={`${buttonStyle} right-1 bottom-1 text-indigo-600 hover:text-indigo-700 cursor-pointer flex justify-center items-center p-1`}
+            className={`${buttonStyle} right-2 bottom-1.5 text-indigo-600 hover:text-indigo-700 cursor-pointer flex justify-center items-center p-1`}
             onClick={handleStop}
           >
-            <MdStop size={24} /> {/* Assuming MdClose is the icon for stop */}
-            <ImSpinner8 className="slow-spin absolute" size={28} />
+            <MdStop size={20} /> {/* Assuming MdClose is the icon for stop */}
+            <CgSpinner className="slow-spin absolute" size={36} />
           </button>
         ) : (
           <button
             disabled={buttonDisabled}
-            className={`${buttonStyle} bg-indigo-600 right-1.5 bottom-1.5 py-1.5 px-1.5 text-white rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-700 cursor-pointer'}`}
+            className={`${buttonStyle} bg-indigo-600 right-2 bottom-1.5 py-1.5 px-1.5 text-white rounded-3xl shadow-md ${buttonDisabled ? 'opacity-50' : 'hover:bg-indigo-700 cursor-pointer'}`}
             onClick={handleSend}
           // style={{ marginBottom: '1.5rem' }}
           >

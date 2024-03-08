@@ -1,24 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
 import { Disclosure, Transition } from '@headlessui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import FileEditorModal from '../general/FileEditorModal'; // Import your EditorModal
+import { useState } from 'react';
 import { ModuleHierarchy } from '@/utils/apis';
 import { checkboxStyles } from '@/utils/tailwindStyles';
 
 export interface Option {
-  value: string;
-  initialOpen?: boolean;
-  children?: Option[];
+  value: string,
+  initialOpen?: boolean,
+  children?: Option[]
 }
 
 interface DisclosurePanelProps {
-  aModule: ModuleHierarchy;
-  handleCheckboxChange: (fileRelPath: number) => void;
-  selectedCheckboxOptions: number[]; // relative paths
-  isInitOpen: boolean;
-  moduleIdPath: number[];
+  aModule: ModuleHierarchy,
+  handleCheckboxChange: (fileRelPath: number) => void,
+  selectedCheckboxOptions: number[],  // relative paths
+  isInitOpen: boolean,
+  moduleIdPath: number[],
 }
 
+// TODO:
+// - [ ] if selectedCheckboxOptions changed should show the ones that are selected
 const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   aModule,
   handleCheckboxChange,
@@ -26,9 +28,8 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
   isInitOpen,
   moduleIdPath,
 }) => {
+  // Create new state for the modal open state and the content to display
   const [editingFileId, setEditingFileId] = useState<number | null>(null);
-  const [panelHeight, setPanelHeight] = useState<number | undefined>(0);
-  const panelRef = useRef<HTMLDivElement>(null);
 
   const openEditor = (fileId: number) => {
     setEditingFileId(fileId);
@@ -38,50 +39,32 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
     setEditingFileId(null);
   };
 
-  useEffect(() => {
-    if (panelRef.current) {
-      setPanelHeight(isInitOpen ? panelRef.current.scrollHeight : 0);
-    }
-  }, [isInitOpen]);
-
   return (
     <>
-      <Disclosure defaultOpen={isInitOpen} as="div" className="w-full">
+      <Disclosure defaultOpen={isInitOpen}>
         {({ open }) => (
           <>
             <Disclosure.Button className="flex justify-between w-full px-4 py-2 mt-2 text-sm font-medium text-left text-indigo-800 bg-indigo-100 rounded-lg hover:bg-indigo-200">
               <span>{aModule.name}</span>
               <MdKeyboardArrowDown
-                className={`transition-transform ${open ? 'rotate-180' : ''} w-5 h-5 text-indigo-500`}
+                className={`transition-transform ${open ? 'rotate-180' : ''
+                  } w-5 h-5 text-indigo-500`}
               />
             </Disclosure.Button>
             <Transition
               show={open}
-              enter="transition-height duration-300 ease-out"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-height duration-300 ease-in"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              afterEnter={() => {
-                if (panelRef.current) {
-                  setPanelHeight(panelRef.current.scrollHeight);
-                }
-              }}
-              beforeLeave={() => {
-                if (panelRef.current) {
-                  setPanelHeight(0);
-                }
-              }}
+              enter="transition-all duration-500 ease-in overflow-y-hidden"
+              enterFrom="max-h-0"
+              enterTo="max-h-[2000px]"
+              leave="transition-all duration-300 ease-out overflow-y-hidden"
+              leaveFrom="max-h-[2000px] opacity-100"
+              leaveTo="max-h-0 opacity-10"
             >
-              <Disclosure.Panel
-                static
-                className="text-sm text-gray-500"
-                style={{ height: panelHeight }}
-              >
-                <div ref={panelRef} className="overflow-hidden transition-all">
-                  <div className="flex flex-wrap items-center">
-                    {aModule.files?.map((file) => (
+              <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center">
+                  {aModule.files?.map((file) => {
+                    if (file.status === "pending") return null;
+                    return (
                       <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
                         <div className="hover:scale-110">
                           <input
@@ -103,19 +86,19 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
                           {file.path}
                         </label>
                       </div>
-                    ))}
-                  </div>
-                  {aModule.modules?.map((subModule) => (
-                    <DisclosurePanel
-                      key={subModule.id}
-                      aModule={subModule}
-                      handleCheckboxChange={handleCheckboxChange}
-                      selectedCheckboxOptions={selectedCheckboxOptions}
-                      isInitOpen={moduleIdPath[0] === subModule.id}
-                      moduleIdPath={moduleIdPath.slice(1)}
-                    />
-                  ))}
+                    )
+                  })}
                 </div>
+                {aModule.modules?.map((subModule) => (
+                  <DisclosurePanel
+                    key={subModule.id}
+                    aModule={subModule}
+                    handleCheckboxChange={handleCheckboxChange}
+                    selectedCheckboxOptions={selectedCheckboxOptions}
+                    isInitOpen={moduleIdPath[0] === subModule.id}
+                    moduleIdPath={moduleIdPath.slice(1)}
+                  />
+                ))}
               </Disclosure.Panel>
             </Transition>
           </>

@@ -126,13 +126,13 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
           <MdAdd size={20} />
         </Menu.Button>
         <Dropdown>
-          <Menu.Items className={contextMenuStyles}>
+          <Menu.Items className={`${contextMenuStyles} min-w-[160px]`}>
             <Menu.Item>
               <button
                 className={contextMenuItemStyles}
                 onClick={open}
               >
-                <MdDashboard className="mr-3" /> New Project
+                <MdDashboard className="mr-3" /> Create Project
               </button>
             </Menu.Item>
             <Menu.Item>

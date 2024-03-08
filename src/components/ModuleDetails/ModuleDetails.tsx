@@ -99,7 +99,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
             disabled={!canBuild}
             className={`${buttonStyles} my-3`}
           >
-            Implement
+            Code
           </button>}
           <button
             onClick={

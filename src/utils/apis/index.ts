@@ -105,7 +105,7 @@ export async function fixProjectIssue(
   issues: ChatInputType,
   projectId: number,
   abortController?: AbortController
-  ): Promise<QAResponse> {
+): Promise<QAResponse> {
   const data = {
     issues,
     projectId,
@@ -135,7 +135,7 @@ export async function buildModule(projectId: number, moduleId: number, targets?:
   return await postReq(`build/module`, data);
 }
 
-export async function fetchSourceCode(projectId: number, fileId: number | string): Promise<FileDesign> {
+export async function fetchSourceCode(projectId: number, fileId: number | string, target?: "code" | "metadata" | "guidelines"): Promise<FileDesign> {
   let apiUrl: string;
 
   if (typeof fileId === 'string') {
@@ -145,6 +145,9 @@ export async function fetchSourceCode(projectId: number, fileId: number | string
     apiUrl = `project/${projectId}/source-file?id=${fileId}`;
   else
     throw new Error("Either path or id must be provided");
+
+  if (target != null)
+    apiUrl += `&target=${target}`;
 
   return await getReq(apiUrl);
 }

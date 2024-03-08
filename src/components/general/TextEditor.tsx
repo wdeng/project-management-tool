@@ -30,6 +30,7 @@ const TextEditor: React.FC<TextEditorModalProps> = ({ onClose, isOpen, title, ha
   const [content, setContent] = useState<string>(initialContent || "");
   useEffect(() => {
     setContent(initialContent || "");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const onCloseModal = () => {

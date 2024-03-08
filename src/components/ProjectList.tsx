@@ -73,7 +73,16 @@ export const ProjectList: React.FC<ProjectListProps> = ({
     <div className="overflow-y-auto h-full">
       <ProjectCreationModal onNewProject={handleNewProject} onProjectBuild={handleProjectBuild} />
       {error && <p className="text-red-500">{error}</p>}
-      <RetractMenu />
+      <RetractMenu>
+        <li
+          className={`pl-4 pr-2 py-1 flex items-center rounded-l-md text-white cursor-pointer transition-all ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === null ? 'bg-indigo-500' : ''}`}
+        >
+          <div className="mr-2">
+            <MdDashboard size={16} />
+          </div>
+          <span>Dashboard</span>
+        </li>
+      </RetractMenu>
       <ul>
         {projects.map((project) => (
           <li
@@ -85,7 +94,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
               {buildingProjects.includes(project.id) ? (
                 <Spinner spinnerSize={16} />
               ) : (
-                <MdDriveFileMove size={16} />
+                <MdDashboard size={16} />
               )}
             </div>
             <span>{project.name}</span>

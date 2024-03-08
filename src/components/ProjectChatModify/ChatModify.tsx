@@ -108,8 +108,8 @@ const ChatButton = ({ moduleIdPath, modules }: ChatButtonProps) => {
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
           <div className="overflow-y-auto flex-grow p-4">
-            <h2 className="font-semibold text-2xl">Select the resources to expose to Debugger</h2>
-            <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p>
+            <h2 className="font-semibold text-2xl mb-5">Select the resources to expose to Debugger</h2>
+            {/* <p className='text-gray-500 mb-5 text-sm'>Please note GPT-4 has 8k token limit</p> */}
             <div className="mb-4 bg-white px-6 py-3 rounded-lg drop-shadow-sm">
               {Object.entries(REFINE_RESOURCES).map(([resource, label], index) => (
                 <div key={resource}>

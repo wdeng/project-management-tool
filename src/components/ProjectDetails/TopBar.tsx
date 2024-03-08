@@ -44,10 +44,8 @@ const TopBar = ({ syncProject }: TopBarProps) => {
           />
           <Dropdown show={searchActive}>
             <div className="absolute left-0 mt-1 w-full bg-white rounded border shadow-lg z-10 p-2">
-              {/* Your dropdown items here */}
               <p>Item 1</p>
               <p>Item 2</p>
-              {/* ... */}
             </div>
           </Dropdown>
         </div>
@@ -67,7 +65,7 @@ const TopBar = ({ syncProject }: TopBarProps) => {
               <MdSettings className="text-gray-600 text-2xl" />
             </Menu.Button>
             <Dropdown>
-              <Menu.Items className="absolute right-0 mt-0 w-48 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+              <Menu.Items className="absolute right-0 mt-0 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none min-w-[150px]">
                 <Menu.Item>
                   <button
                     className='hover:bg-gray-100 group flex items-center w-full px-4 py-2 text-sm text-gray-700'

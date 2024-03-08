@@ -29,9 +29,10 @@ const areDiff = (file1: FileDesign, file2?: FileDesign | null): boolean => {
   return false;
 };
 
-const dispayTypes = {
+const displayTypes = {
   path: "label",
   goal: "textfield",
+  content: "textarea",
 }
 
 function handleEditorWillMount(monaco: any) {
@@ -55,16 +56,21 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
 
   useEffect(() => {
     if (fileId != null && selectedProjectId) {
-      fetchSourceCode(selectedProjectId, fileId).then(data => {
-        setFile(data);
-        orgFile.current = { ...data }
-        const ext = getFileExtension(data.path);
+      let target: "guidelines" | undefined = undefined
+      if (kind === "info")
+        target = "guidelines"
+      fetchSourceCode(selectedProjectId, fileId, target).then(file => {
+        setFile(file);
+        orgFile.current = { ...file }
+        let ext = "yaml"
+        if (file.status !== "pending")
+          ext = getFileExtension(file.path);
         setLanguageType(languageMap[ext] || ext);
       }).catch(err => {
         console.error(err);
       });
     }
-  }, [selectedProjectId, fileId]);
+  }, [selectedProjectId, fileId, kind]);
 
   const onCloseModal = () => {
     setTimeout(() => {
@@ -89,25 +95,27 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
     if (!selectedProjectId || !file?.id) return null
     if (curr?.content === file?.content && curr?.goal === file?.goal)
       return null
+
+    const save = () => {
+      const fields: any = { fileId: file.id }
+      if (file?.content && curr?.content !== file?.content)
+        fields["content"] = file?.content
+      if (file?.goal && curr?.goal !== file?.goal)
+        fields["goal"] = file?.goal
+      if (kind === "info")
+        fields["target"] = "guidelines"
+      updateFile(selectedProjectId, fields)
+    }
     return <>
-      <button key='chat'>
+      {/* <button key='chat'>
         <MdOutlineChat />
-      </button>
-      <button key="save" onClick={() => {
-        if (!selectedProjectId || !file?.id) return
-        const org = orgFile.current
-        const payload: any = { fileId: file.id }
-        if (file?.content && org?.content !== file?.content)
-          payload["content"] = file?.content
-        if (file?.goal && org?.goal !== file?.goal)
-          payload["goal"] = file?.goal
-        updateFile(selectedProjectId, payload)
-      }}>
+      </button> */}
+      <button key="save" onClick={save}>
         <MdSave />
       </button>
 
     </>
-  }, [file, selectedProjectId])
+  }, [file, selectedProjectId, kind])
 
   const Chat = useMemo(() => {
     // return <ChatInput onSend={async () => { }} />
@@ -127,7 +135,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({ onClose, fileId, onChange
           fontSize: 13,
           minimap: { enabled: false },
         }}
-      /> : <InfoEditor values={file} valueTypes={dispayTypes} onUpdateField={handleInfoChange} />}
+      /> : <InfoEditor values={file} valueTypes={displayTypes} onUpdateField={handleInfoChange} />}
     </Modal>
   );
 };
