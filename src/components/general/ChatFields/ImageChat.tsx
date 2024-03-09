@@ -39,7 +39,7 @@ const ImageChatInput: React.FC<ChatInputProps> = ({
       });
     };
     return (
-      <label htmlFor="image-upload" className="left-2 mb-2 cursor-pointer">
+      <label htmlFor="image-upload" className="mb-2 cursor-pointer">
         <MdImage size={20} />
         <input
           id="image-upload"

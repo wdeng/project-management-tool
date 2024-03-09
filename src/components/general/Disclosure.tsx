@@ -87,7 +87,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           ))}
         </div>}
       </div>
-      <FileEditorModal fileId={editingFileId} onClose={closeEditor} />
+      <FileEditorModal fileId={editingFileId} onClose={closeEditor} allowChat={false} />
     </>
   );
 };

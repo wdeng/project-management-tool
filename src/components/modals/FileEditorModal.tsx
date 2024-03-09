@@ -5,12 +5,13 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
 import { getFileExtension, languageMap } from '@/utils';
 import { MdOutlineChat, MdSave } from 'react-icons/md';
-import ChatInput from '../general/ChatFields/ChatTextArea';
+import ComplexChat from '../general/ChatFields/ComplexChat';
 
 interface EditorModalProps {
   onClose: () => void;
   fileId?: number | null | string;
   onChange?: (value: string | undefined) => void;
+  allowChat?: boolean;
 }
 
 function handleEditorWillMount(monaco: any) {
@@ -24,9 +25,11 @@ function handleEditorWillMount(monaco: any) {
   });
 }
 
-const FileEditor: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) => {
+const FileEditor: React.FC<EditorModalProps> = ({
+  onClose, fileId, onChange, allowChat = true
+}) => {
   const { selectedProjectId } = useSelected();
-  const [showChat, setShowChat] = useState(false);
+  // const [showChat, setShowChat] = useState(false);
   const [file, setFile] = useState<FileDesign | undefined>(undefined);
   const [languageType, setLanguageType] = useState<string>("");
   const orgFile = useRef<FileDesign | null>(null);
@@ -57,11 +60,12 @@ const FileEditor: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) =
   };
 
   const Buttons = useMemo(() => {
-    const buttons = [
-      <button key='chat' onClick={() => setShowChat(prev => !prev)}>
-        <MdOutlineChat />
-      </button>
-    ];
+    const buttons: JSX.Element[] = [];
+    // if (allowChat) {
+    //   buttons.push(<button key='chat' onClick={() => setShowChat(prev => !prev)}>
+    //     <MdOutlineChat />
+    //   </button>);
+    // }
     const curr = orgFile.current;
     if (!selectedProjectId || !file?.id || (curr?.content === file?.content)) return buttons;
 
@@ -74,7 +78,7 @@ const FileEditor: React.FC<EditorModalProps> = ({ onClose, fileId, onChange }) =
     return buttons;
   }, [file, selectedProjectId]);
 
-  const Chat = useMemo(() => showChat && <ChatInput onSend={async () => { }} />, [showChat]);
+  const Chat = useMemo(() => allowChat && <ComplexChat onSend={async () => { }} />, [allowChat]);
 
   return (
     <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Buttons} FieldBelow={Chat}>

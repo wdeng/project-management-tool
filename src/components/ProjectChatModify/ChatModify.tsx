@@ -97,7 +97,7 @@ const ChatButton = ({ }: ChatButtonProps) => {
           >
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
-          <div className="overflow-y-auto flex-grow p-4">
+          <div className="flex-grow py-2">
             <ResourcesSelector
               resourcesEnabled={resourcesEnabled}
               setResourcesEnabled={setResourcesEnabled}

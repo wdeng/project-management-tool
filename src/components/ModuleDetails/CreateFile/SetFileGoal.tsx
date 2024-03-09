@@ -34,15 +34,13 @@ export const SetFileGoal: React.FC<Props> = ({
         className={`mt-4 ${textAreaStyles}`}
         rows={5}
       />
-      <div className="my-4">
-        <ResourcesSelector
+      <ResourcesSelector
         resourcesAvailable={['outline', 'read_more_files']}
-          resourcesEnabled={resourcesEnabled}
-          setResourcesEnabled={setResourcesEnabled}
-          selectedCheckboxOptions={selectedCheckboxOptions}
-          setSelectedCheckboxOptions={setSelectedCheckboxOptions}
-        />
-      </div>
+        resourcesEnabled={resourcesEnabled}
+        setResourcesEnabled={setResourcesEnabled}
+        selectedCheckboxOptions={selectedCheckboxOptions}
+        setSelectedCheckboxOptions={setSelectedCheckboxOptions}
+      />
       <button type="submit" disabled={!validateForm()} className={`w-full ${buttonStyles}`} onClick={handleSubmit}>
         Submit
       </button>

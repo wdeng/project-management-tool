@@ -1,4 +1,4 @@
-import React, { use, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/utils/apis';
 import FileEditorModal from '../modals/FileEditorModal';
