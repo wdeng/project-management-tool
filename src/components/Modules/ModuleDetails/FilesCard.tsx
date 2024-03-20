@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/apis';
-import FileEditorModal from '../modals/FileEditorModal';
+import FileEditorModal from '../../modals/FileEditorModal';
 import FileCreation from './CreateFile';
-import InfoEditorModal from '../modals/InfoEditorModal';
+import InfoEditorModal from '../../modals/InfoEditorModal';
 
 interface IFileCardProps {
   files: FileDesign[];

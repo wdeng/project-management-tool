@@ -51,7 +51,6 @@ export async function resolveIssues(
     fileIds,
     resourcesAllowed,
   };
-  console.log(data);
   return await postReq('resolve-issues/propose', data, abortController);
 }
 
@@ -60,7 +59,6 @@ export async function confirmProjectChanges(changedFiles: ProposedItem[], projec
     projectId,
     changes: changedFiles,
   };
-  console.log(data);
   const resp = await postReq('resolve-issues/confirm', data);
   return resp;
 }

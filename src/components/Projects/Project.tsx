@@ -2,7 +2,7 @@
 import React, { useState, ReactElement, useCallback, useMemo } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync, updateProjectSpecs } from '@/apis';
-import GitDiffReview from './ProjectSync/ReviewGitDiff';
+import GitDiffReview from './GitSync/ReviewGitDiff';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { MdOutlineSubject } from 'react-icons/md';

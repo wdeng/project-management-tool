@@ -6,7 +6,7 @@ import Modal from './Modal';
 interface ModalProps {
   title: string;
   children: ReactNode;
-  directInputComponent: ReactNode;
+  directInputComponent?: ReactNode;
   height?: string;
   isLoading: boolean;
   isOpen: boolean;

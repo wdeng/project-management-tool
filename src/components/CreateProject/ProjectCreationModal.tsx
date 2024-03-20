@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Menu } from '@headlessui/react';
 import { MdAdd, MdDashboard } from 'react-icons/md'; // MdDriveFileMove
 import { FaFileImport } from "react-icons/fa";
 import { ImMakeGroup } from "react-icons/im";
 import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
-import { SetProjectGoal } from './SetProjectGoal';
+import { SetCreationGoal } from '../modals/SetCreationGoal';
 import {
   QuestionChoices,
   setProjectGoal,
@@ -36,75 +36,73 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  const handleProjectGoalSubmit = async (goal: string) => {
-    // Start the loading state
-    setIsLoading(true);
+  const currentComponent = useMemo(() => {
+    const handleProjectGoalSubmit = async (goal: string) => {
+      // Start the loading state
+      setIsLoading(true);
 
-    try {
-      // Simulate an async operation e.g. making API request.
-      const res = await setProjectGoal(goal);
-      setProjectId(res.projectId);
-      setQuestions(res.QAs);
+      try {
+        // Simulate an async operation e.g. making API request.
+        const res = await setProjectGoal(goal);
+        setProjectId(res.projectId);
+        setQuestions(res.QAs);
 
-      setCurrentStep('MultipleChoiceQuestions');
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // End the loading state
-      setIsLoading(false);
-    }
-  };
-
-  const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
-    setIsLoading(true);
-
-    try {
-      // await new Promise(res => setTimeout(res, 2000));
-      const resps = await anwerProjectQAs(answers, projectId)
-      if (resps.finished) {
+        setCurrentStep('MultipleChoiceQuestions');
+      } catch (error) {
+        console.error(error);
+      } finally {
+        // End the loading state
         setIsLoading(false);
-        setProjectSpecs(resps.projectSpecs);
-        setCurrentStep('ReviewProjectSpecs');
-        return;
       }
-      setQuestions(resps.QAs);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // End the loading state
-      setIsLoading(false);
-    }
-  };
+    };
 
-  const handleIssueSubmit = async (issues: ChatInputType, abortController: AbortController) => {
-    if (issues?.text) {
-      const resps = await fixProjectIssue(issues, projectId, abortController)
-      resps && setProjectSpecs(resps.projectSpecs);
-    } else {
-      setCurrentStep('SetProjectGoal');
-      close();
-      onProjectBuild(projectId);
-    }
-  };
+    const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
+      setIsLoading(true);
 
-  let currentComponent;
-  switch (currentStep) {
-    case 'SetProjectGoal':
-      currentComponent = <SetProjectGoal onProjectGoalSubmit={handleProjectGoalSubmit} />;
-      break;
-    case 'MultipleChoiceQuestions':
-      currentComponent = <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
-      break;
-    case 'ReviewProjectSpecs':
-      currentComponent = projectSpecs && <ReviewProjectSpecs
-        setProjectSpecs={setProjectSpecs}
-        projectSpecs={projectSpecs}
-        onSubmitIssue={handleIssueSubmit}
-      />;
-      break;
-    default:
-      currentComponent = null;
-  }
+      try {
+        // await new Promise(res => setTimeout(res, 2000));
+        const resps = await anwerProjectQAs(answers, projectId)
+        if (resps.finished) {
+          setIsLoading(false);
+          setProjectSpecs(resps.projectSpecs);
+          setCurrentStep('ReviewProjectSpecs');
+          return;
+        }
+        setQuestions(resps.QAs);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        // End the loading state
+        setIsLoading(false);
+      }
+    };
+
+    const handleIssueSubmit = async (issues: ChatInputType, abortController: AbortController) => {
+      if (issues?.text) {
+        const resps = await fixProjectIssue(issues, projectId, abortController)
+        resps && setProjectSpecs(resps.projectSpecs);
+      } else {
+        setCurrentStep('SetProjectGoal');
+        close();
+        onProjectBuild(projectId);
+      }
+    };
+
+    switch (currentStep) {
+      case 'SetProjectGoal':
+        return <SetCreationGoal onGoalSubmit={handleProjectGoalSubmit} />;
+      case 'MultipleChoiceQuestions':
+        return <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
+      case 'ReviewProjectSpecs':
+        return projectSpecs && <ReviewProjectSpecs
+          setProjectSpecs={setProjectSpecs}
+          projectSpecs={projectSpecs}
+          onSubmitIssue={handleIssueSubmit}
+        />;
+      default:
+        return null;
+    }
+  }, [currentStep, questions, projectSpecs, onProjectBuild, projectId]);
 
   const directNewProject = async (projectName: string, requirements: string, schema: string) => {
     close();

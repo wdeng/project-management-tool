@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ProjectList from '../components/ProjectList';
-import ModuleList from '../components/ModuleList';
-import ModuleDetails from '../components/ModuleDetails/ModuleDetails';
+import ProjectList from '../components/Projects/ProjectsList';
+import ModuleList from '../components/Modules/ModuleList';
+import ModuleDetails from '../components/Modules/ModuleDetails/ModuleDetails';
 import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, fetchModuleDetails } from '@/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
-import ProjectDetails from '@/components/ProjectDetails/Project';
+import ProjectDetails from '@/components/Projects/Project';
 
 
 
