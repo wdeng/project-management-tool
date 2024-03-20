@@ -2,7 +2,7 @@ import React, { useState, ReactElement, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { MdClose, MdOutlineChat } from 'react-icons/md';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ChatInputType, ProposedDirectAnswer, ProposedItem, RefineResource, clearIssueHistory, getIssueHistory, resolveIssues } from '@/apis/chatRefine';
+import { ChatInputType, ProposedDirectAnswer, ProposedItem, RefineResource, clearIssueHistory, getIssueHistory, resolveIssues } from '@/apis';
 import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';

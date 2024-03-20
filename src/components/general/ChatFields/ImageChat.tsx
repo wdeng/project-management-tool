@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import ChatInput, { ChatInputProps } from "./ChatTextArea";
-import { ChatInputType } from "@/apis/chatRefine";
+import { ChatInputType } from "@/apis";
 import { convertToBase64JPEG } from "@/utils";
 import { MdClose, MdImage } from "react-icons/md";
 import NextImage from 'next/image';

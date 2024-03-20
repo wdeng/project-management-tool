@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefineResource, REFINE_RESOURCES } from '@/apis/chatRefine';
+import { RefineResource, REFINE_RESOURCES } from '@/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
 import DisclosurePanel from '../general/Disclosure';
 import { useSelected } from '@/hooks/useSelectedContext';

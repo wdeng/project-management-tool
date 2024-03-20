@@ -1,6 +1,6 @@
 import React, { useState,ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem } from '@/apis/chatRefine';
+import { ProposedItem } from '@/apis';
 import DiffEditorModal from '../../modals/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ReviewItem from '../../general/ReviewItem';

@@ -1,7 +1,10 @@
-import { deleteReq, getReq, postReq } from '../utils';
-import { ChatInputType } from './chatRefine';
-export * from './update';
+import { getReq, postReq } from '../utils';
+import { FileDesign } from './files';
+import { ChatInputType } from './refine';
 export * from './gitSync';
+export * from './refine';
+export * from './modules';
+export * from './files';
 
 export interface ComponentSpecs {
   [key: string]: string | ComponentSpecs | ComponentSpecs[];
@@ -49,13 +52,7 @@ export interface ModuleHierarchy {
   modules?: ModuleHierarchy[];
 }
 
-export interface FileDesign {
-  id: number;
-  path: string;
-  goal?: string;
-  content?: string;
-  status?: 'pending' | 'done';
-}
+
 
 export interface QuestionOption {
   text: string;
@@ -135,23 +132,6 @@ export async function buildModule(projectId: number, moduleId: number, targets?:
   return await postReq(`build/module`, data);
 }
 
-export async function fetchSourceCode(projectId: number, fileId: number | string, target?: "code" | "metadata" | "guidelines"): Promise<FileDesign> {
-  let apiUrl: string;
-
-  if (typeof fileId === 'string') {
-    const encodedPath = encodeURIComponent(fileId);
-    apiUrl = `project/${projectId}/source-file?path=${encodedPath}`;
-  } else if (typeof fileId === 'number')
-    apiUrl = `project/${projectId}/source-file?id=${fileId}`;
-  else
-    throw new Error("Either path or id must be provided");
-
-  if (target != null)
-    apiUrl += `&target=${target}`;
-
-  return await getReq(apiUrl);
-}
-
 export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
   let url = `project/${projectId}/modules`;
   if (projectDetails)
@@ -180,10 +160,6 @@ function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], nu
 
 export async function fetchModuleDetails(projectId: number, moduleId: number): Promise<ModuleHierarchy> {
   return await getReq(`project/${projectId}/module/${moduleId}/details`);
-}
-
-export async function deleteModule(projectId: number, moduleId: number): Promise<any> {
-  return await deleteReq(`project/${projectId}/module/${moduleId}`);
 }
 
 export async function fetchProjects(): Promise<Project[]> {

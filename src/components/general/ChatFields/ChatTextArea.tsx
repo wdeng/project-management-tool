@@ -1,4 +1,4 @@
-import { ChatInputType } from '@/apis/chatRefine';
+import { ChatInputType } from '@/apis';
 import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode, useMemo } from 'react';
 import { MdSend,  MdStop } from 'react-icons/md';
 import { CgSpinner } from "react-icons/cg";

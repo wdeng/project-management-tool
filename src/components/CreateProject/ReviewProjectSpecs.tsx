@@ -1,6 +1,5 @@
-import { ComponentSpecs, ProjectSpecs } from '@/apis';
+import { ChatInputType, ComponentSpecs, ProjectSpecs } from '@/apis';
 import React from 'react';
-import { ChatInputType } from '@/apis/chatRefine';
 import ImageChatInput from '../general/ChatFields/ImageChat';
 
 interface ProjectSpecsProps {

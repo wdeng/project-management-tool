@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ModuleHierarchy } from '../../apis';
+import { ModuleHierarchy } from '@/apis';
 import { MdDescription, MdViewStream, MdPlayArrow, MdAdd } from 'react-icons/md';
 import Spinner from '../general/Spinner';
 import { useSelected } from '@/hooks/useSelectedContext';
