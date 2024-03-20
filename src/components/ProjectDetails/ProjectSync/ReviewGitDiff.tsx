@@ -1,9 +1,9 @@
 import React, { useState, ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem } from '@/utils/apis/chatRefine';
+import { ProposedItem } from '@/apis/chatRefine';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileModifyType } from '@/components/general/ModifySpan';
-import { synchronizeProject } from '@/utils/apis';
+import { synchronizeProject } from '@/apis';
 import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
 import ReviewItem from '@/components/general/ReviewItem';
 import FileEditorModal from '@/components/modals/FileEditorModal';
@@ -12,7 +12,7 @@ import Spinner from '@/components/general/Spinner';
 
 interface FileChangeType {
   name: string;
-  revisionType: FileModifyType;
+  task: FileModifyType;
   goal: string;
 }
 

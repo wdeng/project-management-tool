@@ -12,9 +12,9 @@ import {
   anwerProjectQAs,
   ProjectSpecs,
   fixProjectIssue,
-} from '@/utils/apis';
+} from '@/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
-import { ChatInputType } from '@/utils/apis/chatRefine';
+import { ChatInputType } from '@/apis/chatRefine';
 import Dropdown from '../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
 import ItemCreationModal from '../modals/ItemCreationModal';

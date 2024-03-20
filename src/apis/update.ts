@@ -1,5 +1,5 @@
 import { FileDesign } from '.';
-import { postReq } from '..';
+import { postReq } from '../utils';
 
 export async function updateFile(projectId: number, fields: Object): Promise<any> {
   return await postReq(`project/${projectId}/update-file`, fields);

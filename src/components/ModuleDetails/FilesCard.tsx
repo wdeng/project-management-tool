@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
-import { FileDesign } from '@/utils/apis';
+import { FileDesign } from '@/apis';
 import FileEditorModal from '../modals/FileEditorModal';
 import FileCreation from './CreateFile';
 import InfoEditorModal from '../modals/InfoEditorModal';

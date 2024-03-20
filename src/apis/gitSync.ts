@@ -1,4 +1,4 @@
-import { createQueryString, getReq, postReq } from "..";
+import { createQueryString, getReq, postReq } from "../utils";
 
 interface Proposed {
   projectId: number;

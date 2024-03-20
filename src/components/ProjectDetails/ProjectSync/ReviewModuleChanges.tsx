@@ -1,11 +1,11 @@
 import React, { useState,ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem } from '@/utils/apis/chatRefine';
+import { ProposedItem } from '@/apis/chatRefine';
 import DiffEditorModal from '../../modals/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ReviewItem from '../../general/ReviewItem';
 import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
-import { finalizeSyncGit } from '@/utils/apis';
+import { finalizeSyncGit } from '@/apis';
 
 interface ModuleReviewPanelProps {
   changes: ProposedItem[];

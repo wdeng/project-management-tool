@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Project, fetchProjects, initProject, buildProject, ProjectDetailResponse } from '../utils/apis';
+import { Project, fetchProjects, initProject, buildProject, ProjectDetailResponse } from '../apis';
 import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard, MdDriveFileMove } from "react-icons/md";
 import Spinner from './general/Spinner';

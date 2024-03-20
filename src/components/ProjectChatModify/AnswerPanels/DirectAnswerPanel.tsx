@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProposedDirectAnswer } from '@/utils/apis/chatRefine';
+import { ProposedDirectAnswer } from '@/apis/chatRefine';
 
 interface ChangesReviewPanelProps {
   answer: ProposedDirectAnswer;

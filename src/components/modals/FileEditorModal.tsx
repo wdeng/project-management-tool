@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import Editor from "@monaco-editor/react";
 import { useSelected } from '@/hooks/useSelectedContext';
-import { FileDesign, fetchSourceCode, updateFile } from '@/utils/apis';
+import { FileDesign, fetchSourceCode, updateFile } from '@/apis';
 import { getFileExtension, languageMap } from '@/utils';
 import { MdOutlineChat, MdSave } from 'react-icons/md';
 import ComplexChat from '../general/ChatFields/ComplexChat';

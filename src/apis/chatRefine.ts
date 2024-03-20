@@ -1,26 +1,26 @@
 import { FileModifyType } from '@/components/general/ModifySpan';
-import { createQueryString, getReq, postReq } from '..';
+import { createQueryString, getReq, postReq } from '../utils';
 
 interface BaseProposed {
-  type: string;
+  target: string;
   name: string;
-  revisionType: FileModifyType;
+  task: FileModifyType;
   content: string;
   original: string;
 }
 
 export interface ProposedFile extends BaseProposed {
-  type: 'file';
+  target: 'file';
   goal: string;
   module: string;
 }
 
 export interface ProposedModule extends BaseProposed {
-  type: 'module';
+  target: 'module';
 }
 
 export interface ProposedDirectAnswer {
-  type: 'answer';
+  target: 'answer';
   content: string;
 }
 

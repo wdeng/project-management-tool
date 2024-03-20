@@ -1,7 +1,7 @@
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import FileEditorModal from '../modals/FileEditorModal'; // Import your EditorModal
 import { useState } from 'react';
-import { ModuleHierarchy } from '@/utils/apis';
+import { ModuleHierarchy } from '@/apis';
 import { checkboxStyles } from '@/utils/tailwindStyles';
 import useRetract from '@/hooks/useRetract';
 

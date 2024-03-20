@@ -5,7 +5,7 @@ import ModTag, { FileModifyType } from './ModifySpan';
 
 export interface Item {
   goal?: string;
-  revisionType: FileModifyType;
+  task: FileModifyType;
   name: string;
 }
 
@@ -38,7 +38,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ change, accept, setEditingItem,
   return (
     <div key={change.name} className="flex justify-between items-center mb-4 bg-white p-3 rounded-lg drop-shadow-sm">
       <div className='flex-grow'>
-        <ModTag type={change.revisionType} />
+        <ModTag task={change.task} />
         <button onClick={() => setEditingItem(change)} className="text-blue-500 underline ml-2">
           {change.name}
         </button>

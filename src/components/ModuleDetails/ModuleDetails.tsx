@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { MdOutlineSubject } from 'react-icons/md'; // Import icons from react-icons
 import { buttonStyles } from '@/utils/tailwindStyles';
 import FilesCard from './FilesCard';
-import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/utils/apis';
+import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
 import TextEditor from '../modals/TextEditor';
 import { useSelected } from '@/hooks/useSelectedContext';

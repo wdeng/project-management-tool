@@ -3,7 +3,7 @@ import { Menu } from '@headlessui/react';
 import { MdSearch, MdRefresh, MdNotifications, MdSettings } from 'react-icons/md';
 import Dropdown from '../general/Dropdown';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { deleteAllFiles, deleteProject } from '@/utils/apis';
+import { deleteAllFiles, deleteProject } from '@/apis';
 
 interface TopBarProps {
   syncProject: () => void;

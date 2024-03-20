@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
-import { ProposedItem, confirmProjectChanges } from '@/utils/apis/chatRefine';
+import { ProposedItem, confirmProjectChanges } from '@/apis/chatRefine';
 import DiffEditorModal from '../../modals/DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ReviewItem from '@/components/general/ReviewItem';

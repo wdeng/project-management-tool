@@ -1,4 +1,4 @@
-import { deleteReq, getReq, postReq } from '..';
+import { deleteReq, getReq, postReq } from '../utils';
 import { ChatInputType } from './chatRefine';
 export * from './update';
 export * from './gitSync';
