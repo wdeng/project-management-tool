@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Project, fetchProjects, initProject, buildProject, ProjectDetailResponse } from '../../apis';
-import ProjectCreationModal from '../CreateProject/ProjectCreationModal';
+import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard, MdDriveFileMove } from "react-icons/md";
 import Spinner from '../general/Spinner';
 import RetractMenu from '../general/RetractMenu';
@@ -16,7 +16,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
 }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [buildingProjects, setBuildingProjects] = useState<number[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
 
   async function fetchData() {
     try {
@@ -72,7 +72,6 @@ export const ProjectList: React.FC<ProjectListProps> = ({
   return (
     <div className="overflow-y-auto h-full">
       <ProjectCreationModal onNewProject={handleNewProject} onProjectBuild={handleProjectBuild} />
-      {error && <p className="text-red-500">{error}</p>}
       <RetractMenu>
         <li
           className={`pl-4 pr-2 py-1 flex items-center rounded-l-md text-white cursor-pointer transition-all ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === null ? 'bg-indigo-500' : ''}`}

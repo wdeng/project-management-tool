@@ -5,7 +5,7 @@ import { FaFileImport } from "react-icons/fa";
 import { ImMakeGroup } from "react-icons/im";
 import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
-import { SetCreationGoal } from '../modals/SetCreationGoal';
+import { SetCreationGoal } from '../../modals/SetCreationGoal';
 import {
   QuestionChoices,
   setProjectGoal,
@@ -15,9 +15,9 @@ import {
   ChatInputType,
 } from '@/apis';
 import { ReviewProjectSpecs } from './ReviewProjectSpecs';
-import Dropdown from '../general/Dropdown';
+import Dropdown from '../../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
-import ItemCreationModal from '../modals/ItemCreationModal';
+import ItemCreationModal from '../../modals/ItemCreationModal';
 
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;

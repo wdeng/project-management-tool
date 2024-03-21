@@ -1,6 +1,6 @@
 import React, { useState, ReactElement, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
-import { MdClose, MdOutlineChat } from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { ChatInputType, ProposedDirectAnswer, ProposedItem, RefineResource, clearIssueHistory, getIssueHistory, resolveIssues } from '@/apis';
 import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
@@ -9,6 +9,7 @@ import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import ResourcesSelector from '../general/ResourcesSelector';
 import ImageChatInput from '../general/ChatFields/ImageChat';
+import { HiSparkles } from "react-icons/hi2";
 
 interface ChatButtonProps {
 }
@@ -137,7 +138,7 @@ const ChatButton = ({ }: ChatButtonProps) => {
           className="absolute bottom-3 right-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded-3xl drop-shadow-lg transition ease-in-out hover:scale-105"
           onClick={toggleChat}
         >
-          <MdOutlineChat size={20} />
+          <HiSparkles size={20} />
         </button>
       </Transition>
     </div>

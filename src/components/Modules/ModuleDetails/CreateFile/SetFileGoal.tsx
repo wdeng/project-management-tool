@@ -4,7 +4,7 @@ import { buttonStyles, textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useState } from 'react';
 
 interface Props {
-  onSubmit: (goal: string) => void;
+  onSubmit: (goal: string, resourcesEnabled: RefineResource[], selectedCheckboxOptions: number[]) => void;
 }
 
 export const SetFileGoal: React.FC<Props> = ({
@@ -19,7 +19,7 @@ export const SetFileGoal: React.FC<Props> = ({
   const handleSubmit = (event: React.FormEvent) => {
     console.log('submitting file goal');
     event.preventDefault();
-    onSubmit(overview);
+    onSubmit(overview, resourcesEnabled, selectedCheckboxOptions);
     setOverview(""); // reset form
   };
 

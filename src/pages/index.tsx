@@ -97,9 +97,9 @@ export default function Home() {
               canBuild={canBuild}
               moduleDetails={selectedModule}
             />
-            <ChatButton />
           </> : projectDetails && <ProjectDetails {...projectDetails} projectId={selectedProjectId!} />}
         </div>
+        {projectDetails && <ChatButton />}
       </div>
     </SelectedContext.Provider>
   );

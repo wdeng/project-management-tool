@@ -1,4 +1,4 @@
-import { buttonStyles, checkboxStyles } from '../../utils/tailwindStyles';
+import { buttonStyles, checkboxStyles } from '../../../utils/tailwindStyles';
 import { QuestionChoices } from '@/apis';
 import React, { useState } from 'react';
 

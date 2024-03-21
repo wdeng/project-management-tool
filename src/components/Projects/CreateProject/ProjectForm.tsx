@@ -1,4 +1,4 @@
-import { buttonStyles, textAreaStyles } from '../../utils/tailwindStyles';
+import { buttonStyles, textAreaStyles } from '../../../utils/tailwindStyles';
 import React, { useState } from 'react';
 
 interface ProjectFormProps {

@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { MdAddCircleOutline } from 'react-icons/md'; // MdDriveFileMove
 import ItemCreationModal from '@/components/modals/ItemCreationModal';
 import { SetFileGoal } from './SetFileGoal';
+import { useSelected } from '@/hooks/useSelectedContext';
+import { RefineResource, promptCreateFile } from '@/apis';
+import { ReviewSpecs } from '../../ReviewSpecs';
 
 interface Props {
 }
 
 const FileCreation: React.FC<Props> = ({ }) => {
+  const { selectedProjectId } = useSelected();
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState('SetGoal');
@@ -15,32 +19,42 @@ const FileCreation: React.FC<Props> = ({ }) => {
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  const handleGoalSubmit = async (goal: string) => {
-    // Start the loading state
-    setIsLoading(true);
+  const currentComponent = useMemo(() => {
+    const handleGoalSubmit = async (
+      goal: string,
+      resources: RefineResource[],
+      selectedCheckboxOptions: number[],
+    ) => {
+      // Start the loading state
+      if (!selectedProjectId) return;
+      setIsLoading(true);
 
-    try {
-      // Simulate an async operation e.g. making API request.
-      // const res = await 
-      setCurrentStep('SetGoal');
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // End the loading state
-      setIsLoading(false);
+      try {
+        // Simulate an async operation e.g. making API request.
+        const res = await promptCreateFile(
+          selectedProjectId,
+          goal,
+          selectedCheckboxOptions,
+          resources,
+        );
+        setCurrentStep('ReviewSpecs');
+      } catch (error) {
+        console.error(error);
+      } finally {
+        // End the loading state
+        setIsLoading(false);
+      }
+    };
+
+    switch (currentStep) {
+      case 'SetGoal':
+        return <SetFileGoal onSubmit={handleGoalSubmit} />;
+      case 'ReviewSpecs':
+        return <ReviewSpecs specs='123' />;
+      default:
+        return <SetFileGoal onSubmit={handleGoalSubmit} />;
     }
-  };
-
-  
-
-  let currentComponent;
-  switch (currentStep) {
-    case 'SetGoal':
-      currentComponent = <SetFileGoal onSubmit={handleGoalSubmit} />;
-      break;
-    default:
-      currentComponent = null;
-  }
+  }, [currentStep, selectedProjectId]);
 
   return (
     <>

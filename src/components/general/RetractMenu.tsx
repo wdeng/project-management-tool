@@ -1,6 +1,7 @@
 import { Menu } from '@headlessui/react';
 import React from 'react';
 import { MdKeyboardArrowDown, MdMenu } from 'react-icons/md';
+import { HiDotsHorizontal } from "react-icons/hi";
 import Dropdown from './Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
 import useRetract from '@/hooks/useRetract';
@@ -26,7 +27,7 @@ const RetractMenu: React.FC<Props> = ({
         </button>
         <Menu as="div" className="relative">
           <Menu.Button className='p-2 hover:text-gray-300' >
-            <MdMenu size={16} />
+            <HiDotsHorizontal size={16} />
           </Menu.Button>
           <Dropdown>
             <Menu.Items className={`${contextMenuStyles} min-w-[100px]`}>

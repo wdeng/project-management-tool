@@ -38,7 +38,6 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
       try {
         // Simulate an async operation e.g. making API request.
         // const res = await 
-
         setCurrentStep('ReviewSpecs');
       } catch (error) {
         console.error(error);
@@ -50,9 +49,9 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
 
     switch (currentStep) {
       case 'SetGoal':
-        return <ReviewSpecs specs='123' />;
+        return <SetCreationGoal onGoalSubmit={handleGoalSubmit} />;
       case 'ReviewSpecs':
-        return null;
+        return <ReviewSpecs specs='123' />;
       default:
         return <SetCreationGoal onGoalSubmit={handleGoalSubmit} />;
     }
