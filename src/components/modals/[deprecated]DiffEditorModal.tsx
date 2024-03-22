@@ -17,7 +17,7 @@ interface EditorModalProps {
 
 const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file }) => {
   const languageType = useMemo(() => {
-    const extension = getFileExtension(file?.name || "yaml");
+    const extension = getFileExtension(file?.name) || "yaml";
     return languageMap[extension] || extension;
   }, [file]);
 
@@ -60,4 +60,3 @@ const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file
 };
 
 export default EditorModal;
-

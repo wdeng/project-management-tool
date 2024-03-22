@@ -5,6 +5,7 @@ export interface FileDesign {
   id: number;
   path: string;
   goal?: string;
+  original?: string;
   content?: string;
   status?: 'pending' | 'done';
 }
@@ -32,7 +33,7 @@ export async function updateFile(projectId: number, fields: Object): Promise<any
 
 export async function promptCreateFile(
   projectId: number,
-  userInput: string,
+  userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
 ): Promise<any> {
@@ -53,7 +54,6 @@ export async function promptUpdateFile(
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
 ): Promise<any> {
-  throw new Error("Not implemented userInput properly" );
   const fields = {
     target: 'file',
     projectId,

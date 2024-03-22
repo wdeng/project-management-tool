@@ -23,18 +23,23 @@ const FileCreation: React.FC<Props> = ({ }) => {
     const handleGoalSubmit = async (
       goal: string,
       resources: RefineResource[],
-      selectedCheckboxOptions: number[],
+      selectedFileIds: number[],
     ) => {
       // Start the loading state
       if (!selectedProjectId) return;
       setIsLoading(true);
 
       try {
-        // Simulate an async operation e.g. making API request.
+        console.log("goal", goal);
+        console.log("resources", resources);
+        console.log("selectedCheckboxOptions", selectedFileIds);
+        console.log("selectedProjectId", selectedProjectId);
+
+
         const res = await promptCreateFile(
           selectedProjectId,
-          goal,
-          selectedCheckboxOptions,
+          { text: goal },
+          selectedFileIds,
           resources,
         );
         setCurrentStep('ReviewSpecs');

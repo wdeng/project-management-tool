@@ -30,7 +30,9 @@ export function camelToTitle(camelStr: string) {
     .join(' ');  // Join the words back into a single string
 }
 
-export function getFileExtension(filename: string) {
+export function getFileExtension(filename?: string) {
+  if (!filename)
+    return undefined;
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
 }
 

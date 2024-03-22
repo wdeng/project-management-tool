@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { FileDesign, fetchSourceCode, updateFile } from '@/apis';
-import { InfoEditor } from '../general/DescView';
+import { InfoEditor } from './InfoEditor';
 
 interface InfoEditorModalProps {
   onClose: () => void;

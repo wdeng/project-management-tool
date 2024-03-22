@@ -1,7 +1,7 @@
 import React, { useState,ReactElement } from 'react';
 import { outlineButtonStyles } from '@/utils/tailwindStyles';
 import { ProposedItem } from '@/apis';
-import DiffEditorModal from '../../modals/DiffEditorModal';
+import DiffEditorModal from '../../modals/[deprecated]DiffEditorModal';
 import { useSelected } from '@/hooks/useSelectedContext';
 import ReviewItem from '../../general/ReviewItem';
 import { AcceptIgnoreType } from '@/components/general/AcceptIgnoreTab';
