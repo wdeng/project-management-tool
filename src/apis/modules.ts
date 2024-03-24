@@ -1,6 +1,6 @@
 import { createQueryString, getReq, postReq } from "@/utils";
-import { FileDesign } from "./files";
-import { RefineResource } from "./refine";
+import { ElementDesign } from "./files";
+import { ChatInputType, RefineResource } from "./refine";
 
 export interface ModuleHierarchy {
   id: number;
@@ -8,7 +8,7 @@ export interface ModuleHierarchy {
   name: string;
   description: string;
   functionalRequirements: string[];
-  files: FileDesign[];
+  files: ElementDesign[];
   status?: string;
   modules?: ModuleHierarchy[];
 }
@@ -17,7 +17,7 @@ export interface ModuleImplement {
   id: number;
   name: string;
   description: string;
-  files: FileDesign[];
+  files: ElementDesign[];
   status: 'pending' | 'done' | 'failure';
   [key: string]: any
 }
@@ -52,13 +52,11 @@ export async function updateModuleSpecs(projectId: number, moduleId: number, spe
 
 export async function finalizeModule(
   projectId: number,
-  moduleId: number,
   data: object,
-  task: "create" | "modify"
+  task: "create" | "modify" = "create",
 ): Promise<any> {
   return await postReq(`module/finalize-update`, {
     projectId,
-    moduleId,
     data,
     task,
   });
@@ -66,10 +64,10 @@ export async function finalizeModule(
 
 export async function smartCreateModule(
   projectId: number,
-  userInput: string,
+  userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
-): Promise<any> {
+): Promise<ElementDesign> {
   const fields = {
     projectId,
     userInput,
@@ -82,10 +80,10 @@ export async function smartCreateModule(
 export async function smartUpdateModule(
   projectId: number,
   mainElement: string,
-  userInput: string,
+  userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
-): Promise<any> {
+): Promise<ElementDesign> {
   const fields = {
     projectId,
     mainElement,

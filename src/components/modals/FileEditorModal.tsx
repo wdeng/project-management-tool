@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { FileDesign, getSourceCode, updateGuidelines, updateSource } from '@/apis';
+import { ElementDesign, getSourceCode, updateGuidelines, updateSource } from '@/apis';
 import { MdSave } from 'react-icons/md';
 import ComplexChat from '../general/ChatFields/ComplexChat';
 import ContentEditor from './ContentEditor';
@@ -17,8 +17,8 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
   onClose, fileIdOrName, allowChat = true
 }) => {
   const { selectedProjectId } = useSelected();
-  const [file, setFile] = useState<FileDesign | undefined>(undefined);
-  const orgFile = useRef<FileDesign | null>(null);
+  const [file, setFile] = useState<ElementDesign | undefined>(undefined);
+  const orgFile = useRef<ElementDesign | null>(null);
   const [saved, setSaved] = useState(true);
 
   useEffect(() => {

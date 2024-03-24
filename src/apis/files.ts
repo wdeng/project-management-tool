@@ -1,7 +1,7 @@
 import { getReq, postReq } from "@/utils";
 import { ChatInputType, RefineResource } from "./refine";
 
-export interface FileDesign {
+export interface ElementDesign {
   id: number;
   name: string;
   goal?: string;
@@ -13,7 +13,7 @@ export interface FileDesign {
 }
 
 
-export async function getSourceCode(projectId: number, fileId: number | string): Promise<FileDesign> {
+export async function getSourceCode(projectId: number, fileId: number | string): Promise<ElementDesign> {
   let apiUrl = `file/source?project-id=${projectId}`;
 
   if (typeof fileId === 'string') {
@@ -44,7 +44,7 @@ export async function smartCreateFile(
   userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
-): Promise<any> {
+): Promise<ElementDesign> {
   const fields = {
     projectId,
     fileIds,
@@ -56,11 +56,11 @@ export async function smartCreateFile(
 
 export async function smartUpdateFile(
   projectId: number,
-  mainElement: FileDesign,
+  mainElement: ElementDesign,
   userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],
-): Promise<any> {
+): Promise<ElementDesign> {
   const fields = {
     projectId,
     mainElement,
@@ -71,6 +71,6 @@ export async function smartUpdateFile(
   return await postReq(`file/smart-update`, fields);
 }
 
-export async function createFile(projectId: number, file: FileDesign): Promise<any> {
+export async function createFile(projectId: number, file: ElementDesign): Promise<any> {
   return await postReq('file/finalize-source', { projectId, data: file, task: "create" });
 }

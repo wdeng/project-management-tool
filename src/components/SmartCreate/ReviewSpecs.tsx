@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FileDesign, updateSource } from '@/apis';
+import { ElementDesign, updateSource, finalizeModule } from '@/apis';
 import DynamicForm, { ElementTypeMapping } from '@/components/modals/DynamicForm';
 import { GeneralData } from '@/utils/types';
 
 interface ReviewSpecsProps {
-  onClose: () => void;
-  orgFile: FileDesign;
+  close: () => void;
+  orgItem: ElementDesign;
   projectId: number;
+  itemType: 'file' | 'module';
 }
 
 const elementTypes: ElementTypeMapping = {
@@ -15,37 +16,43 @@ const elementTypes: ElementTypeMapping = {
   content: { type: 'editor' },
 };
 
-const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ onClose, orgFile, projectId }) => {
-  const [file, setFile] = useState<FileDesign>(orgFile);
+const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, itemType }) => {
+  const [item, setItem] = useState<ElementDesign>(orgItem);
 
   useEffect(() => {
-    setFile(orgFile);
-  }, [orgFile]);
+    setItem(orgItem);
+  }, [orgItem]);
 
   const handleContentChange = (key: string, value: string | GeneralData) => {
-    setFile((prevFile) => ({ ...prevFile, [key]: value }));
+    setItem((prevItem) => ({ ...prevItem, [key]: value }));
   };
 
   const handleSave = () => {
-    updateSource(projectId, {
-      name: file.name,
-      content: file,
-    }).then(() => {
-      onClose();
-    });
+    if (itemType === 'file') {
+      updateSource(projectId, {
+        name: item.name,
+        content: item as ElementDesign,
+      }).then(() => {
+        close();
+      });
+    } else {
+      finalizeModule(projectId, item).then(() => {
+        close();
+      });
+    }
   };
 
   const formData = useMemo(() => {
     return {
-      name: file.name,
-      goal: file.goal || '',
+      name: item.name,
+      goal: item.goal || '',
       content: {
-        name: file.name,
-        content: file.content,
-        original: orgFile.content,
+        name: item.name,
+        content: item.content,
+        original: orgItem.content,
       },
     };
-  }, [file, orgFile]);
+  }, [item, orgItem]);
 
   return (
     <div>
@@ -62,7 +69,7 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ onClose, orgFile, projectId }
           Save
         </button>
         <button
-          onClick={onClose}
+          onClick={close}
           className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
         >
           Cancel

@@ -6,7 +6,7 @@ import { GeneralData } from '@/utils/types';
 
 export interface ElementTypeMapping {
   [key: string]: {
-    type: 'textarea' | 'textfield' | 'label' | 'editor';
+    type: 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
   };
 }
 

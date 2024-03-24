@@ -1,6 +1,6 @@
 import React from 'react';
 import Editor, { DiffEditor } from "@monaco-editor/react";
-import { FileDesign } from '@/apis';
+import { ElementDesign } from '@/apis';
 
 interface FileEditorProps {
   editorHeight?: string;
@@ -72,13 +72,13 @@ const ContentEditor: React.FC<FileEditorProps> = ({
 export default ContentEditor;
 
 
-const areDiff = (file1: FileDesign, file2?: FileDesign | null): boolean => {
+const areDiff = (file1: ElementDesign, file2?: ElementDesign | null): boolean => {
   if (!file2)
     return true
-  const allKeys: (keyof FileDesign)[] = ["id", "name", "goal", "content"];
+  const allKeys: (keyof ElementDesign)[] = ["id", "name", "goal", "content"];
 
   for (const key of allKeys) {
-    if (file1[key] !== file2[key as keyof FileDesign]) {
+    if (file1[key] !== file2[key as keyof ElementDesign]) {
       return true;
     }
   }

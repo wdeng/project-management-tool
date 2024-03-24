@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../../../modals/Modal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { FileDesign, getSourceCode, updateSource } from '@/apis';
+import { ElementDesign, getSourceCode, updateSource } from '@/apis';
 import DynamicForm, { ElementTypeMapping } from '@/components/modals/DynamicForm';
 import { MdSave } from 'react-icons/md';
 
@@ -19,8 +19,8 @@ const elementTypes: ElementTypeMapping = {
 
 const FileInfoModal: React.FC<FileInfoModalProps> = ({ onClose, fileIdOrName, onContentChange }) => {
   const { selectedProjectId } = useSelected();
-  const [file, setFile] = useState<FileDesign | undefined>(undefined);
-  const orgFile = useRef<FileDesign | null>(null);
+  const [file, setFile] = useState<ElementDesign | undefined>(undefined);
+  const orgFile = useRef<ElementDesign | null>(null);
   const [saved, setSaved] = useState(true);
 
   useEffect(() => {
