@@ -26,7 +26,7 @@ function handleEditorWillMount(monaco: Monaco) {
   });
 }
 
-const TextEditor: React.FC<TextEditorModalProps> = ({ onClose, isOpen, title, handleSave, initialContent, languageType = "yaml", barButtons = [] }) => {
+const TextEditorModal: React.FC<TextEditorModalProps> = ({ onClose, isOpen, title, handleSave, initialContent, languageType = "yaml", barButtons = [] }) => {
   const [content, setContent] = useState<string>(initialContent || "");
   useEffect(() => {
     setContent(initialContent || "");
@@ -72,4 +72,4 @@ const TextEditor: React.FC<TextEditorModalProps> = ({ onClose, isOpen, title, ha
   );
 };
 
-export default TextEditor;
+export default TextEditorModal;

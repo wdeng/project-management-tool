@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import { FileDesign } from '@/apis';
-import FileEditorModal from '../../modals/FileEditorModal';
-import FileCreation from './CreateFile';
-import InfoEditorModal from '../../modals/InfoEditorModal';
+import FileEditorModal from '../../../modals/FileEditorModal';
+import FileCreation from '../../../SmartCreate/CreateItem';
+import InfoEditorModal from './FileInfoModal';
 
 interface IFileCardProps {
   files: FileDesign[];
@@ -18,15 +18,15 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
     setEditorKind(kind);
   };
 
-  const modal = useMemo(() => {
+  const Modal = useMemo(() => {
     const closeEditor = () => setEditingFileID(null);
     const Modal = editorKind === "editor" ? FileEditorModal : InfoEditorModal;
-    return <Modal fileId={editingFileID} onClose={closeEditor} />
+    return <Modal fileIdOrName={editingFileID} onClose={closeEditor} />
   }, [editingFileID, editorKind]);
 
   return (
     <div className="flex flex-wrap items-start">
-      {modal}
+      {Modal}
       {files.map((file) => (
         <div
           key={file.id}
@@ -37,7 +37,7 @@ const FilesCard: React.FC<IFileCardProps> = ({ files }) => {
         >
           <div className="flex justify-between items-center">
             <h3 className="font-medium text-base truncate text-gray-700">
-              {file.path.substring(0, file.path.lastIndexOf('.'))}
+              {file.name.substring(0, file.name.lastIndexOf('.'))}
             </h3>
             <button className="text-gray-400 hover:text-gray-600 p-1 mr-[-0.25rem]" onClick={(ev) => {
               ev.stopPropagation();

@@ -72,6 +72,5 @@ export async function clearIssueHistory(projectId: number): Promise<any> {
 
 export async function getIssueHistory(projectId: number): Promise<any> {
   const queries = createQueryString({ 'project-id': projectId });
-  console.log(`resolve-issues/history?${queries}`);
   return await getReq(`resolve-issues/history?${queries}`);
 }

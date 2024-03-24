@@ -11,5 +11,5 @@ export interface Project {
 }
 
 export async function fetchProjects(): Promise<Project[]> {
-  return await getReq('projects');
+  return await getReq('project/list');
 }

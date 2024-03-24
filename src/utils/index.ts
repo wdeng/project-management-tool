@@ -30,9 +30,9 @@ export function camelToTitle(camelStr: string) {
     .join(' ');  // Join the words back into a single string
 }
 
-export function getFileExtension(filename?: string) {
+export function getExt(filename?: string) {
   if (!filename)
-    return undefined;
+    return "";
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
 }
 
@@ -54,6 +54,7 @@ export const languageMap: Record<string, string> = {
   "ts": "typescript",
   "tsx": "typescript",
   "yml": "yaml",
+  "": "yaml",
 }
 
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://skapi.wenxiangdeng.com';
@@ -93,18 +94,18 @@ export const getReq = async (url: string) => {
   return response.json();
 }
 
-export const deleteReq = async (url: string) => {
-  const response = await fetch(`${API_BASE_URL}/${url}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json'
-    },
-  });
+// export const deleteReq = async (url: string) => {
+//   const response = await fetch(`${API_BASE_URL}/${url}`, {
+//     method: 'DELETE',
+//     credentials: 'include',
+//     headers: {
+//       'Accept': 'application/json'
+//     },
+//   });
 
-  if (!response.ok) {
-    console.log(`HTTP error! status: ${response.status}`);
-  }
+//   if (!response.ok) {
+//     console.log(`HTTP error! status: ${response.status}`);
+//   }
 
-  return response.json();
-}
+//   return response.json();
+// }

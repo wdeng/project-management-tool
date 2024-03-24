@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import { FileDesign } from '@/apis';
-import { getFileExtension, languageMap } from '@/utils';
 
 interface FileEditorProps {
+  editorHeight?: string;
   handleContentChange?: (content: string | undefined) => void;
-  path?: string;
+  langType?: string;
   content?: string;
   original?: string;
 }
@@ -21,36 +21,25 @@ function handleEditorWillMount(monaco: any) {
   });
 }
 
-const FileEditor: React.FC<FileEditorProps> = ({
-  path,
+const ContentEditor: React.FC<FileEditorProps> = ({
+  editorHeight = "90vh",
+  langType = "yaml",
   content,
   original,
   handleContentChange,
 }) => {
-  const [languageType, setLanguageType] = useState<string>("");
-  useEffect(() => {
-    const ext = getFileExtension(path) || "yaml";
-    setLanguageType(languageMap[ext] || ext);
-  }, [path]);
-
-  const handleEditorChange = (value?: string) => {
-    console.log("Editor changed", value);
-    handleContentChange && handleContentChange(value);
-  };
-
   if (original) {
     return (
       <DiffEditor
         beforeMount={handleEditorWillMount}
-        height="90vh"
-        language={languageType}
+        height={editorHeight}
+        language={langType || "yaml"}
         original={original}
         modified={content}
         onMount={(editor) => {
           editor.getModifiedEditor().onDidChangeModelContent(() => {
             const value = editor.getModifiedEditor().getValue();
-            console.log("Editor changed",);
-            handleEditorChange(value);
+            handleContentChange && handleContentChange(value);
           });
         }}
         theme="vs-dark"
@@ -67,10 +56,10 @@ const FileEditor: React.FC<FileEditorProps> = ({
   return (
     <Editor
       beforeMount={handleEditorWillMount}
-      height="90vh"
-      language={languageType}
+      height={editorHeight}
+      language={langType || "yaml"}
       value={content}
-      onChange={handleEditorChange}
+      onChange={handleContentChange}
       theme="vs-dark"
       options={{
         fontSize: 13,
@@ -80,13 +69,13 @@ const FileEditor: React.FC<FileEditorProps> = ({
   );
 };
 
-export default FileEditor;
+export default ContentEditor;
 
 
 const areDiff = (file1: FileDesign, file2?: FileDesign | null): boolean => {
   if (!file2)
     return true
-  const allKeys: (keyof FileDesign)[] = ["id", "path", "goal", "content"];
+  const allKeys: (keyof FileDesign)[] = ["id", "name", "goal", "content"];
 
   for (const key of allKeys) {
     if (file1[key] !== file2[key as keyof FileDesign]) {

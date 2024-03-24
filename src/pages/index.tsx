@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/Projects/ProjectsList';
 import ModuleList from '../components/Modules/ModuleList';
 import ModuleDetails from '../components/Modules/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, fetchModuleDetails } from '@/apis';
+import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, getModuleDetails } from '@/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 import ProjectDetails from '@/components/Projects/Project';
@@ -17,7 +17,7 @@ export default function Home() {
   const handleModuleSelect = useCallback(async (moduleId: number) => {
     if (!selectedProjectId) return;
     if (moduleId > 0) {
-      const m = await fetchModuleDetails(selectedProjectId, moduleId);
+      const m = await getModuleDetails(selectedProjectId, moduleId);
       setSelectedModule(m);
     } else
       setSelectedModule(null);
@@ -56,7 +56,7 @@ export default function Home() {
     selectedModule && setSelectedModule(null);
   };
 
-  const handleModuleBuild = async (moduleName: string, moduleId: number, targets?: string) => {
+  const handleModuleBuild = async (moduleName: string, moduleId: number, targets?: "code" | "module" | "both") => {
     if (executingName || !selectedProjectId) return;
     setExecuting(moduleName);
     const next = await buildModule(selectedProjectId, moduleId, targets);
@@ -68,7 +68,7 @@ export default function Home() {
       };
     });
     setExecuting("");
-    const m = await fetchModuleDetails(selectedProjectId, moduleId);
+    const m = await getModuleDetails(selectedProjectId, moduleId);
     setSelectedModule(m);
   };
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { buttonStyles } from '@/utils/tailwindStyles';
-import FilesCard from './FilesCard';
+import FilesCard from './Files/FilesCard';
 import { ModuleHierarchy } from '@/apis';
-import ElementSettingsModal from './ElementSettings';
+import ModuleSettingsModal from './ModuleSettings';
 
 interface IModuleDetailsProps {
-  moduleBuild: (moduleName: string, moduleId: number, target?: string) => Promise<void>;
+  moduleBuild: (moduleName: string, moduleId: number, target?: "code" | "module" | "both") => Promise<void>;
   canBuild?: "warning" | true | false | null;
   moduleDetails: ModuleHierarchy;
 }
@@ -60,7 +60,7 @@ export const ModuleDetails: React.FC<IModuleDetailsProps> = ({ moduleBuild, canB
           <h1 className='text-3xl font-medium pb-2'>
             {name}
           </h1>
-          <ElementSettingsModal moduleDetails={moduleDetails} canBuild={canBuild} />
+          <ModuleSettingsModal moduleDetails={moduleDetails} canBuild={canBuild} moduleBuild={moduleBuild} />
         </div>
         <p className='mb-2'>{moduleDetails.description}</p>
         {requires?.length && <>

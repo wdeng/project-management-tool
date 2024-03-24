@@ -8,12 +8,13 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
 
-interface ElementSettingsModalProps {
+interface ModuleSettingsModalProps {
   moduleDetails: ModuleHierarchy;
   canBuild?: "warning" | true | false | null;
+  moduleBuild: (name: string, id: number, type: 'module' | 'code') => void;
 }
 
-export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ moduleDetails, canBuild }) => {
+export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ moduleDetails, canBuild, moduleBuild }) => {
   const { selectedProjectId, refreshCurrentProject } = useSelected();
 
   const [moduleEditorOpen, setModuleEditorOpen] = useState(false);
@@ -29,6 +30,18 @@ export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ modu
     return yaml.dump({ name, description, functionalRequirements })
   }, [moduleDetails]);
 
+  const makeGuidelines = async (ev: React.MouseEvent) => {
+    ev.preventDefault();
+    if (moduleDetails)
+      moduleBuild(moduleDetails.name, moduleDetails.id, 'module');
+  }
+
+  const implementFiles = async (ev: React.MouseEvent) => {
+    ev.preventDefault();
+    if (moduleDetails)
+      moduleBuild(moduleDetails.name, moduleDetails.id, 'code');
+  }
+
   return (
     <>
       <Menu as="div" className="relative mb-2">
@@ -37,7 +50,7 @@ export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ modu
         </Menu.Button>
         <Dropdown>
           <Menu.Items className={`${contextMenuStyles} min-w-[160px]`}>
-          <Menu.Item>
+            <Menu.Item>
               <button
                 className={contextMenuItemStyles}
                 onClick={() => setModuleEditorOpen(true)}
@@ -48,7 +61,7 @@ export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ modu
             <Menu.Item>
               <button
                 className={contextMenuItemStyles}
-                onClick={() => setModuleEditorOpen(true)}
+                onClick={makeGuidelines}
               >
                 Create Guidelines
               </button>
@@ -56,7 +69,7 @@ export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ modu
             <Menu.Item>
               <button
                 className={contextMenuItemStyles}
-                onClick={() => setModuleEditorOpen(true)}
+                onClick={implementFiles}
               >
                 Implement Files
               </button>
@@ -77,4 +90,4 @@ export const ElementSettingsModal: React.FC<ElementSettingsModalProps> = ({ modu
   );
 };
 
-export default ElementSettingsModal;
+export default ModuleSettingsModal;

@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import Modal from './Modal';
 import { DiffEditor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import { getFileExtension, languageMap } from '@/utils';
+import { getExt, languageMap } from '@/utils';
 
 
 interface EditorModalProps {
@@ -17,7 +17,7 @@ interface EditorModalProps {
 
 const EditorModal: React.FC<EditorModalProps> = ({ onClose, contentUpdated, file }) => {
   const languageType = useMemo(() => {
-    const extension = getFileExtension(file?.name) || "yaml";
+    const extension = getExt(file?.name) || "yaml";
     return languageMap[extension] || extension;
   }, [file]);
 

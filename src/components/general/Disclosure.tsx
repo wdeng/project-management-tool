@@ -52,25 +52,25 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
             {aModule.files?.map((file) => {
               if (file.status !== "pending")
                 return (
-                  <div className="flex items-center space-x-2 mr-8 p-1" key={file.path}>
+                  <div className="flex items-center space-x-2 mr-8 p-1" key={file.name}>
                     <div className="hover:scale-110">
                       <input
                         type="checkbox"
-                        id={file.path}
+                        id={file.name}
                         checked={selectedCheckboxOptions.includes(file.id)}
                         onChange={() => handleCheckboxChange(file.id)}
                         className={checkboxStyles}
                       />
                     </div>
                     <label
-                      htmlFor={file.path}
+                      htmlFor={file.name}
                       onClick={(event) => {
                         event.preventDefault();
                         openEditor(file.id);
                       }}
                       className="cursor-pointer hover:text-indigo-700 hover:underline"
                     >
-                      {file.path}
+                      {file.name}
                     </label>
                   </div>
                 )
@@ -87,7 +87,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
           ))}
         </div>}
       </div>
-      <FileEditorModal fileId={editingFileId} onClose={closeEditor} allowChat={false} />
+      <FileEditorModal fileIdOrName={editingFileId} onClose={closeEditor} allowChat={false} />
     </>
   );
 };

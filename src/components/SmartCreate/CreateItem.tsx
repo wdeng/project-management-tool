@@ -1,15 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { MdAddCircleOutline } from 'react-icons/md'; // MdDriveFileMove
 import ItemCreationModal from '@/components/modals/ItemCreationModal';
-import { SetFileGoal } from './SetFileGoal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { RefineResource, promptCreateFile } from '@/apis';
-import { ReviewSpecs } from '../../ReviewSpecs';
+import { RefineResource, smartCreateFile } from '@/apis';
+import { ReviewSpecs } from '../Modules/ReviewSpecs';
+import SetCreationGoal from './SetCreationGoal';
 
 interface Props {
+  buttonStyle?: string;
 }
-
-const FileCreation: React.FC<Props> = ({ }) => {
+// "py-10 mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-64 h-32 transition ease-in-out delay-100 hover:scale-110 duration-300 flex items-center justify-center"
+const CreateItem: React.FC<Props> = ({ buttonStyle }) => {
   const { selectedProjectId } = useSelected();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,7 +37,7 @@ const FileCreation: React.FC<Props> = ({ }) => {
         console.log("selectedProjectId", selectedProjectId);
 
 
-        const res = await promptCreateFile(
+        const res = await smartCreateFile(
           selectedProjectId,
           { text: goal },
           selectedFileIds,
@@ -53,18 +54,18 @@ const FileCreation: React.FC<Props> = ({ }) => {
 
     switch (currentStep) {
       case 'SetGoal':
-        return <SetFileGoal onSubmit={handleGoalSubmit} />;
+        return <SetCreationGoal onSubmit={handleGoalSubmit} />;
       case 'ReviewSpecs':
         return <ReviewSpecs specs='123' />;
       default:
-        return <SetFileGoal onSubmit={handleGoalSubmit} />;
+        return <SetCreationGoal onSubmit={handleGoalSubmit} />;
     }
   }, [currentStep, selectedProjectId]);
 
   return (
     <>
       <button
-        className="py-10 mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-64 h-32 transition ease-in-out delay-100 hover:scale-110 duration-300 flex items-center justify-center"
+        className={`${buttonStyle} flex items-center justify-center`}
         onClick={open}
         role="button"
         tabIndex={0}
@@ -79,4 +80,4 @@ const FileCreation: React.FC<Props> = ({ }) => {
   );
 };
 
-export default FileCreation;
+export default CreateItem;

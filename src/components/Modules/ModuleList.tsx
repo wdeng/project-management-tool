@@ -83,8 +83,6 @@ export const ModuleList: React.FC<IModuleListProps> = ({ onModuleSelect, modules
     </li>
   );
 
-
-
   return (
     <>
       <div className="w-full h-full overflow-auto">

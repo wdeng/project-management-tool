@@ -7,7 +7,7 @@ export async function initProject(name: string, folder: string, requirements: st
 }
 
 export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]> {
-  const modules = await getReq(`project/${projectId}/modules`);
+  const modules = await getReq(`project/modules?project-id=${projectId}`);
 
   // Create tabLevels for modules and include files
   const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
@@ -25,9 +25,10 @@ export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]
 
 
 export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
-  let url = `project/${projectId}/modules`;
+  let url = `project/modules`;
   if (projectDetails)
-    url = `project/${projectId}/details`;
+    url = `project/details`;
+  url += `?project-id=${projectId}`;
   const resp = await getReq(url);
 
   const [modules, moduleIds] = parseProjectModules(resp.modules);
@@ -35,11 +36,17 @@ export async function fetchProjectModules(projectId: number, projectDetails = tr
 }
 
 export async function updateProjectSpecs(projectId: number, specs: string): Promise<any> {
-  return await postReq(`project/${projectId}/update-specs`, { specs });
+  return await postReq(`project/update-specs`, { specs, projectId });
 }
 
 export async function deleteProject(projectId: number): Promise<any> {
-  return await postReq(`project/${projectId}/delete`);
+  return await postReq(`project/delete`, { projectId });
+}
+
+export async function deleteAllFiles(projectId: number): Promise<any> {
+  return await postReq(
+    `project/delete`, { targets: 'files', projectId }
+  );
 }
 
 
@@ -124,9 +131,8 @@ export async function buildProject(projectId: number): Promise<ProjectDetailResp
     projectId,
   };
 
-  return await postReq(`build/project`, data);
+  return await postReq(`project/build`, data);
 }
-
 
 function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], number[]] {
   const moduleIds = new Set<number>();

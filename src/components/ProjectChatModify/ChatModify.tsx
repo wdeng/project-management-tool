@@ -33,7 +33,6 @@ const ChatButton = ({ }: ChatButtonProps) => {
     if (isChatOpen && selectedProjectId) {
       const getHistory = async () => {
         const data = await getIssueHistory(selectedProjectId);
-        console.log(data);
         setHistory(data.history);
         if (data.toolType && data.changes?.sucess)
           applyIssueResolve(data.toolType, data.changes);

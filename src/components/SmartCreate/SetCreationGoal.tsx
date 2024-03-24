@@ -5,10 +5,12 @@ import React, { useState } from 'react';
 
 interface Props {
   onSubmit: (goal: string, resourcesEnabled: RefineResource[], selectedCheckboxOptions: number[]) => void;
+  createTarget?: string;
 }
 
-export const SetFileGoal: React.FC<Props> = ({
+const SetCreationGoal: React.FC<Props> = ({
   onSubmit,
+  createTarget = 'file',
 }) => {
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
   const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
@@ -17,7 +19,7 @@ export const SetFileGoal: React.FC<Props> = ({
   const validateForm = () => overview.length > 0;
 
   const handleSubmit = (event: React.FormEvent) => {
-    console.log('submitting file goal');
+    console.log('submitting goal');
     event.preventDefault();
     onSubmit(overview, resourcesEnabled, selectedCheckboxOptions);
     setOverview(""); // reset form
@@ -25,12 +27,12 @@ export const SetFileGoal: React.FC<Props> = ({
 
   return (
     <div className="p-4">
-      <h2 className='font-medium pt-3'>What this file is about? Please provide an overview or description.</h2>
+      <h2 className='font-medium pt-3'>What this {createTarget} is about? Please provide an overview or description.</h2>
       <textarea
         id="overview"
         value={overview}
-        placeholder='Goal or overview of file'
-        onChange={(e) => setOverview(e.target.value)}
+        placeholder={`Goal or overview of ${createTarget}`}
+        onChange={({ target }) => setOverview(target.value)}
         className={`mt-4 ${textAreaStyles}`}
         rows={5}
       />
@@ -47,3 +49,5 @@ export const SetFileGoal: React.FC<Props> = ({
     </div>
   );
 };
+
+export default SetCreationGoal;

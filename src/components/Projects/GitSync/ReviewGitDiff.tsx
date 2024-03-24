@@ -59,7 +59,7 @@ const GitDiffReview: React.FC<ChangesReviewPanelProps> = ({
           Next
         </button>}
       </div>
-      {editingItem && <FileEditorModal onClose={closeEditor} fileId={editingItem.name} />}
+      {editingItem && <FileEditorModal onClose={closeEditor} fileIdOrName={editingItem.name} />}
     </div>
   );
 };

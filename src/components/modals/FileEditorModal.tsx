@@ -1,20 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { FileDesign, fetchSourceCode, updateFile } from '@/apis';
+import { FileDesign, getSourceCode, updateGuidelines, updateSource } from '@/apis';
 import { MdSave } from 'react-icons/md';
 import ComplexChat from '../general/ChatFields/ComplexChat';
-import FileEditor from './FileEditor';
+import ContentEditor from './ContentEditor';
+import { getExt, languageMap } from '@/utils';
 
 interface EditorModalProps {
   onClose: () => void;
-  fileId?: number | null | string;
-  onChange?: (value: string | undefined) => void;
+  fileIdOrName?: number | null | string;
   allowChat?: boolean;
 }
 
 const FileEditorModal: React.FC<EditorModalProps> = ({
-  onClose, fileId, allowChat = true
+  onClose, fileIdOrName, allowChat = true
 }) => {
   const { selectedProjectId } = useSelected();
   const [file, setFile] = useState<FileDesign | undefined>(undefined);
@@ -22,8 +22,8 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
   const [saved, setSaved] = useState(true);
 
   useEffect(() => {
-    if (fileId != null && selectedProjectId) {
-      fetchSourceCode(selectedProjectId, fileId).then(file => {
+    if (fileIdOrName != null && selectedProjectId) {
+      getSourceCode(selectedProjectId, fileIdOrName).then(file => {
         setFile(file);
         orgFile.current = { ...file };
         setSaved(true);
@@ -31,7 +31,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
         console.error(err);
       });
     }
-  }, [selectedProjectId, fileId]);
+  }, [selectedProjectId, fileIdOrName]);
 
   useEffect(() => {
     if (file?.content !== orgFile.current?.content) {
@@ -57,7 +57,11 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
     if (!selectedProjectId || !file?.id || saved) return buttons;
     const saveFile = () => {
       if (selectedProjectId && file?.id) {
-        updateFile(selectedProjectId, { fileId: file.id, content: file?.content });
+        const payload = { id: file.id, content: file?.content };
+        if (file?.contentType === 'guidelines')
+          updateGuidelines(selectedProjectId, payload);
+        else
+          updateSource(selectedProjectId, payload);
         orgFile.current = { ...file };
         setSaved(true);
       }
@@ -72,9 +76,10 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
   const Chat = useMemo(() => allowChat && <ComplexChat onSend={async () => { }} />, [allowChat]);
 
   return (
-    <Modal isOpen={fileId != null} onClose={onCloseModal} title={file?.path || "File Edit"} MoreButtons={Buttons} FieldBelow={Chat} height='h-[77vh]'>
-      <FileEditor
+    <Modal isOpen={fileIdOrName != null} onClose={onCloseModal} title={file?.name || "File Edit"} MoreButtons={Buttons} FieldBelow={Chat} height='h-[81vh]'>
+      <ContentEditor
         {...file}
+        langType={languageMap[getExt(file?.name)] || getExt(file?.name)}
         handleContentChange={handleContentChange}
       />
     </Modal>
