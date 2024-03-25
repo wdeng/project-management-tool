@@ -57,7 +57,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
     if (!selectedProjectId || !file?.id || saved) return buttons;
     const saveFile = () => {
       if (selectedProjectId && file?.id) {
-        const payload = { id: file.id, content: file?.content };
+        const payload = { id: file.id, name: file.name, content: file?.content };
         if (file?.contentType === 'guidelines')
           updateGuidelines(selectedProjectId, payload);
         else

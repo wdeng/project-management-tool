@@ -5,7 +5,7 @@ import { FaFileImport } from "react-icons/fa";
 import { ImMakeGroup } from "react-icons/im";
 import { MultipleChoiceQuestions } from './MultipleChoices';
 import { ProjectForm } from './ProjectForm';
-import { SetCreationGoal } from '../../modals/SetCreationGoal';
+import { ProjectCreationGoal } from './ProjectCreationGoal';
 import {
   QuestionChoices,
   setProjectGoal,
@@ -90,7 +90,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
 
     switch (currentStep) {
       case 'SetProjectGoal':
-        return <SetCreationGoal onGoalSubmit={handleProjectGoalSubmit} />;
+        return <ProjectCreationGoal onGoalSubmit={handleProjectGoalSubmit} />;
       case 'MultipleChoiceQuestions':
         return <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
       case 'ReviewProjectSpecs':

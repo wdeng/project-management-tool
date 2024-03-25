@@ -3,37 +3,41 @@ import { textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useState } from 'react';
 import TextEditorModal from './TextEditorModal';
 import { GeneralData } from '@/utils/types';
+import Selection from '../general/Selection';
+
+type FormElementType = 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
 
 export interface ElementTypeMapping {
   [key: string]: {
-    type: 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
+    type: FormElementType;
   };
 }
+
 
 interface DynamicFormProps {
   formData: GeneralData;
   elementTypes: ElementTypeMapping;
-  onContentChange: (key: string, value: GeneralData | string) => void;
+  onContentChange: (value: GeneralData) => void;
 }
 
 const FormElement: React.FC<{
   elementKey: string;
-  elementType: 'textarea' | 'textfield' | 'label' | 'editor';
+  elementType: FormElementType;
   value?: GeneralData | string;
-  onContentChange: (key: string, value: GeneralData | string) => void;
+  onContentChange: (value: GeneralData) => void;
 }> = ({ elementKey, elementType, value, onContentChange }) => {
   const title = camelToTitle(elementKey);
-  const content = (value instanceof Object ? value.content : value) as string;
-
+  const content = value instanceof Object ? value.content : value;
   const [open, setOpen] = useState<boolean>(false);
 
+  if (!content) return null;
   switch (elementType) {
     case 'textarea':
       return (
         <textarea
           id={elementKey}
-          value={content}
-          onChange={({ target }) => onContentChange(elementKey, target.value)}
+          value={value as any}
+          onChange={({ target }) => onContentChange({ [elementKey]: target.value })}
           rows={6}
           placeholder={title}
           className={textAreaStyles}
@@ -45,7 +49,7 @@ const FormElement: React.FC<{
           id={elementKey}
           type="text"
           value={content}
-          onChange={({ target }) => onContentChange(elementKey, target.value)}
+          onChange={({ target }) => onContentChange({ [elementKey]: target.value })}
           placeholder={title}
           className="w-full border-none outline-none resize-none rounded-md focus:ring-1"
         />
@@ -68,12 +72,21 @@ const FormElement: React.FC<{
             name={val.name}
             original={val.original}
             content={val.content}
-            saveContent={(v) => onContentChange(elementKey, v)}
+            saveContent={(v) => onContentChange(v)}
             onClose={() => setOpen(false)}
             isOpen={open}
             showSaveButtons={false}
           />
         </>
+      );
+    case 'select':
+      if (typeof value === 'string' || !value?.options) return null;
+      return (
+        <Selection
+          value={content as string}
+          onValueChange={(v) => onContentChange({ [elementKey]: v })}
+          options={value.options}
+        />
       );
     default:
       return null;

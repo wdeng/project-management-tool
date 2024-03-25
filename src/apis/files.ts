@@ -31,11 +31,20 @@ export async function deleteFile(projectId: number, fileId: number): Promise<any
   return await postReq('file/delete', { projectId, fileId });
 }
 
-export async function updateSource(projectId: number, data: Object): Promise<any> {
+export interface ElementContent {
+  id?: number;
+  name: string;
+  parent?: string;
+  content: string;
+  original?: string;
+  goal?: string;
+}
+
+export async function updateSource(projectId: number, data: ElementDesign): Promise<any> {
   return await postReq('file/finalize-source', { projectId, data, task: "modify" });
 }
 
-export async function updateGuidelines(projectId: number, data: Object): Promise<any> {
+export async function updateGuidelines(projectId: number, data: ElementDesign): Promise<any> {
   return await postReq('file/update-guidelines', { projectId, ...data });
 }
 
@@ -51,7 +60,7 @@ export async function smartCreateFile(
     resourcesAllowed,
     userInput,
   };
-  return await postReq(`file/smark-create`, fields);
+  return await postReq(`file/smart-create`, fields);
 }
 
 export async function smartUpdateFile(

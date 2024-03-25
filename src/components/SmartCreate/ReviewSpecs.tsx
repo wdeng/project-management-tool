@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ElementDesign, updateSource, finalizeModule } from '@/apis';
+import { ElementDesign, createFile, finalizeModule } from '@/apis';
 import DynamicForm, { ElementTypeMapping } from '@/components/modals/DynamicForm';
 import { GeneralData } from '@/utils/types';
 
@@ -23,23 +23,16 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
     setItem(orgItem);
   }, [orgItem]);
 
-  const handleContentChange = (key: string, value: string | GeneralData) => {
-    setItem((prevItem) => ({ ...prevItem, [key]: value }));
+  const handleContentChange = (value: GeneralData) => {
+    setItem((prevItem) => ({ ...prevItem, ...value }));
   };
 
-  const handleSave = () => {
-    if (itemType === 'file') {
-      updateSource(projectId, {
-        name: item.name,
-        content: item as ElementDesign,
-      }).then(() => {
-        close();
-      });
-    } else {
-      finalizeModule(projectId, item).then(() => {
-        close();
-      });
-    }
+  const handleSave = async () => {
+    if (itemType === 'file')
+      await createFile(projectId, item)
+    else
+      await finalizeModule(projectId, item, "create")
+    close();
   };
 
   const formData = useMemo(() => {
@@ -49,10 +42,9 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
       content: {
         name: item.name,
         content: item.content,
-        original: orgItem.content,
       },
     };
-  }, [item, orgItem]);
+  }, [item]);
 
   return (
     <div>
@@ -61,16 +53,16 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
         elementTypes={elementTypes}
         onContentChange={handleContentChange}
       />
-      <div className="mt-4">
+      <div className="m-6 relative flex items-center justify-end">
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
         >
           Save
         </button>
         <button
           onClick={close}
-          className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+          className="ml-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400"
         >
           Cancel
         </button>

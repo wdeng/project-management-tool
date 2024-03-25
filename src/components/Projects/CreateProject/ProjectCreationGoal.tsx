@@ -5,7 +5,7 @@ interface Props {
   onGoalSubmit: (goal: string) => void;
 }
 
-export const SetCreationGoal: React.FC<Props> = ({
+export const ProjectCreationGoal: React.FC<Props> = ({
   onGoalSubmit,
 }) => {
   const [overview, setOverview] = useState('');
