@@ -1,8 +1,8 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ChatInput, { ChatInputProps } from "./ChatTextArea";
 import { ChatInputType, RefineResource } from "@/apis";
 import { convertToBase64JPEG } from "@/utils";
-import { MdClose, MdImage, MdAdd, MdDescription, MdArticle } from "react-icons/md";
+import { MdClose, MdImage, MdAdd, MdDescription } from "react-icons/md";
 import NextImage from 'next/image';
 import ResourcesSelector from "../ResourcesSelector";
 
@@ -22,12 +22,23 @@ const ComplexChat: React.FC<Props> = ({
   maxLines = 10,
 }) => {
 
+  const chatInputRef = useRef<HTMLDivElement>(null);
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
-  const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
+  const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline']);
 
   const [chatImages, setBase64Images] = useState<string[]>([]);
   const [showButtons, setShowButtons] = useState(false);
   const [showResources, setShowResources] = useState(false);
+
+  useEffect(() => {
+    const closePopover = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.chat-domain'))
+        setShowButtons(false);
+    };
+    window.addEventListener('click', closePopover);
+    return () => window.removeEventListener('click', closePopover);
+  }, []);
 
   const sendChat = useCallback(async (chat: ChatInputType, abortController: AbortController) => {
     if (chat && chatImages.length > 0)
@@ -69,16 +80,17 @@ const ComplexChat: React.FC<Props> = ({
 
   const ExtraButton = useMemo(() => {
     return (
-      <button onClick={() => setShowButtons(p => !p)} className="ml-2 mb-2">
+      <button onClick={() => setShowButtons(v => !v)} className="ml-2 mb-2">
         <MdAdd size={24} />
       </button>
     )
   }, []);
 
-  return <ChatInput onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} >
+  return <ChatInput ref={chatInputRef} onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} >
     {showButtons &&
       <>
         {showResources && <ResourcesSelector
+          resourcesAvailable={['outline', 'schema', 'read_more_files']}
           resourcesEnabled={resourcesEnabled}
           setResourcesEnabled={setResourcesEnabled}
           selectedCheckboxOptions={selectedCheckboxOptions}

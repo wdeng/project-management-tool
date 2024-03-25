@@ -1,24 +1,24 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Modal from '../../../modals/Modal';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { ElementDesign, getSourceCode, updateSource } from '@/apis';
+import { ElementDesign, deleteFile, getSourceCode, updateSource } from '@/apis';
 import DynamicForm, { ElementTypeMapping } from '@/components/modals/DynamicForm';
-import { MdSave } from 'react-icons/md';
+import { MdSave, MdDelete } from 'react-icons/md';
+import { GeneralData } from '@/utils/types';
 
 interface FileInfoModalProps {
   onClose: () => void;
   fileIdOrName?: number | null | string;
-  onContentChange?: (key: string, value: string) => void;
+  onContentChange?: (value: GeneralData) => void;
 }
 
 const elementTypes: ElementTypeMapping = {
   name: { type: 'textfield' },
   goal: { type: 'textarea' },
-  // content: { type: 'editor', langType: 'html' },
 };
 
 const FileInfoModal: React.FC<FileInfoModalProps> = ({ onClose, fileIdOrName, onContentChange }) => {
-  const { selectedProjectId } = useSelected();
+  const { selectedProjectId, refreshCurrentProject } = useSelected();
   const [file, setFile] = useState<ElementDesign | undefined>(undefined);
   const orgFile = useRef<ElementDesign | null>(null);
   const [saved, setSaved] = useState(true);
@@ -40,6 +40,8 @@ const FileInfoModal: React.FC<FileInfoModalProps> = ({ onClose, fileIdOrName, on
   useEffect(() => {
     if (file?.name !== orgFile.current?.name || file?.goal !== orgFile.current?.goal) {
       setSaved(false);
+    } else {
+      setSaved(true);
     }
   }, [file]);
 
@@ -51,14 +53,25 @@ const FileInfoModal: React.FC<FileInfoModalProps> = ({ onClose, fileIdOrName, on
     onClose();
   };
 
-  const handleContentChange = (key: string, value: string) => {
-    setFile((prevFile) => (prevFile ? { ...prevFile, [key]: value } : undefined));
-    onContentChange && onContentChange(key, value);
+  const handleContentChange = (value: GeneralData) => {
+    setFile((prevFile) => (prevFile ? { ...prevFile, ...value } : undefined));
+    onContentChange && onContentChange(value);
   };
 
   const Buttons = useMemo(() => {
-    const buttons: JSX.Element[] = [];
-    if (!selectedProjectId || !file?.id || saved) return buttons;
+    if (!selectedProjectId || !file?.id) return [];
+    const buttons: JSX.Element[] = [(
+      <button key="delete" onClick={() => {
+        if (window.confirm('Are you sure you want to delete this file?')) {
+          deleteFile(selectedProjectId, file.id);
+          refreshCurrentProject();
+          onClose();
+        }
+      }}>
+        <MdDelete />
+      </button>
+    )];
+    if (saved) return buttons;
     const saveFile = () => {
       if (selectedProjectId && file?.id) {
         updateSource(selectedProjectId, { id: file.id, name: file.name, goal: file.goal });
@@ -73,14 +86,14 @@ const FileInfoModal: React.FC<FileInfoModalProps> = ({ onClose, fileIdOrName, on
       </button>
     );
     return buttons;
-  }, [selectedProjectId, file, saved]);
+  }, [selectedProjectId, file, saved, onClose, refreshCurrentProject]);
 
   return (
     <Modal isOpen={fileIdOrName != null} onClose={onCloseModal} title={file?.name || 'Info Edit'} MoreButtons={Buttons}>
       <DynamicForm
         formData={{ name: file?.name, goal: file?.goal }}
         elementTypes={elementTypes}
-        onContentChange={handleContentChange as any}
+        onContentChange={handleContentChange}
       />
     </Modal>
   );

@@ -22,11 +22,11 @@ export interface ModuleImplement {
   [key: string]: any
 }
 
-export async function buildModule(projectId: number, moduleId: number, targets?: "code" | "module" | "both"): Promise<any> {
+export async function buildModule(projectId: number, moduleId: number, target?: "code" | "module" | "both"): Promise<any> {
   const data = {
     projectId,
-    moduleId,
-    targets,
+    id: moduleId,
+    target,
   };
 
   return await postReq(`module/build`, data);

@@ -1,5 +1,5 @@
 import { ChatInputType } from '@/apis';
-import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode, useMemo } from 'react';
+import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode, forwardRef } from 'react';
 import { MdSend, MdStop } from 'react-icons/md';
 import { CgSpinner } from "react-icons/cg";
 
@@ -14,7 +14,7 @@ export interface ChatInputProps {
   ExtraButton?: ReactNode;
 }
 
-const ChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abortController: AbortController) => Promise<void> }> = ({
+const ChatInput = forwardRef<HTMLDivElement, ChatInputProps & { onSend: (data: ChatInputType, abortController: AbortController) => Promise<void> }>(({
   onSend,
   ExtraButton,
   children = null,
@@ -23,7 +23,7 @@ const ChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abort
   placeholder = "Write your issues here..",
   defaultText = '',
   maxLines = 12,
-}) => {
+}, ref) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [chatText, setChatText] = useState<string>(defaultText);
 
@@ -84,7 +84,7 @@ const ChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abort
   }, [chatText, maxLines]);
 
   return (
-    <div className="relative flex flex-col p-1">
+    <div ref={ref} className="relative flex flex-col p-1 chat-domain">
       {children}
       <div className="relative flex justify-between items-end">
         {ExtraButton}
@@ -115,6 +115,8 @@ const ChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abort
       </div>
     </div>
   );
-};
+});
+
+ChatInput.displayName = 'ChatInput';
 
 export default ChatInput;

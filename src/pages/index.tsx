@@ -56,15 +56,16 @@ export default function Home() {
     selectedModule && setSelectedModule(null);
   };
 
-  const handleModuleBuild = async (moduleName: string, moduleId: number, targets?: "code" | "module" | "both") => {
+  const handleModuleBuild = async (moduleName: string, moduleId: number, target?: "code" | "module" | "both") => {
     if (executingName || !selectedProjectId) return;
     setExecuting(moduleName);
-    const next = await buildModule(selectedProjectId, moduleId, targets);
+    const data = await buildModule(selectedProjectId, moduleId, target);
     setProjectDetails((prev) => {
       if (!prev) return null;
+      if (!data?.next) return prev;
       return {
         ...prev,
-        next,
+        next: data.next,
       };
     });
     setExecuting("");
