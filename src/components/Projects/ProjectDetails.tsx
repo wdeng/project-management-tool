@@ -9,21 +9,6 @@ import ProjectSettingsModal from './ProjectSettings';
 // MdDescription
 // MdHomeFilled
 
-interface ApiSchemaProps {
-  schemaData: any; // Replace 'any' with your schema data type
-}
-
-const ApiSchema: React.FC<ApiSchemaProps> = ({ schemaData }) => {
-  return (
-    <div>
-      <h3>{schemaData.name}</h3>
-      <p>{schemaData.description}</p>
-      {/* Add more attributes as needed */}
-    </div>
-  );
-};
-
-
 interface IProjectDetailsProps {
   projectId: number;
   projectName: string;
@@ -52,7 +37,7 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           <h1 className='text-3xl font-medium pb-2'>
             {projectName}
           </h1>
-          <ProjectSettingsModal projectSpecs={{ projectName, description, requirements }} canBuild={true} />
+          <ProjectSettingsModal projectSpecs={{ projectName, description, requirements }} projectSchema={projectSchema} canBuild={true} />
         </div>
 
         <p>{description}</p>
@@ -63,16 +48,6 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           ))}
         </ul>
         {gitReview}
-        {projectSchema && (
-          <>
-            <h2>Project Schema:</h2>
-            {
-              projectSchema.map((schema: any, index: number) => ( // Replace 'any' with your schema data type
-                <ApiSchema key={index} schemaData={schema} />
-              ))
-            }
-          </>
-        )}
       </div>
       <div ref={bottomRef} />
     </>

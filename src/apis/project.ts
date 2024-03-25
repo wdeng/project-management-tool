@@ -35,8 +35,12 @@ export async function fetchProjectModules(projectId: number, projectDetails = tr
   return { ...resp, modules, moduleIds };
 }
 
-export async function updateProjectSpecs(projectId: number, specs: string): Promise<any> {
-  return await postReq(`project/update-specs`, { specs, projectId });
+export async function updateProjectSpecs(
+  projectId: number,
+  content: string,
+  target: "schema" | "specs" = "specs"
+): Promise<any> {
+  return await postReq(`project/update-specs`, { content, projectId, target });
 }
 
 export async function deleteProject(projectId: number): Promise<any> {

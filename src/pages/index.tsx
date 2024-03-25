@@ -5,7 +5,7 @@ import ModuleDetails from '../components/Modules/ModuleDetails/ModuleDetails';
 import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, getModuleDetails } from '@/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
-import ProjectDetails from '@/components/Projects/Project';
+import ProjectDetails from '@/components/Projects/ProjectDetails';
 
 
 

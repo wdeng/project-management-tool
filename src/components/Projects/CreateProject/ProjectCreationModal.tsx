@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Menu } from '@headlessui/react';
-import { MdAdd, MdDashboard } from 'react-icons/md'; // MdDriveFileMove
+import { MdAdd, MdDashboard, MdOutlineTextSnippet } from 'react-icons/md'; // MdDriveFileMove
 import { FaFileImport } from "react-icons/fa";
 import { ImMakeGroup } from "react-icons/im";
 import { MultipleChoiceQuestions } from './MultipleChoices';
@@ -18,7 +18,6 @@ import { ReviewProjectSpecs } from './ReviewProjectSpecs';
 import Dropdown from '../../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
 import ItemCreationModal from '../../modals/ItemCreationModal';
-
 interface ProjectCreationModalProps {
   onNewProject: (projectName: string, requirements: string, schema: string) => Promise<void>;
   onProjectBuild: (projectId: number) => Promise<void>;
@@ -140,6 +139,14 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
                 onClick={() => { console.log('New Group') }}
               >
                 <ImMakeGroup className="mr-3" /> New Group
+              </button>
+            </Menu.Item>
+            <Menu.Item>
+              <button
+                className={contextMenuItemStyles}
+                onClick={() => { console.log('New Prompt') }}
+              >
+                <MdOutlineTextSnippet className="mr-3" /> Create Prompt
               </button>
             </Menu.Item>
           </Menu.Items>

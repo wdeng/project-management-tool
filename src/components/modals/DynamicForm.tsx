@@ -1,7 +1,7 @@
 import { camelToTitle } from '@/utils';
 import { textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useState } from 'react';
-import TextEditorModal from './TextEditorModal';
+import ContentEditorModal from './ContentEditorModal';
 import { GeneralData } from '@/utils/types';
 import Selection from '../general/Selection';
 
@@ -68,7 +68,7 @@ const FormElement: React.FC<{
           >
             {val.name}
           </button>
-          <TextEditorModal
+          <ContentEditorModal
             name={val.name}
             original={val.original}
             content={val.content}

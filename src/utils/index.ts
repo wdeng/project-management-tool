@@ -31,7 +31,7 @@ export function camelToTitle(camelStr: string) {
 }
 
 export function getExt(filename?: string) {
-  if (!filename)
+  if (!filename || filename.indexOf(".") === -1)
     return "";
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
 }

@@ -3,10 +3,11 @@ import { Menu } from '@headlessui/react';
 import { MdOutlineSubject } from 'react-icons/md'; // MdDriveFileMove
 import Dropdown from '../../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
-import TextEditor from '@/components/modals/TextEditor';
+import TextEditor from '@/components/modals/[deprecated]TextEditor';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
+import ContentEditorModal from '@/components/modals/ContentEditorModal';
 
 interface ModuleSettingsModalProps {
   moduleDetails: ModuleHierarchy;
@@ -19,7 +20,7 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
 
   const [moduleEditorOpen, setModuleEditorOpen] = useState(false);
 
-  const saveModuleSpecs = async (content: string) => {
+  const saveModuleSpecs = async ({ content }: any) => {
     await updateModuleSpecs(selectedProjectId!, moduleDetails.id, content);
     refreshCurrentProject();
   }
@@ -85,7 +86,15 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
           </Menu.Items>
         </Dropdown>
       </Menu>
-      <TextEditor isOpen={moduleEditorOpen} initialContent={moduleSpecs} handleSave={saveModuleSpecs} onClose={() => setModuleEditorOpen(false)} />
+      {/* <TextEditor isOpen={moduleEditorOpen} initialContent={moduleSpecs} handleSave={saveModuleSpecs} onClose={() => setModuleEditorOpen(false)} /> */}
+      <ContentEditorModal
+        name={moduleDetails.name}
+        content={moduleSpecs}
+        saveContent={saveModuleSpecs}
+        onClose={() => setModuleEditorOpen(false)}
+        isOpen={moduleEditorOpen}
+        showSaveButtons={true}
+      />
     </>
   );
 };

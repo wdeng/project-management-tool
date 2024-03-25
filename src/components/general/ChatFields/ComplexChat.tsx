@@ -6,7 +6,16 @@ import { MdClose, MdImage, MdAdd, MdDescription, MdArticle } from "react-icons/m
 import NextImage from 'next/image';
 import ResourcesSelector from "../ResourcesSelector";
 
-const ComplexChat: React.FC<ChatInputProps> = ({
+type Props = ChatInputProps & {
+  onSend: (
+    chat: ChatInputType,
+    resourcesEnabled: RefineResource[],
+    selectedCheckboxOptions: number[],
+    abortController: AbortController
+  ) => Promise<void>;
+}
+
+const ComplexChat: React.FC<Props> = ({
   onSend,
   placeholder = "Write your issues here..",
   defaultText = '',
@@ -23,9 +32,9 @@ const ComplexChat: React.FC<ChatInputProps> = ({
   const sendChat = useCallback(async (chat: ChatInputType, abortController: AbortController) => {
     if (chat && chatImages.length > 0)
       chat.images = chatImages;
-    await onSend(chat, abortController);
+    await onSend(chat, resourcesEnabled, selectedCheckboxOptions, abortController);
     setBase64Images([]);
-  }, [chatImages, onSend]);
+  }, [chatImages, onSend, resourcesEnabled, selectedCheckboxOptions]);
 
   const ImageUpload = useMemo(() => {
     const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {

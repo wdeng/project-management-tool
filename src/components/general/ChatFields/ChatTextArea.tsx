@@ -1,10 +1,9 @@
 import { ChatInputType } from '@/apis';
 import React, { useRef, useEffect, useState, ChangeEvent, useCallback, ReactNode, useMemo } from 'react';
-import { MdSend,  MdStop } from 'react-icons/md';
+import { MdSend, MdStop } from 'react-icons/md';
 import { CgSpinner } from "react-icons/cg";
 
 export interface ChatInputProps {
-  onSend: (data: ChatInputType, abortController: AbortController) => Promise<void>;
   sendOnEmpty?: boolean;
   placeholder?: string;
   disabled?: boolean;
@@ -15,7 +14,7 @@ export interface ChatInputProps {
   ExtraButton?: ReactNode;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({
+const ChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abortController: AbortController) => Promise<void> }> = ({
   onSend,
   ExtraButton,
   children = null,

@@ -3,8 +3,10 @@ import Modal from './Modal';
 import ContentEditor from './ContentEditor';
 import { MdSave, MdRestore } from 'react-icons/md';
 import { getExt, languageMap } from '@/utils';
+import ComplexChat from '../general/ChatFields/ComplexChat';
+import { ChatInputType } from '@/apis';
 
-interface TextEditorModalProps {
+interface ContentEditorModalProps {
   onClose: () => void;
   isOpen: boolean;
   name?: string;
@@ -12,9 +14,11 @@ interface TextEditorModalProps {
   original?: string;
   saveContent: (data: { content: string, original?: string }) => void;
   showSaveButtons?: boolean;
+  contentType?: string;
+  allowChat?: boolean;
 }
 
-const TextEditorModal: React.FC<TextEditorModalProps> = ({ onClose, isOpen, content, saveContent, original, showSaveButtons = true, ...rest }) => {
+const ContentEditorModal: React.FC<ContentEditorModalProps> = ({ onClose, isOpen, content, saveContent, original, showSaveButtons = true, name, allowChat = true }) => {
   const [_content, setContent] = useState<string>(content || "");
 
   useEffect(() => {
@@ -53,11 +57,19 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({ onClose, isOpen, cont
       )
   }, [original, saveContent])
 
+  const Chat = useMemo(() => {
+    if (allowChat)
+      return (
+        <ComplexChat onSend={async (chat: ChatInputType) => { }}
+        />
+      )
+  }, [allowChat])
+
   return (
-    <Modal isOpen={isOpen} onClose={onCloseModal} title={rest.name || "Edit Text"} MoreButtons={[reset, save]}>
+    <Modal isOpen={isOpen} onClose={onCloseModal} title={name || "Edit Text"} MoreButtons={[reset, save]} FieldBelow={Chat}>
       <ContentEditor
         editorHeight='81vh'
-        langType={languageMap[getExt(rest.name)] || getExt(rest.name) || "yaml"}
+        langType={languageMap[getExt(name)] || getExt(name) || "yaml"}
         content={_content}
         original={original}
         handleContentChange={handleContentChange}
@@ -66,4 +78,4 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({ onClose, isOpen, cont
   );
 };
 
-export default TextEditorModal;
+export default ContentEditorModal;
