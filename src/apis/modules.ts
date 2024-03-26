@@ -79,7 +79,7 @@ export async function smartCreateModule(
 
 export async function smartUpdateModule(
   projectId: number,
-  mainElement: string,
+  mainElement: ElementDesign,
   userInput: ChatInputType,
   fileIds: number[] = [],
   resourcesAllowed: RefineResource[] = [],

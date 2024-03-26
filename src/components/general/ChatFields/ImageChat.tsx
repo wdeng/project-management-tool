@@ -5,7 +5,7 @@ import { convertToBase64JPEG } from "@/utils";
 import { MdClose, MdImage } from "react-icons/md";
 import NextImage from 'next/image';
 
-const ImageChatInput: React.FC<ChatInputProps> = ({
+const ImageChatInput: React.FC<ChatInputProps & { onSend: (data: ChatInputType, abortController: AbortController) => Promise<void> }> = ({
   onSend,
   disabled = false,
   sendOnEmpty = false,

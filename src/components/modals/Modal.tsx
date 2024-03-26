@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height 
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className={`w-full max-w-4xl text-left align-middle bg-gray-100 shadow-xl rounded-xl overflow-clip text-gray-700`}>
+            <div className={`w-full max-w-6xl mx-12 text-left align-middle bg-gray-100 shadow-xl rounded-xl overflow-clip text-gray-700`}>
               <div className="sticky inset-x-0 top-0 flex justify-between items-center z-10 bg-gray-100 border-b px-4 py-2">
                 <Dialog.Title as="h3" className="text-md leading-6 font-medium">
                   {title}

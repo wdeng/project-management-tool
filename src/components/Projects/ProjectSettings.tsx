@@ -2,11 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { Menu } from '@headlessui/react';
 import { MdOutlineSubject } from 'react-icons/md';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
-import TextEditor from '@/components/modals/[deprecated]TextEditor';
 import { useSelected } from '@/hooks/useSelectedContext';
-import { deleteProject, updateProjectSpecs } from '@/apis';
+import { ChatInputType, deleteProject, smartUpdateSchema, updateProjectSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
 import Dropdown from '../general/Dropdown';
+import ContentEditorModal from '../modals/ContentEditorModal';
+import ComplexChat from '../general/ChatFields/ComplexChat';
 
 interface SettingsModalProps {
   canBuild?: true | false | null;
@@ -19,10 +20,13 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
 
   const [editorOpen, setEditorOpen] = useState(false);
   const [editorContent, setEditorContent] = useState('');
+  const [editorOriginal, setEditorOriginal] = useState<string | undefined>();
   const [editorType, setEditorType] = useState<'specs' | 'schema'>('specs');
 
-  const saveContent = async (content: string) => {
+  const saveContent = async ({ content }: any) => {
     await updateProjectSpecs(selectedProjectId!, content, editorType);
+    setEditorContent(content);
+    setEditorOriginal(undefined)
     refreshCurrentProject();
   }
 
@@ -42,6 +46,30 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
     setEditorContent(type === 'specs' ? projectString || '' : projectSchemaString || '');
     setEditorOpen(true);
   }
+
+  const closeEditor = () => {
+    setEditorOpen(false);
+    setEditorContent('');
+    setEditorOriginal(undefined);
+  }
+
+  const Chat = useMemo(() => {
+    if (editorType === 'specs') return null
+    return (
+      <ComplexChat
+        onSend={async (chat: ChatInputType, resourcesEnabled: any, selectedCheckboxOptions: number[]) => {
+          const element = await smartUpdateSchema(
+            selectedProjectId!,
+            { id: -1, name: "Data Schema", content: editorContent },
+            chat,
+            selectedCheckboxOptions);
+          setEditorOriginal(editorContent);
+          setEditorContent(element.content || '');
+        }}
+        resourcesAvailable={[]}
+      />
+    );
+  }, [editorType, editorContent, selectedProjectId]);
 
   return (
     <>
@@ -70,7 +98,7 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
             <Menu.Item>
               <button
                 className={`${contextMenuItemStyles} text-red-500`}
-                onClick={() => window.confirm('Are you sure to delete this module?') && deleteProject(selectedProjectId!)}
+                onClick={() => window.confirm('Are you sure to delete this project?') && deleteProject(selectedProjectId!)}
               >
                 Delete
               </button>
@@ -78,11 +106,14 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
           </Menu.Items>
         </Dropdown>
       </Menu>
-      <TextEditor
-        isOpen={editorOpen}
+      <ContentEditorModal
+        name={projectSpecs.projectName}
         initialContent={editorContent}
-        handleSave={saveContent}
-        onClose={() => setEditorOpen(false)}
+        original={editorOriginal}
+        saveContent={saveContent}
+        additionalField={Chat}
+        onClose={closeEditor}
+        isOpen={editorOpen}
       />
     </>
   );

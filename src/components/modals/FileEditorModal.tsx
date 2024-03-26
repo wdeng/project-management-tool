@@ -18,31 +18,23 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
 }) => {
   const { selectedProjectId } = useSelected();
   const [file, setFile] = useState<ElementDesign | undefined>(undefined);
-  const orgFile = useRef<ElementDesign | null>(null);
-  const [saved, setSaved] = useState(true);
+  const [initialContent, setInitialContent] = useState<string | undefined>();
 
   useEffect(() => {
     if (fileIdOrName != null && selectedProjectId) {
       getSourceCode(selectedProjectId, fileIdOrName).then(file => {
         setFile(file);
-        orgFile.current = { ...file };
-        setSaved(true);
+        setInitialContent(file.content);
       }).catch(err => {
         console.error(err);
       });
     }
   }, [selectedProjectId, fileIdOrName]);
 
-  useEffect(() => {
-    if (file?.content !== orgFile.current?.content) {
-      setSaved(false);
-    }
-  }, [file]);
-
   const onCloseModal = () => {
     setTimeout(() => {
       setFile(undefined);
-      orgFile.current = null;
+      setInitialContent(undefined);
     }, 300);
     onClose();
   };
@@ -55,7 +47,7 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
   const Buttons = useMemo(() => {
     const buttons: JSX.Element[] = [];
     if (!selectedProjectId || !file?.id) return buttons;
-    if (orgFile.current?.content !== file?.content && !saved)
+    if (initialContent !== file?.content)
       buttons.push(<button key="save" onClick={() => {
         if (selectedProjectId && file?.id) {
           const payload = { id: file.id, name: file.name, content: file?.content };
@@ -63,21 +55,23 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
             updateGuidelines(selectedProjectId, payload);
           else
             updateSource(selectedProjectId, payload);
-          orgFile.current = { ...file };
-          setSaved(true);
+          setInitialContent(file.content);
+          setFile(prev => prev ? { ...prev, original: undefined } : undefined);
         }
       }}>
         <MdSave />
       </button>);
     if (file?.original)
       buttons.push(<button key="reset" onClick={() => {
-        if (window.confirm('Are you sure to reset to original?'))
-          setFile(prev => prev ? { ...prev, content: file.original, original: undefined } : undefined)
+        if (window.confirm('Are you sure to reset to original?')) {
+          setInitialContent(file.original);
+          setFile(prev => prev ? { ...prev, content: file.original, original: undefined } : undefined);
+        }
       }}>
         <MdRestore />
       </button>);
     return buttons;
-  }, [selectedProjectId, file, saved]);
+  }, [selectedProjectId, file, initialContent]);
 
   const Chat = useMemo(() => allowChat && <ComplexChat onSend={async (chat: ChatInputType, resourcesEnabled: RefineResource[], fileIds: number[]) => {
     if (!selectedProjectId || !file?.id) return;
@@ -85,11 +79,10 @@ const FileEditorModal: React.FC<EditorModalProps> = ({
     try {
       console.log('Chat:', chat, resourcesEnabled, fileIds);
       const data = await smartUpdateFile(selectedProjectId, file, chat, fileIds, resourcesEnabled);
+      console.log('Data:', data);
 
-      orgFile.current = { ...file, content: data.content, original: data.original };
-      setFile(prev => prev ? { ...prev, content: data.content, original: data.original } : undefined);
-
-      setSaved(false);
+      setInitialContent(file.content);
+      setFile(prev => prev ? { ...prev, content: data.content, original: file.content } : undefined);
     } catch (error) {
       console.error('Error sending chat input:', error);
     }

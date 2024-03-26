@@ -12,8 +12,8 @@ interface ReviewSpecsProps {
 
 const elementTypes: ElementTypeMapping = {
   name: { type: 'textfield' },
-  goal: { type: 'textarea' },
   content: { type: 'editor' },
+  goal: { type: 'textarea' },
 };
 
 const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, itemType }) => {
@@ -36,14 +36,15 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
   };
 
   const formData = useMemo(() => {
-    return {
+    const v = {
       name: item.name,
-      goal: item.goal || '',
       content: {
         name: item.name,
         content: item.content,
       },
-    };
+    } as GeneralData;
+    if (item.goal) v['goal'] = item.goal;
+    return v;
   }, [item]);
 
   return (

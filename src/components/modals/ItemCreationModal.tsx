@@ -21,7 +21,7 @@ const ItemCreationModal: React.FC<ModalProps> = ({
   children,
   directInputComponent,
   title,
-  height = 'h-[80vh]',
+  height = 'h-[85vh]',
   isLoading,
   isOpen,
   close,

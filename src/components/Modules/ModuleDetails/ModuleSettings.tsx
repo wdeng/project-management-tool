@@ -3,7 +3,6 @@ import { Menu } from '@headlessui/react';
 import { MdOutlineSubject } from 'react-icons/md'; // MdDriveFileMove
 import Dropdown from '../../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
-import TextEditor from '@/components/modals/[deprecated]TextEditor';
 import { useSelected } from '@/hooks/useSelectedContext';
 import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
@@ -21,6 +20,7 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
   const [moduleEditorOpen, setModuleEditorOpen] = useState(false);
 
   const saveModuleSpecs = async ({ content }: any) => {
+    console.log(content);
     await updateModuleSpecs(selectedProjectId!, moduleDetails.id, content);
     refreshCurrentProject();
   }
@@ -31,15 +31,13 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
     return yaml.dump({ name, description, functionalRequirements })
   }, [moduleDetails]);
 
-  const makeGuidelines = async (ev: React.MouseEvent) => {
-    ev.preventDefault();
-    if (moduleDetails)
+  const makeGuidelines = async () => {
+    if (moduleDetails && window.confirm('Are you sure to create guidelines for this module?'))
       moduleBuild(moduleDetails.name, moduleDetails.id, 'module');
   }
 
-  const implementFiles = async (ev: React.MouseEvent) => {
-    ev.preventDefault();
-    if (moduleDetails)
+  const implementFiles = async () => {
+    if (moduleDetails && window.confirm('Are you sure to implement files for this module?'))
       moduleBuild(moduleDetails.name, moduleDetails.id, 'code');
   }
 
@@ -78,7 +76,12 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
             <Menu.Item>
               <button
                 className={`${contextMenuItemStyles} text-red-500`}
-                onClick={() => window.confirm('Are you sure to delete this module?') && deleteModule(selectedProjectId!, moduleDetails.id)}
+                onClick={() => {
+                  if (window.confirm('Are you sure to delete this module?')) {
+                    deleteModule(selectedProjectId!, moduleDetails.id)
+                    refreshCurrentProject();
+                  }
+                }}
               >
                 Delete
               </button>
@@ -86,14 +89,12 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
           </Menu.Items>
         </Dropdown>
       </Menu>
-      {/* <TextEditor isOpen={moduleEditorOpen} initialContent={moduleSpecs} handleSave={saveModuleSpecs} onClose={() => setModuleEditorOpen(false)} /> */}
       <ContentEditorModal
         name={moduleDetails.name}
-        content={moduleSpecs}
+        initialContent={moduleSpecs}
         saveContent={saveModuleSpecs}
         onClose={() => setModuleEditorOpen(false)}
         isOpen={moduleEditorOpen}
-        showSaveButtons={true}
       />
     </>
   );

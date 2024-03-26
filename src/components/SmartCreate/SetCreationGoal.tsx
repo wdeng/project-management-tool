@@ -13,7 +13,7 @@ const SetCreationGoal: React.FC<Props> = ({
   createTarget = 'file',
 }) => {
   const [selectedCheckboxOptions, setSelectedCheckboxOptions] = useState<number[]>([]);
-  const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline', 'read_more_files']);
+  const [resourcesEnabled, setResourcesEnabled] = useState<RefineResource[]>(['outline']);
 
   const [overview, setOverview] = useState('');
   const validateForm = () => overview.length > 0;
@@ -37,7 +37,7 @@ const SetCreationGoal: React.FC<Props> = ({
         rows={5}
       />
       <ResourcesSelector
-        resourcesAvailable={['outline', 'read_more_files']}
+        resourcesAvailable={['outline']}
         resourcesEnabled={resourcesEnabled}
         setResourcesEnabled={setResourcesEnabled}
         selectedCheckboxOptions={selectedCheckboxOptions}

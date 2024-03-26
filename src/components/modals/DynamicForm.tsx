@@ -1,9 +1,11 @@
 import { camelToTitle } from '@/utils';
 import { textAreaStyles } from '@/utils/tailwindStyles';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ContentEditorModal from './ContentEditorModal';
 import { GeneralData } from '@/utils/types';
 import Selection from '../general/Selection';
+import ComplexChat from '../general/ChatFields/ComplexChat';
+import { ChatInputType } from '@/apis';
 
 type FormElementType = 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
 
@@ -30,13 +32,23 @@ const FormElement: React.FC<{
   const content = value instanceof Object ? value.content : value;
   const [open, setOpen] = useState<boolean>(false);
 
+  const Chat = useMemo(() => {
+    return (
+      <ComplexChat
+        onSend={async (chat: ChatInputType, resourcesEnabled: any, selectedCheckboxOptions: number[]) => {
+        }}
+        resourcesAvailable={[]}
+      />
+    );
+  }, []);
+
   if (!content) return null;
   switch (elementType) {
     case 'textarea':
       return (
         <textarea
           id={elementKey}
-          value={value as any}
+          value={content}
           onChange={({ target }) => onContentChange({ [elementKey]: target.value })}
           rows={6}
           placeholder={title}
@@ -59,23 +71,22 @@ const FormElement: React.FC<{
     case 'editor':
       if (!value || typeof value === 'string')
         return null;
-      const val = value as any;
       return (
         <>
           <button
             onClick={() => setOpen(true)}
             className="cursor-pointer hover:text-indigo-700 hover:underline"
           >
-            {val.name}
+            {value.name}
           </button>
           <ContentEditorModal
-            name={val.name}
-            original={val.original}
-            content={val.content}
-            saveContent={(v) => onContentChange(v)}
+            name={value.name}
+            original={value.original}
+            initialContent={value.content}
+            saveContent={({ content }) => onContentChange({ content })}
             onClose={() => setOpen(false)}
             isOpen={open}
-            showSaveButtons={false}
+            additionalField={Chat}
           />
         </>
       );
@@ -98,8 +109,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   elementTypes,
   onContentChange,
 }) => {
+  console.log(elementTypes, formData)
   return (
-    <div className="p-4">
+    <div className="p-4 mb-12">
       {Object.entries(formData).map(([key, value]) => (
         <div key={key} className="mb-4">
           <h3 className="text-lg font-semibold py-1">{camelToTitle(key)}:</h3>

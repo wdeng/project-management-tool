@@ -17,7 +17,7 @@ const CreateItem: React.FC<Props> = ({
   buttonStyle = "py-10 mr-4 mb-4 inline-block bg-white drop-shadow-md rounded-lg cursor-pointer w-64 h-32 transition ease-in-out delay-100 hover:scale-110 duration-300 flex items-center justify-center",
   itemType = "file"
 }) => {
-  const { selectedProjectId } = useSelected();
+  const { selectedProjectId, refreshCurrentProject } = useSelected();
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState('SetGoal');
@@ -29,6 +29,7 @@ const CreateItem: React.FC<Props> = ({
     setIsOpen(false);
     setCurrentStep('SetGoal');
     setCreatedItem(null);
+    refreshCurrentProject();
   };
 
   const currentComponent = useMemo(() => {
@@ -70,7 +71,12 @@ const CreateItem: React.FC<Props> = ({
         return (
           createdItem && selectedProjectId && (
             <ReviewSpecs
-              close={close}
+              close={() => {
+                setIsOpen(false);
+                setCurrentStep('SetGoal');
+                setCreatedItem(null);
+                refreshCurrentProject();
+              }}
               orgItem={createdItem}
               projectId={selectedProjectId}
               itemType={itemType}
@@ -80,7 +86,7 @@ const CreateItem: React.FC<Props> = ({
       default:
         return <SetCreationGoal onSubmit={handleGoalSubmit} />;
     }
-  }, [currentStep, selectedProjectId, createdItem, itemType]);
+  }, [currentStep, selectedProjectId, createdItem, itemType, refreshCurrentProject]);
 
   return (
     <>

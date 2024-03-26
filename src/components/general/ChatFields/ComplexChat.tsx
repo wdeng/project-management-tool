@@ -13,6 +13,7 @@ type Props = ChatInputProps & {
     selectedCheckboxOptions: number[],
     abortController: AbortController
   ) => Promise<void>;
+  resourcesAvailable?: RefineResource[];
 }
 
 const ComplexChat: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const ComplexChat: React.FC<Props> = ({
   placeholder = "Write your issues here..",
   defaultText = '',
   maxLines = 10,
+  resourcesAvailable = ['outline', 'schema', 'read_more_files']
 }) => {
 
   const chatInputRef = useRef<HTMLDivElement>(null);
@@ -90,7 +92,7 @@ const ComplexChat: React.FC<Props> = ({
     {showButtons &&
       <>
         {showResources && <ResourcesSelector
-          resourcesAvailable={['outline', 'schema', 'read_more_files']}
+          resourcesAvailable={resourcesAvailable}
           resourcesEnabled={resourcesEnabled}
           setResourcesEnabled={setResourcesEnabled}
           selectedCheckboxOptions={selectedCheckboxOptions}

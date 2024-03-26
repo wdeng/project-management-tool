@@ -22,7 +22,7 @@ export const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ specs }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 h-[calc(80vh-60px)]">
+    <form onSubmit={handleSubmit} className="p-4 h-[calc(85vh-60px)]">
       <textarea
         id="requirements"
         value={requirements}

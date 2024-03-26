@@ -1,6 +1,7 @@
 import { getReq, postReq } from '../utils';
+import { ElementDesign } from './files';
 import { ModuleHierarchy } from './modules';
-import { ChatInputType } from './refine';
+import { ChatInputType, RefineResource } from './refine';
 
 export async function initProject(name: string, folder: string, requirements: string): Promise<any> {
   return await postReq('project-init/init', { name, folder, requirements });
@@ -23,7 +24,6 @@ export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]
   return modules;
 }
 
-
 export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
   let url = `project/modules`;
   if (projectDetails)
@@ -33,6 +33,22 @@ export async function fetchProjectModules(projectId: number, projectDetails = tr
 
   const [modules, moduleIds] = parseProjectModules(resp.modules);
   return { ...resp, modules, moduleIds };
+}
+
+export async function smartUpdateSchema(
+  projectId: number,
+  mainElement: ElementDesign,
+  userInput: ChatInputType,
+  fileIds: number[] = [],
+): Promise<ElementDesign> {
+  const fields = {
+    projectId,
+    mainElement,
+    userInput,
+    fileIds,
+    resourcesAllowed: [],
+  };
+  return await postReq(`project/smart-update-schema`, fields);
 }
 
 export async function updateProjectSpecs(

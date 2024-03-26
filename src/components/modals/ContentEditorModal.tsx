@@ -3,27 +3,35 @@ import Modal from './Modal';
 import ContentEditor from './ContentEditor';
 import { MdSave, MdRestore } from 'react-icons/md';
 import { getExt, languageMap } from '@/utils';
-import ComplexChat from '../general/ChatFields/ComplexChat';
-import { ChatInputType } from '@/apis';
 
 interface ContentEditorModalProps {
   onClose: () => void;
   isOpen: boolean;
   name?: string;
-  content: string | null;
+  initialContent: string | null;
   original?: string;
-  saveContent: (data: { content: string, original?: string }) => void;
+  saveContent: (data: { content: string }) => void;
   showSaveButtons?: boolean;
   contentType?: string;
+  additionalField?: React.ReactNode;
   allowChat?: boolean;
 }
 
-const ContentEditorModal: React.FC<ContentEditorModalProps> = ({ onClose, isOpen, content, saveContent, original, showSaveButtons = true, name, allowChat = true }) => {
-  const [_content, setContent] = useState<string>(content || "");
+const ContentEditorModal: React.FC<ContentEditorModalProps> = ({
+  onClose,
+  isOpen,
+  initialContent,
+  saveContent,
+  original,
+  showSaveButtons = true,
+  name,
+  additionalField,
+}) => {
+  const [_content, setContent] = useState<string>(initialContent || "");
 
   useEffect(() => {
-    isOpen && setContent(prev => prev !== content ? content || "" : prev);
-  }, [content, isOpen]);
+    isOpen && setContent(prev => prev !== initialContent ? (initialContent || "") : prev);
+  }, [initialContent, isOpen]);
 
   const onCloseModal = () => {
     setTimeout(() => {
@@ -34,19 +42,19 @@ const ContentEditorModal: React.FC<ContentEditorModalProps> = ({ onClose, isOpen
 
   const handleContentChange = (value: string | undefined) => {
     setContent(value || "");
-    if (!showSaveButtons) {
-      saveContent({ content: value || "", original });
-    }
+    if (!showSaveButtons)
+      saveContent({ content: value || "" });
   };
 
   const save = useMemo(() => {
-    if (showSaveButtons && content !== _content && saveContent)
+    if (!saveContent || !showSaveButtons) return;
+    if (initialContent !== _content || original)
       return (
-        <button key="save" onClick={() => saveContent({ content: _content, original })}>
+        <button key="save" onClick={() => saveContent({ content: _content })}>
           <MdSave />
         </button>
       )
-  }, [_content, content, saveContent, original, showSaveButtons])
+  }, [_content, initialContent, saveContent, original, showSaveButtons])
 
   const reset = useMemo(() => {
     if (original && saveContent)
@@ -57,16 +65,8 @@ const ContentEditorModal: React.FC<ContentEditorModalProps> = ({ onClose, isOpen
       )
   }, [original, saveContent])
 
-  const Chat = useMemo(() => {
-    if (allowChat)
-      return (
-        <ComplexChat onSend={async (chat: ChatInputType) => { }}
-        />
-      )
-  }, [allowChat])
-
   return (
-    <Modal isOpen={isOpen} onClose={onCloseModal} title={name || "Edit Text"} MoreButtons={[reset, save]} FieldBelow={Chat}>
+    <Modal isOpen={isOpen} onClose={onCloseModal} title={name || "Edit Text"} MoreButtons={[reset, save]} FieldBelow={additionalField}>
       <ContentEditor
         editorHeight='81vh'
         langType={languageMap[getExt(name)] || getExt(name) || "yaml"}

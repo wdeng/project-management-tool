@@ -1,15 +1,17 @@
 
 ## Getting Started
 
-First, run the development server:
+create a Next.js app router API endpoint for retrieving novel translation. compliant to Next.js app router way and use app/api/readChapter.ts or something similar
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+
+let's use sqlalchemy instead
+
+write mock database_queries
+
+
+
+
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
