@@ -1,7 +1,7 @@
 import React from 'react';
 import { RefineResource, REFINE_RESOURCES } from '@/apis';
 import ToggleSwitch from '../general/ToggleSwitch';
-import DisclosurePanel from '../general/Disclosure';
+import DisclosurePanel from './ResourcesDisclosure';
 import { useSelected } from '@/hooks/useSelectedContext';
 
 interface ResourcesSelectorProps {

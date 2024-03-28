@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from './Modal';
-import ContentEditor from './ContentEditor';
+import ContentEditor from '../general/ContentEditor';
 import { MdSave, MdRestore } from 'react-icons/md';
 import { getExt, languageMap } from '@/utils';
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ElementDesign, createFile, finalizeModule } from '@/apis';
-import DynamicForm, { ElementTypeMapping } from '@/components/modals/DynamicForm';
+import DynamicForm, { ElementTypeMapping } from '@/components/general/DynamicForm';
 import { GeneralData } from '@/utils/types';
 
 interface ReviewSpecsProps {
@@ -11,9 +11,9 @@ interface ReviewSpecsProps {
 }
 
 const elementTypes: ElementTypeMapping = {
-  name: { type: 'textfield' },
-  content: { type: 'editor' },
-  goal: { type: 'textarea' },
+  name: 'textfield',
+  details: 'editor',
+  goal: 'textarea',
 };
 
 const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, itemType }) => {
@@ -38,7 +38,7 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
   const formData = useMemo(() => {
     const v = {
       name: item.name,
-      content: {
+      details: {
         name: item.name,
         content: item.content,
       },

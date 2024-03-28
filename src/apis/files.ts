@@ -10,6 +10,7 @@ export interface ElementDesign {
   parent?: string;
   status?: 'pending' | 'done';
   contentType?: 'code' | 'file' | 'guidelines' | 'module';
+  guidelines?: string;
 }
 
 
@@ -79,51 +80,51 @@ export async function smartUpdateFile(
   };
   return await postReq(`file/smart-update`, fields);
 
-//   return {
-//     "content" : `import os
-// from sqlalchemy import create_engine
-// from sqlalchemy.orm import sessionmaker, scoped_session
+  //   return {
+  //     "content" : `import os
+  // from sqlalchemy import create_engine
+  // from sqlalchemy.orm import sessionmaker, scoped_session
 
-// class DatabaseConnection:
-//     def __init__(self):
-//         self.engine = None
-//         self.session_factory = None
+  // class DatabaseConnection:
+  //     def __init__(self):
+  //         self.engine = None
+  //         self.session_factory = None
 
-//     def get_engine(self):
-//         if self.engine is None:
-//             try:
-//                 database_url = os.environ["DATABASE_URL"]
-//                 self.engine = create_engine(database_url, pool_size=10, max_overflow=20)
-//                 print("Database engine created successfully")
-//             except Exception as error:
-//                 print(f"Error while creating database engine: {error}")
-//         return self.engine
+  //     def get_engine(self):
+  //         if self.engine is None:
+  //             try:
+  //                 database_url = os.environ["DATABASE_URL"]
+  //                 self.engine = create_engine(database_url, pool_size=10, max_overflow=20)
+  //                 print("Database engine created successfully")
+  //             except Exception as error:
+  //                 print(f"Error while creating database engine: {error}")
+  //         return self.engine
 
-//     def get_session_factory(self):
-//         if self.session_factory is None:
-//             try:
-//                 self.session_factory = sessionmaker(bind=self.get_engine())
-//                 print("Session factory created successfully")
-//             except Exception as error:
-//                 print(f"Error while creating session factory: {error}")
-//         return self.session_factory
+  //     def get_session_factory(self):
+  //         if self.session_factory is None:
+  //             try:
+  //                 self.session_factory = sessionmaker(bind=self.get_engine())
+  //                 print("Session factory created successfully")
+  //             except Exception as error:
+  //                 print(f"Error while creating session factory: {error}")
+  //         return self.session_factory
 
-//     def get_session(self):
-//         try:
-//             Session = scoped_session(self.get_session_factory())
-//             session = Session()
-//             print("Session retrieved from the factory")
-//             return session
-//         except Exception as error:
-//             print(f"Error while getting session from the factory: {error}")
+  //     def get_session(self):
+  //         try:
+  //             Session = scoped_session(self.get_session_factory())
+  //             session = Session()
+  //             print("Session retrieved from the factory")
+  //             return session
+  //         except Exception as error:
+  //             print(f"Error while getting session from the factory: {error}")
 
-//     def close_session(self, session):
-//         try:
-//             session.close()
-//             print("Session closed")
-//         except Exception as error:
-//             print(f"Error while closing session: {error}")`
-//   }
+  //     def close_session(self, session):
+  //         try:
+  //             session.close()
+  //             print("Session closed")
+  //         except Exception as error:
+  //             print(f"Error while closing session: {error}")`
+  //   }
 }
 
 export async function createFile(projectId: number, file: ElementDesign): Promise<any> {

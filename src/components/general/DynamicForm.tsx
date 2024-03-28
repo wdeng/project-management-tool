@@ -1,18 +1,16 @@
 import { camelToTitle } from '@/utils';
 import { textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useMemo, useState } from 'react';
-import ContentEditorModal from './ContentEditorModal';
+import ContentEditorModal from '../modals/ContentEditorModal';
 import { GeneralData } from '@/utils/types';
-import Selection from '../general/Selection';
-import ComplexChat from '../general/ChatFields/ComplexChat';
+import Selection from './Selection';
+import ComplexChat from './ChatFields/ComplexChat';
 import { ChatInputType } from '@/apis';
 
 type FormElementType = 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
 
 export interface ElementTypeMapping {
-  [key: string]: {
-    type: FormElementType;
-  };
+  [key: string]: FormElementType;
 }
 
 
@@ -29,7 +27,7 @@ const FormElement: React.FC<{
   onContentChange: (value: GeneralData) => void;
 }> = ({ elementKey, elementType, value, onContentChange }) => {
   const title = camelToTitle(elementKey);
-  const content = value instanceof Object ? value.content : value;
+  const content = (value instanceof Object && value.content) ? value.content : value;
   const [open, setOpen] = useState<boolean>(false);
 
   const Chat = useMemo(() => {
@@ -47,10 +45,9 @@ const FormElement: React.FC<{
     case 'textarea':
       return (
         <textarea
-          id={elementKey}
           value={content}
           onChange={({ target }) => onContentChange({ [elementKey]: target.value })}
-          rows={6}
+          rows={8}
           placeholder={title}
           className={textAreaStyles}
         />
@@ -58,7 +55,6 @@ const FormElement: React.FC<{
     case 'textfield':
       return (
         <input
-          id={elementKey}
           type="text"
           value={content}
           onChange={({ target }) => onContentChange({ [elementKey]: target.value })}
@@ -109,22 +105,22 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   elementTypes,
   onContentChange,
 }) => {
-  console.log(elementTypes, formData)
   return (
-    <div className="p-4 mb-12">
-      {Object.entries(formData).map(([key, value]) => (
-        <div key={key} className="mb-4">
+    <div className="p-4 mb-8">
+      {Object.entries(elementTypes).map(([key, type]) => {
+        if (!formData[key]) return null;
+        return <div key={key} className="mb-4">
           <h3 className="text-lg font-semibold py-1">{camelToTitle(key)}:</h3>
           <div className="ml-2">
             <FormElement
               elementKey={key}
-              elementType={elementTypes[key].type}
-              value={value}
+              elementType={type}
+              value={formData[key]}
               onContentChange={onContentChange}
             />
           </div>
         </div>
-      ))}
+      })}
     </div>
   );
 };

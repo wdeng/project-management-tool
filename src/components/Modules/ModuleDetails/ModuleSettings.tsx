@@ -7,6 +7,7 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { ModuleHierarchy, deleteModule, updateModuleSpecs } from '@/apis';
 import * as yaml from 'js-yaml';
 import ContentEditorModal from '@/components/modals/ContentEditorModal';
+import ModuleInfoModal from './ModuleInfoModal';
 
 interface ModuleSettingsModalProps {
   moduleDetails: ModuleHierarchy;
@@ -18,18 +19,6 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
   const { selectedProjectId, refreshCurrentProject } = useSelected();
 
   const [moduleEditorOpen, setModuleEditorOpen] = useState(false);
-
-  const saveModuleSpecs = async ({ content }: any) => {
-    console.log(content);
-    await updateModuleSpecs(selectedProjectId!, moduleDetails.id, content);
-    refreshCurrentProject();
-  }
-
-  const moduleSpecs = useMemo(() => {
-    if (!moduleDetails) return null;
-    const { name, description, functionalRequirements } = moduleDetails;
-    return yaml.dump({ name, description, functionalRequirements })
-  }, [moduleDetails]);
 
   const makeGuidelines = async () => {
     if (moduleDetails && window.confirm('Are you sure to create guidelines for this module?'))
@@ -89,10 +78,8 @@ export const ModuleSettingsModal: React.FC<ModuleSettingsModalProps> = ({ module
           </Menu.Items>
         </Dropdown>
       </Menu>
-      <ContentEditorModal
-        name={moduleDetails.name}
-        initialContent={moduleSpecs}
-        saveContent={saveModuleSpecs}
+      <ModuleInfoModal
+        moduleId={moduleDetails.id}
         onClose={() => setModuleEditorOpen(false)}
         isOpen={moduleEditorOpen}
       />

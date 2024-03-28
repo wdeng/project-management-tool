@@ -7,7 +7,7 @@ import FilesOutlinePanel from './AnswerPanels/FilesOutlinePanel';
 import ChatHistory from './ChatHistory';
 import DirectAnswerPanel from './AnswerPanels/DirectAnswerPanel';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
-import ResourcesSelector from '../general/ResourcesSelector';
+import ResourcesSelector from './ResourcesSelector';
 import ImageChatInput from '../general/ChatFields/ImageChat';
 import { HiSparkles } from "react-icons/hi2";
 

@@ -1,4 +1,4 @@
-import ResourcesSelector from '@/components/general/ResourcesSelector';
+import ResourcesSelector from '@/components/ProjectChatModify/ResourcesSelector';
 import { RefineResource } from '@/apis';
 import { buttonStyles, textAreaStyles } from '@/utils/tailwindStyles';
 import React, { useState } from 'react';

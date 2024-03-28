@@ -54,7 +54,6 @@ const CreateItem: React.FC<Props> = ({
           selectedItemIds,
           resources
         );
-        console.log("element", element);
         setCreatedItem(element);
         setCurrentStep('ReviewSpecs');
       } catch (error) {

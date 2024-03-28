@@ -94,18 +94,7 @@ export const getReq = async (url: string) => {
   return response.json();
 }
 
-// export const deleteReq = async (url: string) => {
-//   const response = await fetch(`${API_BASE_URL}/${url}`, {
-//     method: 'DELETE',
-//     credentials: 'include',
-//     headers: {
-//       'Accept': 'application/json'
-//     },
-//   });
-
-//   if (!response.ok) {
-//     console.log(`HTTP error! status: ${response.status}`);
-//   }
-
-//   return response.json();
-// }
+export function compareObjects(obj1: Object, obj2: Object) {
+  const areEqual = Object.values(obj1).every((value, index) => value === Object.values(obj2)[index]);
+  return areEqual;
+}

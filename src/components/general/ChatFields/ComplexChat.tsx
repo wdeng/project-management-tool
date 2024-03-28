@@ -4,7 +4,7 @@ import { ChatInputType, RefineResource } from "@/apis";
 import { convertToBase64JPEG } from "@/utils";
 import { MdClose, MdImage, MdAdd, MdDescription } from "react-icons/md";
 import NextImage from 'next/image';
-import ResourcesSelector from "../ResourcesSelector";
+import ResourcesSelector from "../../ProjectChatModify/ResourcesSelector";
 
 type Props = ChatInputProps & {
   onSend: (

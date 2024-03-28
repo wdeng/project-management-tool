@@ -18,7 +18,7 @@ export interface ModuleImplement {
   name: string;
   description: string;
   files: ElementDesign[];
-  status: 'pending' | 'done' | 'failure';
+  status: 'pending' | 'done' | 'progress';
   [key: string]: any
 }
 
@@ -42,6 +42,7 @@ export async function deleteModule(projectId: number, moduleId: number): Promise
 }
 
 export async function updateModuleSpecs(projectId: number, moduleId: number, specs: string): Promise<any> {
+  console.log(typeof specs);
   const data = {
     projectId,
     moduleId,

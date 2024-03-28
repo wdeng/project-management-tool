@@ -4,7 +4,7 @@ import { useSelected } from '@/hooks/useSelectedContext';
 import { ChatInputType, ElementDesign, RefineResource, getSourceCode, smartUpdateFile, updateGuidelines, updateSource } from '@/apis';
 import { MdRestore, MdSave } from 'react-icons/md';
 import ComplexChat from '../general/ChatFields/ComplexChat';
-import ContentEditor from './ContentEditor';
+import ContentEditor from '../general/ContentEditor';
 import { getExt, languageMap } from '@/utils';
 
 interface EditorModalProps {
