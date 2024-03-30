@@ -53,6 +53,7 @@ const ChatButton = ({ }: ChatButtonProps) => {
       resourcesEnabled,
       abortController,
     );
+    console.log('data', data)
     if (data && data.toolType) {
       setProposePanel(null);
       applyIssueResolve(data.toolType, data.changes);
@@ -60,6 +61,7 @@ const ChatButton = ({ }: ChatButtonProps) => {
   }
 
   const applyIssueResolve = (toolType: string, changes: any) => {
+    console.log('toolType', toolType)
     switch (toolType) {
       case 'ReadMoreFiles':
         setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
@@ -91,14 +93,14 @@ const ChatButton = ({ }: ChatButtonProps) => {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-75 origin-bottom-right"
       >
-        <div className="absolute bottom-0 text-gray-700 right-0 rounded-lg shadow-2xl bg-gray-200 w-[48rem] max-h-[92vh] flex flex-col">
+        <div className="absolute bottom-0 text-gray-700 right-0 rounded-lg shadow-2xl bg-gray-200 w-[50rem] max-h-[92vh] flex flex-col">
           <button
             onClick={toggleChat}
             className="absolute top-3 right-3 z-10"
           >
             <MdClose className="text-gray-500 hover:text-gray-600" size={24} />
           </button>
-          <div className="flex-grow py-2">
+          <div className="flex-grow py-2 px-2 overflow-y-auto">
             <ResourcesSelector
               resourcesEnabled={resourcesEnabled}
               setResourcesEnabled={setResourcesEnabled}

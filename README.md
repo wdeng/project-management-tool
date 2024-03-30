@@ -9,7 +9,27 @@ let's use sqlalchemy instead
 write mock database_queries
 
 
+create a Next.js app router API endpoint for retrieving novel translation. compliant to Next.js app router way and use app/api/readChapter.ts or something similar
 
+
+let's use sqlalchemy instead
+
+write mock database_queries
+
+
+
+
+a simple project management web app with Typescript Next.js App router, tailwind.css, and headless UI,
+users should be able to add, delete and inspect projects, they can open the project with Github URL
+
+
+rewrite the project schema from scratch following these data tables:
+novel: id, title, introduction, lang_code, latest_chapter
+translate_overviews: id, novel_id, title, introduction, lang_code, latest_chapter
+chapter: id, novel_id, chapter_index
+chapter_translations: id, chapter_id, translate_id (reference translate_overviews), title, start_text, 
+
+please also add user management and api endpoints
 
 
 

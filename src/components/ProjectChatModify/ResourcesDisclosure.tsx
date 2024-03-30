@@ -52,7 +52,7 @@ const DisclosurePanel: React.FC<DisclosurePanelProps> = ({
             {aModule.files?.map((file) => {
               if (file.status !== "pending")
                 return (
-                  <div className="flex items-center space-x-2 mr-8 p-1" key={file.name}>
+                  <div className="flex items-center space-x-2 mr-8 p-1" key={file.id}>
                     <div className="hover:scale-110">
                       <input
                         type="checkbox"

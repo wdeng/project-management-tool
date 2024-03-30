@@ -3,7 +3,7 @@ import { Project, fetchProjects, initProject, buildProject, ProjectDetailRespons
 import ProjectCreationModal from './CreateProject/ProjectCreationModal';
 import { MdDashboard, MdDriveFileMove } from "react-icons/md";
 import Spinner from '../general/Spinner';
-import RetractMenu from '../general/RetractMenu';
+// import RetractMenu from '../general/RetractMenu';
 
 interface ProjectListProps {
   selectedProjectId: number | null;
@@ -72,7 +72,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
   return (
     <div className="overflow-y-auto h-full">
       <ProjectCreationModal onNewProject={handleNewProject} onProjectBuild={handleProjectBuild} />
-      <RetractMenu>
+      {/* <RetractMenu>
         <li
           className={`pl-4 pr-2 py-1 flex items-center rounded-l-md text-white cursor-pointer transition-all ease-in-out hover:translate-x-2 hover:scale-105 hover:bg-indigo-400 duration-300 ${selectedProjectId === null ? 'bg-indigo-500' : ''}`}
         >
@@ -81,7 +81,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({
           </div>
           <span>Dashboard</span>
         </li>
-      </RetractMenu>
+      </RetractMenu> */}
       <ul>
         {projects.map((project) => (
           <li

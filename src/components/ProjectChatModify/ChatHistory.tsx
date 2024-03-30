@@ -14,7 +14,7 @@ const ChatHistory = ({ steps, clearHistory }: ChatHistoryProps) => {
   };
 
   return steps.length > 0 ? (
-    <div className="overflow-y-auto h-full py-2">
+    <div className="h-full py-2">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">Chat History</h3>
         <button className="text-red-500" onClick={handleClearHistory}>Reset</button>
