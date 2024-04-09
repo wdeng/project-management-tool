@@ -24,12 +24,14 @@ export async function fetchModules(projectId: number): Promise<ModuleHierarchy[]
   return modules;
 }
 
-export async function fetchProjectModules(projectId: number, projectDetails = true): Promise<ProjectDetailResponse> {
-  let url = `project/modules`;
-  if (projectDetails)
+export async function fetchProjectDetails(projectId: number, getModules = true): Promise<ProjectDetailResponse> {
+  let url = `project/specs`;
+  if (getModules)
     url = `project/details`;
   url += `?project-id=${projectId}`;
   const resp = await getReq(url);
+  if (!getModules)
+    return resp;
 
   const [modules, moduleIds] = parseProjectModules(resp.modules);
   return { ...resp, modules, moduleIds };

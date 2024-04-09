@@ -91,13 +91,15 @@ const ComplexChat: React.FC<Props> = ({
   return <ChatInput ref={chatInputRef} onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} >
     {showButtons &&
       <>
-        {showResources && <ResourcesSelector
-          resourcesAvailable={resourcesAvailable}
-          resourcesEnabled={resourcesEnabled}
-          setResourcesEnabled={setResourcesEnabled}
-          selectedCheckboxOptions={selectedCheckboxOptions}
-          setSelectedCheckboxOptions={setSelectedCheckboxOptions}
-        />}
+        {showResources && <div className="flex-grow py-2 px-2 overflow-y-auto">
+          <ResourcesSelector
+            resourcesAvailable={resourcesAvailable}
+            resourcesEnabled={resourcesEnabled}
+            setResourcesEnabled={setResourcesEnabled}
+            selectedCheckboxOptions={selectedCheckboxOptions}
+            setSelectedCheckboxOptions={setSelectedCheckboxOptions}
+          />
+        </div>}
         <div className="flex space-x-2">
           {chatImages.map((file, index) => (
             <div key={index} className="relative">

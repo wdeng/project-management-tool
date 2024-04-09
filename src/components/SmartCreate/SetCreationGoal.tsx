@@ -37,7 +37,7 @@ const SetCreationGoal: React.FC<Props> = ({
         rows={5}
       />
       <ResourcesSelector
-        resourcesAvailable={['outline']}
+        resourcesAvailable={['outline', 'schema']}
         resourcesEnabled={resourcesEnabled}
         setResourcesEnabled={setResourcesEnabled}
         selectedCheckboxOptions={selectedCheckboxOptions}

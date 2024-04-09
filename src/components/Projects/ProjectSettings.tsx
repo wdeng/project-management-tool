@@ -8,6 +8,7 @@ import * as yaml from 'js-yaml';
 import Dropdown from '../general/Dropdown';
 import ContentEditorModal from '../modals/ContentEditorModal';
 import ComplexChat from '../general/ChatFields/ComplexChat';
+import ProjectInfoModal from './ProjectInfoModal';
 
 interface SettingsModalProps {
   canBuild?: true | false | null;
@@ -18,43 +19,35 @@ interface SettingsModalProps {
 export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, projectSpecs, projectSchema }) => {
   const { selectedProjectId, refreshCurrentProject } = useSelected();
 
-  const [editorOpen, setEditorOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState<string>('');
   const [editorContent, setEditorContent] = useState('');
   const [editorOriginal, setEditorOriginal] = useState<string | undefined>();
-  const [editorType, setEditorType] = useState<'specs' | 'schema'>('specs');
 
   const saveContent = async ({ content }: any) => {
-    await updateProjectSpecs(selectedProjectId!, content, editorType);
+    await updateProjectSpecs(selectedProjectId!, content, 'schema');
     setEditorContent(content);
     setEditorOriginal(undefined)
     refreshCurrentProject();
   }
-
-  const projectString = useMemo(() => {
-    if (!projectSpecs) return null;
-    const { projectName, description, requirements } = projectSpecs;
-    return yaml.dump({ projectName, description, requirements });
-  }, [projectSpecs]);
 
   const projectSchemaString = useMemo(() => {
     if (!projectSchema) return null;
     return yaml.dump(projectSchema);
   }, [projectSchema]);
 
-  const openEditor = (type: 'specs' | 'schema') => {
-    setEditorType(type);
-    setEditorContent(type === 'specs' ? projectString || '' : projectSchemaString || '');
-    setEditorOpen(true);
+  const openEditor = (kind: 'specs' | 'schema') => {
+    if (kind === 'schema')
+      setEditorContent(projectSchemaString || '');
+    setEditorOpen(kind);
   }
 
   const closeEditor = () => {
-    setEditorOpen(false);
+    setEditorOpen('');
     setEditorContent('');
     setEditorOriginal(undefined);
   }
 
   const Chat = useMemo(() => {
-    if (editorType === 'specs') return null
     return (
       <ComplexChat
         onSend={async (chat: ChatInputType, resourcesEnabled: any, selectedCheckboxOptions: number[]) => {
@@ -69,7 +62,7 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
         resourcesAvailable={[]}
       />
     );
-  }, [editorType, editorContent, selectedProjectId]);
+  }, [editorContent, selectedProjectId]);
 
   return (
     <>
@@ -113,7 +106,11 @@ export const ProjectSettingsModal: React.FC<SettingsModalProps> = ({ canBuild, p
         saveContent={saveContent}
         additionalField={Chat}
         onClose={closeEditor}
-        isOpen={editorOpen}
+        isOpen={editorOpen === 'schema'}
+      />
+      <ProjectInfoModal
+        isOpen={editorOpen === 'specs'}
+        onClose={closeEditor}
       />
     </>
   );

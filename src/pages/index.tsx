@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProjectList from '../components/Projects/ProjectsList';
 import ModuleList from '../components/Modules/ModuleList';
 import ModuleDetails from '../components/Modules/ModuleDetails/ModuleDetails';
-import { Project, ModuleHierarchy, fetchProjectModules, ProjectDetailResponse, buildModule, getModuleDetails } from '@/apis';
+import { Project, ModuleHierarchy, fetchProjectDetails, ProjectDetailResponse, buildModule, getModuleDetails } from '@/apis';
 import ChatButton from '@/components/ProjectChatModify/ChatModify';
 import { SelectedContext } from '@/hooks/useSelectedContext';
 import ProjectDetails from '@/components/Projects/ProjectDetails';
@@ -26,7 +26,7 @@ export default function Home() {
   const refreshCurrentProject = useCallback(async () => {
     if (selectedProjectId == null) return;
 
-    const details = await fetchProjectModules(selectedProjectId);
+    const details = await fetchProjectDetails(selectedProjectId);
     if (!(selectedModule?.id && details.moduleIds.includes(selectedModule.id)))
       setSelectedModule(null);
     else
@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedProjectId !== null) {
-        const details = await fetchProjectModules(selectedProjectId);
+        const details = await fetchProjectDetails(selectedProjectId);
         setProjectDetails(details);
       }
     };
