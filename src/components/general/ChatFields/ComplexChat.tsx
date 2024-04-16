@@ -91,7 +91,7 @@ const ComplexChat: React.FC<Props> = ({
   return <ChatInput ref={chatInputRef} onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} >
     {showButtons &&
       <>
-        {showResources && <div className="flex-grow py-2 px-2 overflow-y-auto">
+        {showResources && <div className="flex-grow py-2 overflow-y-auto max-h-[60vh]">
           <ResourcesSelector
             resourcesAvailable={resourcesAvailable}
             resourcesEnabled={resourcesEnabled}

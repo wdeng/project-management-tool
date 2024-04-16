@@ -1,7 +1,7 @@
 import { getReq, postReq } from '../utils';
 import { ElementDesign } from './files';
 import { ModuleHierarchy } from './modules';
-import { ChatInputType, RefineResource } from './refine';
+import { ChatInputType } from './refine';
 
 export async function initProject(name: string, folder: string, requirements: string): Promise<any> {
   return await postReq('project-init/init', { name, folder, requirements });
@@ -33,8 +33,8 @@ export async function fetchProjectDetails(projectId: number, getModules = true):
   if (!getModules)
     return resp;
 
-  const [modules, moduleIds] = parseProjectModules(resp.modules);
-  return { ...resp, modules, moduleIds };
+  const [modules, moduleIds, moduleNames] = parseProjectModules(resp.modules);
+  return { ...resp, modules, moduleIds, moduleNames };
 }
 
 export async function smartUpdateSchema(
@@ -143,6 +143,7 @@ export async function fixProjectIssue(
 export interface ProjectDetailResponse {
   modules: ModuleHierarchy[];
   moduleIds: number[];
+  moduleNames: string[];
   next: number;
   description: string;
   projectName: string;
@@ -156,18 +157,21 @@ export async function buildProject(projectId: number): Promise<ProjectDetailResp
   return await postReq(`project/build`, data);
 }
 
-function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], number[]] {
+function parseProjectModules(modules: ModuleHierarchy[]): [ModuleHierarchy[], number[], string[]] {
   const moduleIds = new Set<number>();
+  const moduleNames = new Set<string>();
+
   const assignTabLevels = (modules: ModuleHierarchy[], tabLevel = 0) => {
     for (const mod of modules) {
       mod.tabLevel = tabLevel;
       if (mod.modules) {
         assignTabLevels(mod.modules, tabLevel + 1);
       }
+      moduleNames.add(mod.name);
       moduleIds.add(mod.id);
     }
   };
 
   assignTabLevels(modules);
-  return [modules, Array.from(moduleIds)];
+  return [modules, Array.from(moduleIds), Array.from(moduleNames)];
 }

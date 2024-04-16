@@ -1,5 +1,5 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement, useCallback } from 'react';
+import React, { useState, ReactElement, useCallback, use, useEffect } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/apis';
 import GitDiffReview from './GitSync/ReviewGitDiff';
@@ -26,7 +26,12 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
       setReview(
         <GitDiffReview changes={res.files} setElement={setReview} />
       );
+    else
+      setReview(null);
   }, [projectId])
+  useEffect(() => {
+    refreshFiles();
+  }, [refreshFiles]);
   const bottomRef = useScrollToBottom(gitReview);
 
   return (

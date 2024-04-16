@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId, refreshCurrentProject, projectModules: projectDetails?.modules }}>
+    <SelectedContext.Provider value={{ selectedModule, setSelectedModule, selectedProjectId, setSelectedProjectId, refreshCurrentProject, projectModules: projectDetails?.modules, moduleNames: projectDetails?.moduleNames}}>
       <div className="flex">
         <div style={{ flex: '0 0 250px' }} className="z-10 bg-gray-700 h-screen overflow-auto">
           <ProjectList selectedProjectId={selectedProjectId} onProjectSelect={handleProjectSelect} />

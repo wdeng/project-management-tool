@@ -4,8 +4,6 @@ import React, { useMemo, useState } from 'react';
 import ContentEditorModal from '../modals/ContentEditorModal';
 import { GeneralData } from '@/utils/types';
 import Selection from './Selection';
-import ComplexChat from './ChatFields/ComplexChat';
-import { ChatInputType } from '@/apis';
 
 type FormElementType = 'textarea' | 'textfield' | 'label' | 'editor' | 'select';
 
@@ -30,15 +28,15 @@ const FormElement: React.FC<{
   const content = (value instanceof Object && value.content) ? value.content : value;
   const [open, setOpen] = useState<boolean>(false);
 
-  const Chat = useMemo(() => {
-    return (
-      <ComplexChat
-        onSend={async (chat: ChatInputType, resourcesEnabled: any, selectedCheckboxOptions: number[]) => {
-        }}
-        resourcesAvailable={[]}
-      />
-    );
-  }, []);
+  // const Chat = useMemo(() => {
+  //   return (
+  //     <ComplexChat
+  //       onSend={async (chat: ChatInputType, resourcesEnabled: any, selectedCheckboxOptions: number[]) => {
+  //       }}
+  //       resourcesAvailable={[]}
+  //     />
+  //   );
+  // }, []);
 
   if (!content) return null;
   switch (elementType) {
@@ -82,7 +80,7 @@ const FormElement: React.FC<{
             saveContent={({ content }) => onContentChange({ content })}
             onClose={() => setOpen(false)}
             isOpen={open}
-            additionalField={Chat}
+            // additionalField={Chat}
           />
         </>
       );
@@ -91,7 +89,7 @@ const FormElement: React.FC<{
       return (
         <Selection
           value={content as string}
-          onValueChange={(v) => onContentChange({ [elementKey]: v })}
+          onValueChange={v => onContentChange({ [elementKey]: v })}
           options={value.options}
         />
       );

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ElementDesign, createFile, finalizeModule } from '@/apis';
 import DynamicForm, { ElementTypeMapping } from '@/components/general/DynamicForm';
 import { GeneralData } from '@/utils/types';
+import { useSelected } from '@/hooks/useSelectedContext';
 
 interface ReviewSpecsProps {
   close: () => void;
@@ -14,16 +15,19 @@ const elementTypes: ElementTypeMapping = {
   name: 'textfield',
   details: 'editor',
   goal: 'textarea',
+  parent: 'select',
 };
 
 const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, itemType }) => {
   const [item, setItem] = useState<ElementDesign>(orgItem);
+  const { moduleNames } = useSelected();
 
   useEffect(() => {
     setItem(orgItem);
   }, [orgItem]);
 
   const handleContentChange = (value: GeneralData) => {
+    console.log('value', value);
     setItem((prevItem) => ({ ...prevItem, ...value }));
   };
 
@@ -43,9 +47,15 @@ const ReviewSpecs: React.FC<ReviewSpecsProps> = ({ close, orgItem, projectId, it
         content: item.content,
       },
     } as GeneralData;
-    if (item.goal) v['goal'] = item.goal;
+    const { goal, parent } = item;
+    goal && (v.goal = goal);
+    if (parent) {
+      const options = moduleNames?.filter((name) => name !== item.name);
+      v.parent = { content: parent, options };
+    }
     return v;
-  }, [item]);
+  }, [item, moduleNames]);
+  console.log('formData', item);
 
   return (
     <div>

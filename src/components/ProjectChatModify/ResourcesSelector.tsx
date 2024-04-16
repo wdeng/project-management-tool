@@ -27,7 +27,7 @@ const ResourcesSelector: React.FC<ResourcesSelectorProps> = ({
   };
 
   return (
-    <div className='my-2 px-2 max-h-[50vh]'>
+    <div className='my-2 px-2'>
       <h2 className="font-semibold text-2xl mb-5">Select the resources exposed to AI:</h2>
       <div className="mb-4 bg-white px-6 py-3 rounded-lg drop-shadow-sm">
         {resourcesAvailable.map((resource, index) => (

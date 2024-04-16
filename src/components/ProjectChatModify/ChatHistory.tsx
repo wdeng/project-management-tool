@@ -22,7 +22,7 @@ const ChatHistory = ({ steps, clearHistory }: ChatHistoryProps) => {
       <ul>
         {steps.map((s, index) => (
           <li key={index} className="mb-2">
-            <div className="text-gray-700">{s}</div>
+            <div className="text-gray-700 pb-3 px-3">{s}</div>
           </li>
         ))}
       </ul>

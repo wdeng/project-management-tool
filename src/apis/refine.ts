@@ -2,7 +2,7 @@ import { FileModifyType } from '@/components/general/ModifySpan';
 import { createQueryString, getReq, postReq } from '../utils';
 
 interface BaseProposed {
-  target: string;
+  contentType: string;
   name: string;
   task: FileModifyType;
   content: string;
@@ -10,17 +10,17 @@ interface BaseProposed {
 }
 
 export interface ProposedFile extends BaseProposed {
-  target: 'file';
+  contentType: 'file';
   goal: string;
   module: string;
 }
 
 export interface ProposedModule extends BaseProposed {
-  target: 'module';
+  contentType: 'module';
 }
 
 export interface ProposedDirectAnswer {
-  target: 'answer';
+  contentType: 'answer';
   content: string;
 }
 

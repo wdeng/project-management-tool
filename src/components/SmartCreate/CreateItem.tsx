@@ -42,11 +42,6 @@ const CreateItem: React.FC<Props> = ({
       setIsLoading(true);
 
       try {
-        console.log("goal", goal);
-        console.log("resources", resources);
-        console.log("selectedCheckboxOptions", selectedItemIds);
-        console.log("selectedProjectId", selectedProjectId);
-
         const smartCreate = itemType === 'file' ? smartCreateFile : smartCreateModule;
         const element = await smartCreate(
           selectedProjectId,

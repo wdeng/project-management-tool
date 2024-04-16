@@ -53,7 +53,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, height 
               <div className={`overflow-y-auto max-h-[85vh] ${height} ${className}`}>
                 {children}
               </div>
-              <div className="absolute bottom-0 w-full bg-white">
+              <div className="absolute bottom-0 w-full bg-white z-20">
                 {FieldBelow}
               </div>
             </div>

@@ -22,6 +22,29 @@ const ChatButton = ({ }: ChatButtonProps) => {
 
   const [interactHistory, setHistory] = useState<string[]>([]);
   const [ChangesPanel, setProposePanel] = useState<ReactElement | null>(null);
+  const bottomRef = useScrollToBottom(ChangesPanel)
+
+  const applyIssueResolve = (toolType: string, changes: any) => {
+    console.log('toolType', toolType)
+    switch (toolType) {
+      case 'ReadMoreFiles':
+        setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
+        setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
+        break;
+      case 'TaskComplete':
+        setHistory(prev => [...prev, `Task completed: ${changes}`]);
+        break;
+      case 'DirectAnswer':
+        setProposePanel(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
+        break;
+      default:
+        const _changes = changes instanceof Array ? changes : [changes];
+        setProposePanel(
+          <FilesOutlinePanel changes={_changes as ProposedItem[]} syncHistory={syncHistory} nextStep={submitUserIssue} />
+        );
+    }
+  }
+
 
   const syncHistory = async (h?: string[] | null) => {
     h && setHistory(h);
@@ -33,8 +56,10 @@ const ChatButton = ({ }: ChatButtonProps) => {
     if (isChatOpen && selectedProjectId) {
       const getHistory = async () => {
         const data = await getIssueHistory(selectedProjectId);
+        console.log('chat history', data.toolType, data.changes)
+        // console.log('chat history', data.toolType, data.changes.success)
         setHistory(data.history);
-        if (data.toolType && data.changes?.sucess)
+        if (data.toolType && data.changes?.success)
           applyIssueResolve(data.toolType, data.changes);
       }
       getHistory();
@@ -60,27 +85,7 @@ const ChatButton = ({ }: ChatButtonProps) => {
     }
   }
 
-  const applyIssueResolve = (toolType: string, changes: any) => {
-    console.log('toolType', toolType)
-    switch (toolType) {
-      case 'ReadMoreFiles':
-        setHistory(prev => [...prev, `Read more files: ${changes.content}`]);
-        setSelectedCheckboxOptions(v => [...v, ...changes.fileIds])
-        break;
-      case 'TaskComplete':
-        setHistory(prev => [...prev, `Task completed: ${changes}`]);
-        break;
-      case 'DirectAnswer':
-        setProposePanel(<DirectAnswerPanel answer={changes as ProposedDirectAnswer} />);
-        break;
-      default:
-        setProposePanel(
-          <FilesOutlinePanel changes={changes as ProposedItem[]} syncHistory={syncHistory} nextStep={submitUserIssue} />
-        );
-    }
-  }
 
-  const bottomRef = useScrollToBottom(ChangesPanel)
 
   return (
     <div className="z-10 fixed bottom-10 right-12">

@@ -1,5 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { LuChevronsUpDown } from "react-icons/lu";
 
 interface SelectProps {
   value: string;
@@ -31,10 +32,11 @@ const Selection: React.FC<SelectProps> = ({ value, onValueChange, options }) => 
     <Listbox value={value} onChange={onValueChange}>
       {({ open }) => (
         <>
-          <div className="relative">
+          <div className="relative z-10">
             <Listbox.Button className="w-full py-2 pl-3 pr-10 text-left bg-white rounded-md shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 sm:text-sm">
               <span className="block truncate">{value || 'Select an option'}</span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <LuChevronsUpDown size={18} />
               </span>
             </Listbox.Button>
             <Transition
