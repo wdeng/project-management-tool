@@ -21,7 +21,8 @@ const ComplexChat: React.FC<Props> = ({
   placeholder = "Write your issues here..",
   defaultText = '',
   maxLines = 10,
-  resourcesAvailable = ['outline', 'schema', 'read_more_files']
+  resourcesAvailable = ['outline', 'schema', 'read_more_files'],
+  sendOnEmpty = false
 }) => {
 
   const chatInputRef = useRef<HTMLDivElement>(null);
@@ -88,7 +89,7 @@ const ComplexChat: React.FC<Props> = ({
     )
   }, []);
 
-  return <ChatInput ref={chatInputRef} onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} >
+  return <ChatInput ref={chatInputRef} onSend={sendChat} ExtraButton={ExtraButton} placeholder={placeholder} defaultText={defaultText} maxLines={maxLines} sendOnEmpty={sendOnEmpty}>
     {showButtons &&
       <>
         {showResources && <div className="flex-grow py-2 overflow-y-auto max-h-[60vh]">

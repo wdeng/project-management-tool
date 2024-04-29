@@ -10,11 +10,8 @@ import {
   QuestionChoices,
   setProjectGoal,
   anwerProjectQAs,
-  ProjectSpecs,
-  fixProjectIssue,
-  ChatInputType,
 } from '@/apis';
-import { ReviewProjectSpecs } from './ReviewProjectSpecs';
+import { ReviewProjectSpecs } from './ProjectReview';
 import Dropdown from '../../general/Dropdown';
 import { contextMenuItemStyles, contextMenuStyles } from '@/utils/tailwindStyles';
 import ItemCreationModal from '../../modals/ItemCreationModal';
@@ -24,84 +21,57 @@ interface ProjectCreationModalProps {
 }
 
 export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNewProject, onProjectBuild }) => {
+  const [additionalButtons, setAdditionalButtons] = useState<React.ReactNode>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentStep, setCurrentStep] = useState('SetProjectGoal');
-  const [projectSpecs, setProjectSpecs] = useState<ProjectSpecs | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionChoices[]>([]);
-  const [projectId, setProjectId] = useState<number>(19);
+  const [projectId, setProjectId] = useState<number>(0);
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
   const currentComponent = useMemo(() => {
-    const handleProjectGoalSubmit = async (goal: string) => {
-      // Start the loading state
-      setIsLoading(true);
-
-      try {
-        // Simulate an async operation e.g. making API request.
-        const res = await setProjectGoal(goal);
-        setProjectId(res.projectId);
-        setQuestions(res.QAs);
-
-        setCurrentStep('MultipleChoiceQuestions');
-      } catch (error) {
-        console.error(error);
-      } finally {
-        // End the loading state
-        setIsLoading(false);
-      }
-    };
-
-    const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
-      setIsLoading(true);
-
-      try {
-        // await new Promise(res => setTimeout(res, 2000));
-        const resps = await anwerProjectQAs(answers, projectId)
-        if (resps.finished) {
-          setIsLoading(false);
-          setProjectSpecs(resps.projectSpecs);
-          setCurrentStep('ReviewProjectSpecs');
-          return;
-        }
-        setQuestions(resps.QAs);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        // End the loading state
-        setIsLoading(false);
-      }
-    };
-
-    const handleIssueSubmit = async (issues: ChatInputType, abortController: AbortController) => {
-      if (issues?.text) {
-        const resps = await fixProjectIssue(issues, projectId, abortController)
-        resps && setProjectSpecs(resps.projectSpecs);
-      } else {
-        setCurrentStep('SetProjectGoal');
-        close();
-        onProjectBuild(projectId);
-      }
-    };
-
     switch (currentStep) {
       case 'SetProjectGoal':
+        const handleProjectGoalSubmit = async (goal: string) => {
+          setIsLoading(true);
+          const res = await setProjectGoal(goal);
+          setProjectId(res.projectId);
+          setQuestions(res.QAs);
+
+          setCurrentStep('MultipleChoiceQuestions');
+          setIsLoading(false);
+        };
         return <ProjectCreationGoal onGoalSubmit={handleProjectGoalSubmit} />;
       case 'MultipleChoiceQuestions':
+        const handleAnswersSubmit = async (answers: { question: string; answers: string[] }[]) => {
+          setIsLoading(true);
+          const resps = await anwerProjectQAs(answers, projectId)
+          setIsLoading(false);
+          if (resps.finished) {
+            setCurrentStep('ReviewProjectSpecs');
+          } else {
+            setQuestions(resps.QAs);
+          }
+        };
         return <MultipleChoiceQuestions questions={questions} onAnswersSubmit={handleAnswersSubmit} />;
       case 'ReviewProjectSpecs':
-        return projectSpecs && <ReviewProjectSpecs
-          setProjectSpecs={setProjectSpecs}
-          projectSpecs={projectSpecs}
-          onSubmitIssue={handleIssueSubmit}
+        const onFinish = async () => {
+          setCurrentStep('SetProjectGoal');
+          close();
+          onProjectBuild(projectId);
+        };
+        return <ReviewProjectSpecs
+          projectId={projectId}
+          onFinish={onFinish}
+          setAdditionalButtons={setAdditionalButtons}
         />;
       default:
         return null;
     }
-  }, [currentStep, questions, projectSpecs, onProjectBuild, projectId]);
+  }, [currentStep, questions, onProjectBuild, projectId]);
 
   const directNewProject = async (projectName: string, requirements: string, schema: string) => {
     close();
@@ -152,7 +122,7 @@ export const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ onNe
           </Menu.Items>
         </Dropdown>
       </Menu>
-      <ItemCreationModal title="Create Project" isLoading={isLoading} directInputComponent={<ProjectForm onNewProject={directNewProject} />} isOpen={isOpen} close={close}>
+      <ItemCreationModal title="Create Project" isLoading={isLoading} directInputComponent={<ProjectForm onNewProject={directNewProject} />} isOpen={isOpen} close={close} MoreButtons={additionalButtons}>
         {currentComponent}
       </ItemCreationModal>
     </>

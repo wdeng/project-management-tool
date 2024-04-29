@@ -91,7 +91,7 @@ export interface QAResponse {
   projectId: number;
   QAs: QuestionChoices[];
   finished?: boolean;
-  projectSpecs?: ProjectSpecs;
+  projectSpecs?: string;
 }
 
 export async function setProjectGoal(goal: string): Promise<QAResponse> {
@@ -124,20 +124,22 @@ export interface ProjectSpecs {
   components: ComponentSpecs[];
 }
 
-export async function getProjectSpecs(projectId: number): Promise<ProjectSpecs> {
-  return await getReq(`project-init/requirement-specs/${projectId}`);
+export async function getProjectSpecs(projectId: number): Promise<string> {
+  const res = await getReq(`project-init/requirement-specs/${projectId}`);
+  return res.specs;
 }
 
 export async function fixProjectIssue(
-  issues: ChatInputType,
   projectId: number,
-  abortController?: AbortController
+  issues: ChatInputType,
+  updatedSpecs?: string,
 ): Promise<QAResponse> {
   const data = {
     issues,
+    updatedSpecs,
     projectId,
   };
-  return await postReq('project-init/requirement-specs/fix-specs', data, abortController);
+  return await postReq('project-init/requirement-specs/fix-specs', data);
 }
 
 export interface ProjectDetailResponse {

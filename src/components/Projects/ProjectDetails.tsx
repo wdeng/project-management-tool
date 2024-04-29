@@ -1,14 +1,33 @@
 // ProjectDetails.tsx
-import React, { useState, ReactElement, useCallback, use, useEffect } from 'react';
+import React, { useState, ReactElement, useCallback, useEffect } from 'react';
 import TopBar from './TopBar';
 import { checkGitSync } from '@/apis';
 import GitDiffReview from './GitSync/ReviewGitDiff';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 import ProjectSettingsModal from './ProjectSettings';
+import MermaidDiagram from '../general/MermaidDiagram';
 // MdOutlineLogoDev
 // MdDescription
 // MdHomeFilled
 
+const diagram = `
+graph TD
+  A[User Logs In] --> B{Authenticated?}
+  B -->|No| C[Limited Access]
+  B -->|Yes| D{User Role?}
+  D -->|Admin| E[Admin Dashboard]
+  D -->|Regular| F[User Dashboard]
+  E --> G[Manage Users]
+  E --> H[View Reports]
+  F --> I[View Projects]
+  I --> J[Open Project]
+  J --> K[View Kanban Board]
+  K --> L[Add/Edit/Move Tasks]
+  F --> M[Create Project]
+  M --> N[Set Project Fields]
+  F --> O[Edit Project]
+  F --> P[Delete Project]
+`;
 interface IProjectDetailsProps {
   projectId: number;
   projectName: string;
@@ -53,6 +72,9 @@ export const ProjectDetails: React.FC<IProjectDetailsProps> = ({ projectId, proj
           ))}
         </ul>
         {gitReview}
+      </div>
+      <div>
+        <MermaidDiagram diagram={diagram} />
       </div>
       <div ref={bottomRef} />
     </>

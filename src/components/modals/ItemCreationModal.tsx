@@ -11,6 +11,8 @@ interface ModalProps {
   isLoading: boolean;
   isOpen: boolean;
   close: () => void;
+  showTabs?: boolean;
+  MoreButtons?: ReactNode;
 }
 
 const tabStyle = ({ selected }: any) => (
@@ -25,28 +27,32 @@ const ItemCreationModal: React.FC<ModalProps> = ({
   isLoading,
   isOpen,
   close,
+  showTabs = false,
+  MoreButtons,
 }) => {
   return (
-    <Modal height={height} isOpen={isOpen} onClose={close} title={title} className={isLoading ? 'pointer-events-none' : ''}>
+    <Modal height={height} isOpen={isOpen} onClose={close} title={title} className={isLoading ? 'pointer-events-none' : ''} MoreButtons={MoreButtons}>
       {isLoading && (
         <div className={`absolute inset-0 flex items-center justify-center bg-white bg-opacity-40 z-50 pointer-events-auto`}>
           <Spinner />
         </div>
       )}
-      <Tab.Group>
-        <Tab.List className="flex space-x-1 rounded-xl bg-indigo-500 p-1 mx-4">
-          <Tab className={tabStyle}>AI Agent</Tab>
-          <Tab className={tabStyle}>Direct Input</Tab>
-        </Tab.List>
-        <Tab.Panels className="mt-2">
-          <Tab.Panel>
-            {children}
-          </Tab.Panel>
-          <Tab.Panel>
-            {directInputComponent}
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group>
+      {showTabs ? (
+        <Tab.Group>
+          <Tab.List className="flex space-x-1 rounded-xl bg-indigo-500 p-1 mx-4">
+            <Tab className={tabStyle}>AI Agent</Tab>
+            <Tab className={tabStyle}>Direct Input</Tab>
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            <Tab.Panel>
+              {children}
+            </Tab.Panel>
+            <Tab.Panel>
+              {directInputComponent}
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+      ) : children}
     </Modal>
   );
 };

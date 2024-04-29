@@ -1,26 +1,52 @@
+import * as yaml from 'js-yaml';
 
-export const convertToBase64JPEG = (file: File): Promise<string> => {
+export const convertToBase64JPEG = (file: File, maxShorterSide: number = 1024): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx!.drawImage(img, 0, 0);
-        const base64JPEG = canvas.toDataURL('image/jpeg');
-        resolve(base64JPEG);
-      };
-      img.onerror = reject;
-      img.src = e.target!.result as string;
-    };
+        let width = image.width;
+        let height = image.height;
 
-    reader.onerror = reject;
+        // Calculate the scaling factor based on the maxShorterSide
+        const scaleFactor = maxShorterSide / Math.min(width, height);
+
+        // Scale down the image dimensions if necessary
+        if (scaleFactor < 1) {
+          width *= scaleFactor;
+          height *= scaleFactor;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(image, 0, 0, width, height);
+
+        const base64 = canvas.toDataURL('image/jpeg');
+        resolve(base64);
+      };
+      image.onerror = (error) => {
+        reject(error);
+      };
+      image.src = reader.result as string;
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
     reader.readAsDataURL(file);
   });
 };
+
+export const validateYAML = (txt: string) => {
+  try {
+    return txt && !!yaml.load(txt);
+  } catch (error) {
+    return false;
+  }
+}
 
 export function camelToTitle(camelStr: string) {
   return camelStr
